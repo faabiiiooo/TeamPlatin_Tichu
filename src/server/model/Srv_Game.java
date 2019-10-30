@@ -31,10 +31,24 @@ public class Srv_Game {
         return winner;
     }
 
+
     protected Table createTable(){
     this.table = new Table();
         return table;
     }
 
+    //getters and setters
+    public ArrayList<Team> getTeams() {
+        return teams;
+    }
+
+    public Table getTable(){
+        return this.table;
+    }
+
+    public void setTable(Table t){
+        this.table = t;
+
+    }
 
 }
