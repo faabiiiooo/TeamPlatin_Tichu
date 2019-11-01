@@ -22,7 +22,7 @@ public class Srv_HandTypeTest {
     @Before
     public void makeHands() {
         highCardHands = makeHands(highCards);
-    }  */
+    }      */
 
     @Test // This is the test method for the isOnePair in HandType.
     public void testIsOnePair() {

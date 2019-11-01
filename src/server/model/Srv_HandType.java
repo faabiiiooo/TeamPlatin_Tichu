@@ -20,4 +20,8 @@ public enum Srv_HandType {
     public static boolean isOnePair(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards, Srv_Rank rank) {
 
     }
+
+    public static boolean isXPair(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards, Srv_Rank rank) {
+
+    }
 }
