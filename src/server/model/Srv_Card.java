@@ -13,8 +13,8 @@ public class Srv_Card implements Comparable<Srv_Card> { //Import Comparable to c
         this.value = value;
     }
 
-    public int compareTo (Srv_Card card) {
-        return this.rank.ordinal();
+    public int compareTo (Srv_Card card) { //new compareTo method to compare Cards
+        return card.getRank().ordinal() - this.rank.ordinal();
     }
 
     public String toString() {
