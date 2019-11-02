@@ -22,7 +22,9 @@ public class Srv_Round extends Srv_Game {
             for(int j = 0; j < this.getTeams().get(i).getMembers().size(); j++ ){
                 for(int z = 0; z < this.getTeams().get(i).getMembers().get(j).getHandCards().size; z++){
 
-                    if(this.getTeams().get(i).getMembers().get(j).getHandCards().get(z).getRank() == )
+                    if(this.getTeams().get(i).getMembers().get(j).getHandCards().get(z).getRank() == Srv_Rank.mahjong){
+                        this.getTeams().get(i).getMembers().get(j).isActive = true;
+                    }
 
                 }
 
