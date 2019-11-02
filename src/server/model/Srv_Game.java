@@ -12,14 +12,20 @@ public class Srv_Game {
     private Srv_Table table;
 
     public Srv_Game(){
+        this.teams = new ArrayList<Srv_Team>();
         this.rounds = new ArrayList<Srv_Round>();
         this.winner = null;
 
     }
 
     public ArrayList<Srv_Team> createTeams(){
+        for(int i = 0; i < 2; i++){
+            Srv_Team t = new Srv_Team();
+            this.teams.add(t);
 
-        return null;
+        }
+
+        return teams;
     }
     //create a new round, add it to the list and return it.
     public Srv_Round newRound(){
@@ -42,10 +48,11 @@ public class Srv_Game {
         /* check the size of the list to see if there is a team who reached 1000 points or more.
         for the case that both teams reached the 1000 points, sort the list and get the team with more points.
         The instance variable winner will be set to the winner team and returned*/
-        if(winningRangeTeams.size() >= 1){
+        if(winningRangeTeams.size() == 1){
             Collections.sort(winningRangeTeams);
             this.winner = winningRangeTeams.get(0);
-        }else{
+        }else{ // if both teams have the same amount of points, set the winner to null
+            if(winningRangeTeams.get(0).getGameScore() == winningRangeTeams.get(1).getGameScore() )
             this.winner = null;
         }
         return winner;

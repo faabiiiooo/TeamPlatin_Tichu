@@ -17,6 +17,19 @@ public class Srv_Round extends Srv_Game {
     }
 
     private void checkBeginner(){
+        boolean mahJongFound = false;
+        for(int i = 0; i < this.getTeams().size(); i++ ){
+            for(int j = 0; j < this.getTeams().get(i).getMembers().size(); j++ ){
+                for(int z = 0; z < this.getTeams().get(i).getMembers().get(j).getHandCards().size; z++){
+
+                    if(this.getTeams().get(i).getMembers().get(j).getHandCards().get(z).getRank() == )
+
+                }
+
+            }
+
+        }
+
 
     }
 
