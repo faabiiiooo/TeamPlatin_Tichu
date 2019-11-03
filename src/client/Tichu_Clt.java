@@ -29,6 +29,10 @@ public class Tichu_Clt extends Application {
         //Creating MVC for main Client Application: Fabio
         Clt_Model model = new Clt_Model();
         Clt_View view = new Clt_View(primaryStage, model);
-        Clt_Controller controller = new Clt_Controller(primaryStage, view, model);
+        Clt_Controller controller = Clt_Controller.getController();
+        controller.setPrimaryStage(primaryStage);
+        controller.setView(view);
+        controller.setModel(model);
+
     }
 }

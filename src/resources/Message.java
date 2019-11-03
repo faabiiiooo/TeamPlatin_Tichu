@@ -21,7 +21,7 @@ public class Message implements Serializable {
         }
     }
 
-    public ArrayList<?> getObjects() {
+    public ArrayList<Object> getObjects() {
         return objects;
     }
 
