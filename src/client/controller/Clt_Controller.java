@@ -26,11 +26,11 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
 
-    public Message processIncomingMessage(Message msgIn){ // Generates Answermessage for every Incoming Message
+    public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
         Message msgOut = null;
 
-        switch (msgIn.getType()){
+        switch (msgIn.getType()) {
 
             case "card":  //generating a Card from Message
 
@@ -47,7 +47,7 @@ public class Clt_Controller { //Controller is a Singleton
 
         }
 
-        return msgOut;
+
     }
 
     public void setPrimaryStage(Stage primaryStage) {

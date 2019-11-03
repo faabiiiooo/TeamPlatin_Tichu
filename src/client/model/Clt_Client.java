@@ -38,13 +38,11 @@ public class Clt_Client extends Thread{
                 if(this.receive() != null ){
                     Message msgIn = this.receive();
                     logger.info("Message received from Server. Message Type: "+msgIn.getType());
-                    Message msgOut =controller.processIncomingMessage(msgIn);
-                    if(msgOut != null){
-                        this.send(msgOut);
+                   controller.processIncomingMessage(msgIn);
                     }
                 }
 
-            }
+
 
         } catch (Exception e){
         }
@@ -52,7 +50,7 @@ public class Clt_Client extends Thread{
 
     }
 
-    public  Message receive () throws Exception { // Recive Messages from Server /Pascal
+        private  Message receive () throws Exception { // Recive Messages from Server /Pascal
 
 
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -66,7 +64,7 @@ public class Clt_Client extends Thread{
 
         try{
             ObjectOutputStream out=new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject(this);
+            out.writeObject(msgOut);
             out.flush();
 
 
