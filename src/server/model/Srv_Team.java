@@ -23,7 +23,9 @@ public class Srv_Team {
 
     }
 
-    private Srv_Seat bookSeat() {
+    private Srv_Seat bookSeat() { // Create a Seat, add it to the List and return the Seat /Pascal
+        Srv_Seat seat=new Srv_Seat(SEAT_ID);
+         seats.add(seat);
 
             return seat;
 
