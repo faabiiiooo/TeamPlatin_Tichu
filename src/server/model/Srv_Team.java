@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Srv_Team {
 
-    private final int TEAM_ID = 0;
+    private final int TEAM_ID ;
     private final int MAX_TEAM_MEMBERS=2;
     private ArrayList<Srv_Player>members;
     private int gameScore;
@@ -15,32 +15,31 @@ public class Srv_Team {
 
 
 
-    public Srv_Team(){
+    public Srv_Team(int TEAM_ID){
+        this.TEAM_ID=TEAM_ID;
         this.members=new ArrayList<Srv_Player>();
-
-
-
-
+        this.gameScore=gameScore;
+        this.roundScore=roundScore;
 
     }
 
-    private Srv_Seat bookSeat(){
-        Srv_Seat seat=new Srv_Seat(int SEAT_ID);
-        return seat;
+    private Srv_Seat bookSeat() {
 
+            return seat;
+
+        }
+
+
+        public void calcGameScore () {
+
+        }
+
+        public void resetRoundScore () {
+
+        }
+
+        public void calcRoundScore () {
+
+        }
 
     }
-
-    public void calcGameScore(){
-
-    }
-
-    public void resetRoundScore(){
-
-    }
-
-    public void calcRoundScore(){
-
-    }
-
-}
