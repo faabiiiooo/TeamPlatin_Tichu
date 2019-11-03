@@ -7,6 +7,7 @@ public class Srv_Team {
     private final int TEAM_ID ;
     private final int MAX_TEAM_MEMBERS=2;
     private ArrayList<Srv_Player>members;
+    private ArrayList<Srv_Seat>seats;
     private int gameScore;
     private int roundScore;
 
@@ -23,15 +24,17 @@ public class Srv_Team {
 
     }
 
-    private Srv_Seat bookSeat() { // Create a Seat, add it to the List and return the Seat /Pascal
-        Srv_Seat seat=new Srv_Seat(SEAT_ID);
-         seats.add(seat);
+    private Srv_Seat bookSeat() { // A new seat is created, assigned an ID, and added to the list/ Pascal
+        Srv_Seat seat = null;
+        for (int i = 1; i <= 4; i++) {
+            seat = new Srv_Seat(SEAT_ID = i);
+            this.seats.add(seat);
 
-            return seat;
 
         }
 
-
+        return seat;
+    }
         public void calcGameScore () {
 
         }
