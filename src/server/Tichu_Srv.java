@@ -7,6 +7,7 @@ public class Tichu_Srv {
 
     public static void main(String[] args){
         Srv_Model model = new Srv_Model();
-        Srv_Controller controller = new Srv_Controller(model);
+        Srv_Controller controller = Srv_Controller.getController();
+        controller.setModel(model);
     }
 }
