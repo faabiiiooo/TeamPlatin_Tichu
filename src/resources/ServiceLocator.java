@@ -1,6 +1,7 @@
 package resources;
 
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -36,10 +37,23 @@ public class ServiceLocator {
      * Factory method for returning the singleton
      */
     public static ServiceLocator getServiceLocator() {
-        if (serviceLocator == null)
+        if (serviceLocator == null) {
             serviceLocator = new ServiceLocator();
+            serviceLocator.setLogger(configureLogging());
+        }
         return serviceLocator;
     }
+
+    private static Logger configureLogging(){
+
+        Logger rootLogger = Logger.getLogger("");
+        Logger ourLogger = Logger.getLogger(serviceLocator.getAPP_NAME());
+        ourLogger.setLevel(Level.INFO);
+
+        return ourLogger;
+
+    }
+
 
     /**
      * Private constructor, because this class is a singleton

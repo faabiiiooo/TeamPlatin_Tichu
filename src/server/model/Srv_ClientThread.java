@@ -4,10 +4,8 @@ import resources.Message;
 import resources.ServiceLocator;
 import server.controller.Srv_Controller;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.net.Socket;
 import java.util.logging.Logger;
 
 public class Srv_ClientThread extends Thread { //Fabio
@@ -21,14 +19,14 @@ public class Srv_ClientThread extends Thread { //Fabio
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
 
-    public Srv_ClientThread(Srv_Server server, InputStream in) {
+    public Srv_ClientThread(Srv_Server server, InputStream in, OutputStream out) {
         super("ClientThread for Client " + clientId);
         controller = Srv_Controller.getController();
 
         try {
             this.server = server;
             this.in = new ObjectInputStream(in);
-            //this.out = new ObjectOutputStream();
+            this.out = new ObjectOutputStream(out);
 
             logger.info("Created ClientThread for Client: " + clientId);
             clientId++;
@@ -42,8 +40,9 @@ public class Srv_ClientThread extends Thread { //Fabio
 
         try{
             while (true){
-                if(this.receive() != null ){ //when a message received redirect it to the Server Controller /Fabio
-                    Message msgIn = this.receive();
+                Message msgIn = this.receive();
+                if(msgIn != null ){ //when a message received redirect it to the Server Controller /Fabio
+                    //Message msgIn = this.receive();
                     logger.info("Message received from Client. Message Type: "+msgIn.getType());
                     Message msgOut = controller.processIncomingMessage(msgIn);
                     if(msgOut != null){
@@ -59,7 +58,7 @@ public class Srv_ClientThread extends Thread { //Fabio
 
     }
 
-    private Message receive() throws Exception{
+    private Message receive() throws Exception{ //recieving incoming Messages
         Message msgIn = null;
 
         msgIn = (Message) in.readObject();
@@ -68,8 +67,11 @@ public class Srv_ClientThread extends Thread { //Fabio
 
     }
 
-    private void send(Message msgOut) throws Exception {
+    private void send(Message msgOut) throws Exception { //sending outgoing Messages
 
+        out.writeObject(msgOut);
+        out.flush();
+        out.reset();
 
     }
 
