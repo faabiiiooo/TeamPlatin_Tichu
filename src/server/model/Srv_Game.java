@@ -58,7 +58,7 @@ public class Srv_Game { //@author Thomas
         return winner;
     }
 
-
+    //create a new table
     protected Srv_Table createTable(){
     this.table = new Srv_Table();
         return table;
