@@ -1,7 +1,6 @@
 package server.model;
 
-public class Srv_Card implements Comparable<Srv_Card> { //Import Comparable to compare Cards
-
+public class Srv_Card implements Comparable<Srv_Card> { //@author Sandro ; Import Comparable to compare Cards
     private Srv_Suit suit;
     private Srv_Rank rank;
     private int playerId;

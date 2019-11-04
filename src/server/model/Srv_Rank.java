@@ -1,6 +1,6 @@
 package server.model;
 
-public enum Srv_Rank {
+public enum Srv_Rank { //@author Sandro
     Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace, Phoenix, Dragon, Dog, Mahjong;
 
     public String toString() {

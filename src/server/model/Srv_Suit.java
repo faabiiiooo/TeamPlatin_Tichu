@@ -1,6 +1,6 @@
 package server.model;
 
-public enum Srv_Suit {
+public enum Srv_Suit { //@author Sandro
     Jade, Pagodas, Stars, Swords, SpecialCards;
 
     public String toString() {

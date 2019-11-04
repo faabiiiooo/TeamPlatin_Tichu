@@ -3,7 +3,7 @@ package server.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Srv_Deck {
+public class Srv_Deck { //@author Sandro
 
     private final int NUM_OF_CARDS = 56;
     private ArrayList<Srv_Card> cards = new ArrayList<>();
