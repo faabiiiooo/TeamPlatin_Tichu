@@ -1,5 +1,6 @@
 package server.model;
 
+import javax.swing.text.Style;
 import java.util.ArrayList;
 //@author Pascal
 public class Srv_Team {
@@ -7,6 +8,8 @@ public class Srv_Team {
     private final int TEAM_ID ;
     private final int MAX_TEAM_MEMBERS=2;
     private ArrayList<Srv_Player>members;
+    private Srv_Round round;
+    private Srv_Player player;
 
     private int gameScore;
     private int roundScore=0;
@@ -19,8 +22,13 @@ public class Srv_Team {
     public Srv_Team(int TEAM_ID){
         this.TEAM_ID=TEAM_ID;
         this.members=new ArrayList<Srv_Player>();
+        this.round=new Srv_Round();
+        this.player=new Player();
         this.gameScore=gameScore;
         this.roundScore=roundScore;
+
+
+
 
     }
 
@@ -38,7 +46,11 @@ return seat;
         }
 
         public void calcRoundScore () {
-        Srv_Player player=new Srv_Player();
+
+
+        }
+
+
 
 
         }
