@@ -47,12 +47,14 @@ public class Srv_ClientThread extends Thread { //Fabio
                     Message msgOut = controller.processIncomingMessage(msgIn);
                     if(msgOut != null){
                         this.send(msgOut);
+                        logger.info("Message sent back to Client");
                     }
                 }
 
             }
 
         } catch (Exception e){
+            e.printStackTrace();
         }
 
 

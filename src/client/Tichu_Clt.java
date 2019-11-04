@@ -24,9 +24,10 @@ public class Tichu_Clt extends Application {
         }
     }
 
+    // @author Fabio
     public void start(Stage primaryStage){
 
-        //Creating MVC for main Client Application: Fabio
+        //Creating MVC for main Client Application
         Clt_Model model = new Clt_Model();
         Clt_View view = new Clt_View(primaryStage, model);
         Clt_Controller controller = Clt_Controller.getController();

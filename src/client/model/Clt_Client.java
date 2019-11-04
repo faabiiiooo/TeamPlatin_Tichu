@@ -21,10 +21,15 @@ public class Clt_Client extends Thread{
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
 
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
 
-    public Clt_Client(String serverIP,int PORT){
+
+    public Clt_Client(String serverIP){
         try{
             socket=new Socket(serverIP,PORT);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
         } catch (IOException e) {
             logger.severe("Socket could not be created");
@@ -52,8 +57,6 @@ public class Clt_Client extends Thread{
 
         private  Message receive () throws Exception { // Recive Messages from Server /Pascal
 
-
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             Message msgIn = (Message) in.readObject();
             return msgIn;
 
@@ -63,9 +66,10 @@ public class Clt_Client extends Thread{
         public void send(Message msgOut){ // Send Messages to the Server /Pascal
 
         try{
-            ObjectOutputStream out=new ObjectOutputStream(socket.getOutputStream());
+
             out.writeObject(msgOut);
             out.flush();
+            logger.info("Message sent");
 
 
         } catch (IOException e) {
