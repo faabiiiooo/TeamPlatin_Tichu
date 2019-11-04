@@ -30,6 +30,7 @@ public class Srv_Team {
 
 
 
+
     }
 
     private Srv_Seat bookSeat() {
@@ -46,6 +47,12 @@ return seat;
         }
 
         public void calcRoundScore () {
+
+        if(player.getWonCards()==)
+
+       /* if(round.getFinisher.get(0)==round.getFinisher.get(1)){
+            this.roundScore+=200;
+            */
 
 
         }
