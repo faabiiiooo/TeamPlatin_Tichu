@@ -25,14 +25,13 @@ public class Srv_Round extends Srv_Game {
                     if(this.getTeams().get(i).getMembers().get(j).getHandCards().get(z).getRank() == Srv_Rank.mahjong){
                         this.getTeams().get(i).getMembers().get(j).isActive = true;
                     }
-
                 }
-
             }
-
         }
+    }
 
-
+    public ArrayList<Srv_Player> getFinisher(){
+        return this.finisher;
     }
 
 }
