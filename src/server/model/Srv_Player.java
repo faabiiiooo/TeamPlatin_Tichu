@@ -121,4 +121,8 @@ public class Srv_Player {
     public void setSaidSmallTichu(boolean saidSmallTichu) {
         this.saidSmallTichu = saidSmallTichu;
     }
+
+    public int getPLAYER_ID() {
+        return PLAYER_ID;
+    }
 }
