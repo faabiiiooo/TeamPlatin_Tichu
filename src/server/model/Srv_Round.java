@@ -2,7 +2,7 @@ package server.model;
 
 import java.util.ArrayList;
 
-public class Srv_Round extends Srv_Game {
+public class Srv_Round extends Srv_Game { //@author Thomas
 
     private ArrayList<Srv_Player> finisher;
 

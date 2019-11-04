@@ -3,7 +3,7 @@ package server.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Srv_Game {
+public class Srv_Game { //@author Thomas
 
     protected ArrayList<Srv_Team> teams;
     protected final int G_MIN_SCORE = 1000;
