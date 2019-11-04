@@ -11,7 +11,7 @@ public class Srv_Team {
     private Srv_Round round;
     private Srv_Player player;
     private Srv_Seat seat;
-
+    private Srv_Game game;
     private int gameScore;
     private int roundScore=0;
 
@@ -39,11 +39,14 @@ public class Srv_Team {
         return seat;
 
     }
+        //The GameScore is calculated depending on the rounds played.
         public void calcGameScore () {
-        this.gameScore+=this.roundScore;
-
-
+        for(int i=0;i<Srv_Round.getRounds().size();i++) {
+            this.gameScore +=(this.roundScore*=i);
         }
+        }
+
+
         // Resets all used variables and lists
         public void resetRoundScore () {
         this.roundScore=0;
@@ -95,8 +98,7 @@ public class Srv_Team {
                         case Srv_Rank.Phoenix:
                             this.roundScore += c.getValue();
                     }
-                    if (round.getFinisher.get(0) == round.getFinisher.get(1)) {
-                        this.roundScore += 200;
+                    //Doppelsieg fehlt noch
 
 
                     }
@@ -105,7 +107,7 @@ public class Srv_Team {
                 }
 
             }
-        }
+
 
 
 
