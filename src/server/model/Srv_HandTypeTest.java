@@ -8,10 +8,14 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class Srv_HandTypeTest {
+public class Srv_HandTypeTest { //@author Sandro, Thomas
 
-    private static String[][] highCards = {
-            { "2S", "9P", "3K", "5K", "7S" },
+    private static String[][] singleCardCardsTable = {
+            { "2S" },
+    };
+
+    private static String[][] singleCardCardsPlayer = {
+            { "DE" },
     };
 
     private static String[][] onePairCardsTable = {
@@ -23,7 +27,8 @@ public class Srv_HandTypeTest {
     };
 
     // This is where we store the translated hands
-    ArrayList<ArrayList<Srv_Card>> highCardHands;
+    ArrayList<ArrayList<Srv_Card>> singleCardHandsTable;
+    ArrayList<ArrayList<Srv_Card>> singleCardHandsPlayer;
     ArrayList<ArrayList<Srv_Card>> onePairHandsTable;
     ArrayList<ArrayList<Srv_Card>> onePairHandsPlayer;
 
@@ -34,17 +39,54 @@ public class Srv_HandTypeTest {
 
     @Before
     public void makeHands() {
-        highCardHands = makeHands(highCards);
+        singleCardHandsTable = makeHands(singleCardCardsTable);
+        singleCardHandsPlayer = makeHands(singleCardCardsPlayer);
         onePairHandsTable = makeHands(onePairCardsTable);
         onePairHandsPlayer = makeHands(onePairCardsPlayer);
     }
 
     @Test // This is the test method for isHigher in HandType.
-    public void testEvaluateHand() {
+    public void testIsHigherSingleCard() {
+
+        ArrayList<Srv_Card> handTableZero = new ArrayList<Srv_Card>();
+        Srv_HandType ht = Srv_HandType.SingleCard;
+
+        //Case SingleCard Table has 0 Cards
+        for (ArrayList<Srv_Card> handPlayer : singleCardHandsPlayer) {
+            assertTrue(Srv_HandType.SingleCard.isHigher(handTableZero, handPlayer, ht));
+        }
+
+        //Case SingleCard Table has 1 Card
+        for (ArrayList<Srv_Card> handTable : singleCardHandsTable) {
+            for (ArrayList<Srv_Card> handPlayer : singleCardHandsPlayer) {
+                assertTrue(Srv_HandType.SingleCard.isHigher(handTable, handPlayer, ht));
+            }
+        }
+    }
+
+    @Test // This is the test method for isHigher in HandType.
+    public void testisHigherOnePair() {
+
+        ArrayList<Srv_Card> handTableZero = new ArrayList<Srv_Card>();
+        Srv_HandType ht = Srv_HandType.OnePair;
+
+        //Case OnePair Table has 0 Cards
+        for (ArrayList<Srv_Card> handPlayer : onePairHandsPlayer) {
+            assertTrue(Srv_HandType.OnePair.isHigher(handTableZero, handPlayer, ht));
+        }
+
+        //Case OnePair Table has 2 Cards
         for (ArrayList<Srv_Card> handTable : onePairHandsTable) {
             for (ArrayList<Srv_Card> handPlayer : onePairHandsPlayer) {
-                assertTrue(Srv_HandType.evaluateHand(handTable, handPlayer, null));
+                assertTrue(Srv_HandType.OnePair.isHigher(handTable, handPlayer, ht));
             }
+        }
+    }
+
+    @Test // This is the test method for isOnePair in HandType.
+    public void testIsSingleCard() {
+        for (ArrayList<Srv_Card> hand : singleCardHandsPlayer) {
+            assertTrue(Srv_HandType.isSingleCard(hand));
         }
     }
 
