@@ -1,7 +1,7 @@
 package server.model;
 
 import java.util.ArrayList;
-
+//@author Pascal
 public class Srv_Team {
 
     private final int TEAM_ID ;
@@ -9,7 +9,7 @@ public class Srv_Team {
     private ArrayList<Srv_Player>members;
 
     private int gameScore;
-    private int roundScore;
+    private int roundScore=0;
 
 
 
@@ -24,8 +24,7 @@ public class Srv_Team {
 
     }
 
-    private Srv_Seat bookSeat() { // A new seat is created, assigned an ID, and added to the list/ Pascal
-
+    private Srv_Seat bookSeat() {
 
 return seat;
 
@@ -39,7 +38,43 @@ return seat;
         }
 
         public void calcRoundScore () {
+        Srv_Player player=new Srv_Player();
+
 
         }
 
+
+
+
+    public int getTEAM_ID() {
+        return TEAM_ID;
     }
+
+    public int getMAX_TEAM_MEMBERS() {
+        return MAX_TEAM_MEMBERS;
+    }
+
+    public ArrayList<Srv_Player> getMembers() {
+        return members;
+    }
+
+    public void setMembers(ArrayList<Srv_Player> members) {
+        this.members = members;
+    }
+
+    public int getGameScore() {
+        return gameScore;
+    }
+
+    public void setGameScore(int gameScore) {
+        this.gameScore = gameScore;
+    }
+
+    public int getRoundScore() {
+        return roundScore;
+    }
+
+    public void setRoundScore(int roundScore) {
+        this.roundScore = roundScore;
+    }
+}

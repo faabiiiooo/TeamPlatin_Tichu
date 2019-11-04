@@ -25,7 +25,8 @@ public class Srv_Player {
     private int score;
     private int nextPlayerID;
     private boolean hasBomb;
-    private boolean saidTichu;
+    private boolean saidBigTichu;
+    private boolean saidSmallTichu;
 
     public Srv_Player(){
 
@@ -40,7 +41,8 @@ public class Srv_Player {
 
         score = 0;
         hasBomb = false;
-        saidTichu = false;
+        saidBigTichu = false;
+        saidSmallTichu=false;
         isActive = false;
 
         logger.info("Created player with id: " + PLAYER_ID);
@@ -104,11 +106,19 @@ public class Srv_Player {
         this.hasBomb = hasBomb;
     }
 
-    public boolean isSaidTichu() {
-        return saidTichu;
+    public boolean isSaidBigTichu() {
+        return saidBigTichu;
     }
 
-    public void setSaidTichu(boolean saidTichu) {
-        this.saidTichu = saidTichu;
+    public void setSaidBigTichu(boolean saidBigTichu) {
+        this.saidBigTichu = saidBigTichu;
+    }
+
+    public boolean isSaidSmallTichu() {
+        return saidSmallTichu;
+    }
+
+    public void setSaidSmallTichu(boolean saidSmallTichu) {
+        this.saidSmallTichu = saidSmallTichu;
     }
 }
