@@ -10,6 +10,7 @@ public class Srv_Team {
     private ArrayList<Srv_Player>members;
     private Srv_Round round;
     private Srv_Player player;
+    private Srv_Seat seat;
 
     private int gameScore;
     private int roundScore=0;
@@ -35,41 +36,76 @@ public class Srv_Team {
 
     private Srv_Seat bookSeat() {
 
-return seat;
+        return seat;
 
     }
         public void calcGameScore () {
+        this.gameScore+=this.roundScore;
+
 
         }
-
+        // Resets all used variables and lists
         public void resetRoundScore () {
+        this.roundScore=0;
+        player.setSaidSmallTichu(false);
+        player.setSaidBigTichu(false);
+        round.getFinisher().clear();
+
 
         }
 
         public void calcRoundScore () {
 
-        for(Card c: player.getWonCards()) {
+        /*If a small Tichu has been called, it is checked whether
+            the player has finished the round first. Then he gets + 100 points, otherwise -100 points.*/
+            if (player.isSaidSmallTichu() == true) {
+                if (player.getPLAYER_ID() == round.getFinischer().get(0)) {
+                    this.roundScore += 100;
+                } else {
+                    this.roundScore -= 100;
+                }
+                /*If a big Tichu has been called, it is checked whether
+            the player has finished the round first. Then he gets + 100 points, otherwise -2 00 points.*/
+                if (player.isSaidBigTichu() == true) {
+                    if (player.getPLAYER_ID() == round.getFinischer().get(0)) {
+                        this.roundScore += 200;
+                    } else {
+                        this.roundScore -= 200;
 
 
-            switch (Srv_Rank) {
-                case Srv_Rank.king:
-                    this.roundScore += 10;
+                    }
+                }
+                /*Check the values of the cards in the array list wonCards.
+                 If the cards listed below occur, the value is assigned to the roundScore */
+                for (Card c : player.getWonCards()) {
 
-                case Srv_Rank.Ten:
-                    this.roundScore += 10;
+                    switch (Srv_Rank) {
+                        case Srv_Rank.king:
+                            this.roundScore += c.getValue();
 
-       /* if(round.getFinisher.get(0)==round.getFinisher.get(1)){
-            this.roundScore+=200;
-            */
+                        case Srv_Rank.Ten:
+                            this.roundScore += c.getValue();
 
+                        case Srv_Rank.Five:
+                            this.roundScore += c.getValue();
+
+                        case Srv_Rank.Dragon:
+                            this.roundScore += c.getValue();
+
+                        case Srv_Rank.Phoenix:
+                            this.roundScore += c.getValue();
+                    }
+                    if (round.getFinisher.get(0) == round.getFinisher.get(1)) {
+                        this.roundScore += 200;
+
+
+                    }
+
+
+                }
 
             }
-
-
         }
-
-        }
-
 
 
 
