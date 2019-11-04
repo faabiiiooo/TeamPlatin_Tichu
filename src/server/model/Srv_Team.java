@@ -48,17 +48,25 @@ return seat;
 
         public void calcRoundScore () {
 
-        if(player.getWonCards()==)
+        for(Card c: player.getWonCards()) {
+
+
+            switch (Srv_Rank) {
+                case Srv_Rank.king:
+                    this.roundScore += 10;
+
+                case Srv_Rank.Ten:
+                    this.roundScore += 10;
 
        /* if(round.getFinisher.get(0)==round.getFinisher.get(1)){
             this.roundScore+=200;
             */
 
 
+            }
+
+
         }
-
-
-
 
         }
 
