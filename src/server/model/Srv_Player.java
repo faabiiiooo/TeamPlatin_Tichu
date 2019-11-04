@@ -34,7 +34,7 @@ public class Srv_Player {
         logger = serviceLocator.getLogger();
 
         PLAYER_ID = idgenerator++;
-        name = translator.getString("model.player") +PLAYER_ID;
+        name = translator.getString("model.player") + " "+ PLAYER_ID;
         handCards = new ArrayList<>();
         wonCards = new ArrayList<>();
 
