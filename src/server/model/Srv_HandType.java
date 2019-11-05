@@ -49,7 +49,7 @@ public enum Srv_HandType {
             if (includesSpecialCards(cards) == false) { //No special card included? -> regular process
                 for (int i = 0; i < cards.size() - 1 && !found; i++) {
                     for (int j = i + 1; j < cards.size() && !found; j++) {
-                        if (cards.get(i).getRank() == cards.get(j).getRank()) {
+                        if (cards.get(i).getRank() == cards.get(j).getRank()) { //2 cards with same rank = onePair
                             found = true;
                         }
                     }
@@ -57,7 +57,7 @@ public enum Srv_HandType {
             } else { // special card included?
                 if (cards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
                     callSpecialCard(cards);
-                    found = true;
+                    found = true; // 1 card and phoenix as joker = onePair
                 }
             }
         }
@@ -68,19 +68,67 @@ public enum Srv_HandType {
         return false;
     }
 
-    public static boolean isTripple(ArrayList<Srv_Card> tableCards) {
+    public static boolean isTripple(ArrayList<Srv_Card> cards) { //@author Sandro
+        boolean found = false;
+        Collections.sort(cards);
+        if (cards.size() == 3) { //only 3 cards allowed
+            if (includesSpecialCards(cards) == false) { //No special card included? -> regular process
+                if (cards.get(0).getRank() == cards.get(1).getRank() && cards.get(1).getRank() == cards.get(2).getRank()) {
+                    found = true; //3 cards with same rank = Tripple
+                }
+            } else { // special card included?
+                if (cards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
+                    if (cards.get(1).getRank() == cards.get(2).getRank()) { //Other 2 cards same rank?
+                        callSpecialCard(cards);
+                        found = true; //2 cards with same rank and Phoenix as joker = Tripple
+                    }
+                }
+            }
+        }
+        return found;
+    }
+
+    public static boolean isStreet(ArrayList<Srv_Card> cards) {
+        boolean found = false;
+        int counter = 1; // Counter of the correct cards
+        Collections.sort(cards); // Sort the cards from high to low ordinal
+        logger.info("CASE isStreet");
+        logger.info("Cards: "+cards);
+
+        if (cards.size() >= 5) { //only 5 cards or more allowed
+            logger.info("5 or more cards? "+cards.size());
+            if (includesSpecialCards(cards) == false) { //No special card included? -> regular process
+                logger.info("No specialCard");
+                for(int i = 0; i < cards.size()-1; i++) {
+                    if(cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+1) {
+                        counter++;
+                        logger.info("Counter: "+counter);
+                    }
+                    if (counter >= 5) { // -> 5 Ordinals or more in succesion = Street
+                        found = true;
+                    }
+                }
+            } else { // special card included?
+                if (cards.get(0).getRank() == Srv_Rank.Mahjong && cards.get(1).getRank() != Srv_Rank.Phoenix) { //Is it a mahjong?
+                    callSpecialCard(cards);
+                }
+                if (cards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix?
+                    callSpecialCard(cards);
+                }
+                if (cards.get(0).getRank() == Srv_Rank.Mahjong && cards.get(1).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix and a mahjong?
+                    callSpecialCard(cards);
+                }
+
+            }
+        }
+        return found;
+    }
+
+    public static boolean isFullHouse(ArrayList<Srv_Card> cards) {
         return false;
     }
 
-    public static boolean isStreet(ArrayList<Srv_Card> tableCards) {
-        return false;
-    }
-
-    public static boolean isFullHouse(ArrayList<Srv_Card> tableCards) {
-        return false;
-    }
-
-    public static boolean isBomb(ArrayList<Srv_Card> tableCards) {
+    public static boolean isBomb(ArrayList<Srv_Card> cards) {
         return false;
     }
 
@@ -136,6 +184,19 @@ public enum Srv_HandType {
                         isHigher = true;
                     } else {
                         if (tableCards.size() == 2) { //Two cards are on the table
+                            Collections.sort(tableCards);
+                            Collections.sort(playerCards);
+                            if (tableCards.get(1).getRank().ordinal() < playerCards.get(1).getRank().ordinal()) { //Which second card is higher? Maybe first Card is a Phoenix
+                                isHigher = true;
+                            }
+                        }
+                    }
+                    break;
+                case Tripple:
+                    if (tableCards.size() == 0) { //No card on the table -> Player has automatically the higher Tripple
+                        isHigher = true;
+                    } else {
+                        if (tableCards.size() == 3) { //Three cards are on the table
                             Collections.sort(tableCards);
                             Collections.sort(playerCards);
                             if (tableCards.get(1).getRank().ordinal() < playerCards.get(1).getRank().ordinal()) { //Which second card is higher? Maybe first Card is a Phoenix
