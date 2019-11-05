@@ -26,10 +26,15 @@ public class Clt_Client extends Thread{
 
 
     public Clt_Client(String serverIP){
+        this.serverIP = serverIP;
+        this.controller = Clt_Controller.getController();
         try{
-            socket=new Socket(serverIP,PORT);
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+            socket=new Socket(this.serverIP,PORT);
+
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
+
+
 
         } catch (IOException e) {
             logger.severe("Socket could not be created");
@@ -40,22 +45,27 @@ public class Clt_Client extends Thread{
     public void run(){
         try{
             while (true){
-                if(this.receive() != null ){
-                    Message msgIn = this.receive();
+                Message msgIn = this.receive();
+                if(msgIn != null ){
                     logger.info("Message received from Server. Message Type: "+msgIn.getType());
-                   controller.processIncomingMessage(msgIn);
+
+
+                        controller.processIncomingMessage(msgIn);
+
                     }
+                Thread.sleep(2);
                 }
 
 
 
         } catch (Exception e){
+            e.printStackTrace();
         }
 
 
     }
 
-        private  Message receive () throws Exception { // Recive Messages from Server /Pascal
+        public Message receive () throws Exception { // Recive Messages from Server /Pascal
 
             Message msgIn = (Message) in.readObject();
             return msgIn;

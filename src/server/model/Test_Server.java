@@ -1,24 +1,50 @@
 package server.model;
 
 import resources.Message;
+import server.controller.Srv_Controller;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+
+//@author Fabio
 public class Test_Server {
 
     public static void main(String[] args){
-        sendMessage();
+        //sendMessage(generateMessage());
+
+        Scanner scan  = new Scanner(System.in);
+        String answer = "";
+        server.start();
+        while(!answer.equals("stop")){
+            System.out.println("Broadcast senden?");
+            answer = scan.nextLine();
+            if(answer.equals("y")){
+                Message msgOut = generateMessage();
+                    testBroadcast(msgOut);
+
+            }
+        }
+
+
     }
 
     public static Socket s;
 
-    private static void sendMessage(){
-        String s1 = "Test1";
-        String s2 = "Test2";
+    public static Srv_Controller controller = Srv_Controller.getController();
+    public static Srv_Server server = new Srv_Server();
 
-        Message msgOut = new Message("card",s1,s2);
+    public static void testBroadcast(Message msgOut)  {
+            server.broadcast(msgOut);
+
+
+
+    }
+
+
+    private static void sendMessage(Message msgOut){
 
         try{
             s = new Socket("127.0.0.1", 10456);
@@ -33,6 +59,15 @@ public class Test_Server {
 
 
 
+    }
+
+    private static Message generateMessage(){
+        String s1 = "Test1";
+        String s2 = "Test2";
+
+        Message msgOut = new Message("card",s1,s2);
+
+        return msgOut;
     }
 
     private static void recieveMessage(){

@@ -5,6 +5,7 @@ import resources.Message;
 
 import java.util.Scanner;
 
+//@author Fabio
 public class Test_Client {
 
     private static Clt_Controller controller;
@@ -29,6 +30,11 @@ public class Test_Client {
                 Message msg = new Message("card", s1,s2,s3);
 
                 client.send(msg);
+            }
+            try {
+                Message msgIn = client.receive();
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
         }

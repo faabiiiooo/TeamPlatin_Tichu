@@ -8,7 +8,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
     private Srv_Model model;
     private static Srv_Controller controller;
 
-    public static Srv_Controller getController(){ //Fabio
+    //@author Fabio
+    public static Srv_Controller getController(){
         if(controller == null){
             controller = new Srv_Controller();
         }
@@ -19,11 +20,14 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
         this.model = model;
     }
 
+
+    //@author Fabio
     private Srv_Controller(){ //private constructor becaus Srv_Controller is a singleton
 
     }
 
-    public Message processIncomingMessage(Message msgIn){ // Generates Answermessage for every Incoming Message /Fabio
+    //@author Fabio
+    public Message processIncomingMessage(Message msgIn){ // Generates Answermessage for every Incoming Message
 
         Message msgOut = null;
 

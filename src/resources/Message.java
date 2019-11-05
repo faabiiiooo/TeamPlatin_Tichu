@@ -3,6 +3,7 @@ package resources;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+//@author Fabio
 public class Message implements Serializable {
 
     private static final long serialVersionUID= 1;
