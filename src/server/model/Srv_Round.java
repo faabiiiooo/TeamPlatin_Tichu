@@ -7,13 +7,12 @@ public class Srv_Round extends Srv_Game { //@author Thomas
     private ArrayList<Srv_Player> finisher;
 
     public Srv_Round(){
-        super();
         this.finisher = new ArrayList<Srv_Player>();
     }
 
 
 
-    private void checkBeginner(){
+    protected void checkBeginner(){
         //go through all players and their cards
         for(int i = 0; i < this.getTeams().size(); i++ ){
             for(int j = 0; j < this.getTeams().get(i).getMembers().size(); j++ ){

@@ -5,19 +5,19 @@ import java.util.Collections;
 
 public class Srv_Game { //@author Thomas
 
-    protected ArrayList<Srv_Team> teams;
+    protected ArrayList<Srv_Team> teams = new ArrayList<Srv_Team>();;
     protected final int G_MIN_SCORE = 1000;
     protected Srv_Team winner;
     private ArrayList<Srv_Round> rounds;
     private Srv_Table table;
 
     public Srv_Game(){
-        this.teams = new ArrayList<Srv_Team>();
+        this.teams = createTeams();
         this.rounds = new ArrayList<Srv_Round>();
         this.winner = null;
 
     }
-
+    //create two teams and add them to the a list
     public ArrayList<Srv_Team> createTeams(){
         for(int i = 0; i < 2; i++){
             Srv_Team t = new Srv_Team();
@@ -27,10 +27,25 @@ public class Srv_Game { //@author Thomas
 
         return teams;
     }
-    //create a new round, add it to the list and return it.
+    //create a new round
     public Srv_Round newRound(){
         Srv_Round round = new Srv_Round();
-        this.rounds.add(round);
+        round.getFinisher().clear(); // reset the list from finishing players
+        for(int i = 0; i < teams.size(); i++){//reset all the important lists from the players and variables to start a new round
+            teams.get(i).setRoundScore(0); //reset the roundScore from each team
+
+            for(int j = 0; j <teams.getMembers().size(); j++){ //reset all the important lists from the players and variables to start a new round
+                teams.get(i).getMembers.get(j).getWonCards().clear(); //delete all won cards from the player
+                teams.get(i).getMembers.get(j).setScore(0); // set the players score to 0
+                teams.get(i).getMembers.get(j).setIsActive(false); // set everybody to not active
+
+            }
+        }
+        this.rounds.add(round); // add the round to the list and return it
+
+        //create a new Deck, shuffle it, deal it and then check the beginner
+        Srv_Deck deck = createDeck(); deck.shuffle(); table.dealCards(); round.checkBeginner();
+
         return round;
     }
 
