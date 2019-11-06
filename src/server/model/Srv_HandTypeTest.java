@@ -80,6 +80,19 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
           //    { "8S", "2S", "3K", "3P", "PE" }, //case false
     };
 
+    private static String[][] bombCardsTable = {
+            //{ "4S", "4K", "4P", "4J" },
+            { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
+
+    };
+
+    private static String[][] bombCardsPlayer = {
+            //{ "5S", "5K", "5P", "5J" },
+            //{ "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
+            { "4S", "5S", "6S", "7S","8S", "9K", "5K", "8K", "6K", "7S"},
+
+    };
+
     // This is where we store the translated hands
     ArrayList<ArrayList<Srv_Card>> singleCardHandsTable;
     ArrayList<ArrayList<Srv_Card>> singleCardHandsPlayer;
@@ -94,6 +107,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     ArrayList<ArrayList<Srv_Card>> streetHandsPlayer;
     ArrayList<ArrayList<Srv_Card>> fullHouseHandsTable;
     ArrayList<ArrayList<Srv_Card>> fullHouseHandsPlayer;
+    ArrayList<ArrayList<Srv_Card>> bombHandsTable;
+    ArrayList<ArrayList<Srv_Card>> bombHandsPlayer;
 
     /**
      * The makeHands method is called before each test method,
@@ -115,6 +130,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         streetHandsPlayer = makeHands(streetCardsPlayer);
         fullHouseHandsTable = makeHands(fullHouseCardsTable);
         fullHouseHandsPlayer = makeHands(fullHouseCardsPlayer);
+        bombHandsTable = makeHands(bombCardsTable);
+        bombHandsPlayer = makeHands(bombCardsPlayer);
     }
 
     @Test // This is the test method for isHigher in HandType.
@@ -272,6 +289,13 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     public void testIsFullHouse() {
         for (ArrayList<Srv_Card> hand : fullHouseHandsPlayer) {
             assertTrue(Srv_HandType.isFullHouse(hand));
+        }
+    }
+
+    @Test // This is the test method for isStreet in HandType.
+    public void testIsBomb() {
+        for (ArrayList<Srv_Card> hand : bombHandsPlayer) {
+            assertTrue(Srv_HandType.isBomb(hand));
         }
     }
 

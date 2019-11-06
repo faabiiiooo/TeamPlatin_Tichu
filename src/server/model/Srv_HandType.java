@@ -310,7 +310,46 @@ public enum Srv_HandType {
     }
 
     public static boolean isBomb(ArrayList<Srv_Card> cards) {
-        return false;
+        boolean found = false;
+        int counterA = 1;
+        int counterB = 1;
+        Collections.sort(cards);
+        // case if the player has 4 cards of the same Rank
+        if(!includesSpecialCards(cards)){
+            for(int i = 0; i < cards.size();i++){
+                counterA = 1;
+                System.out.println(cards);
+                for(int j = cards.size()-1 ; j >= 0; j--){
+                    if(cards.get(i).getRank().ordinal() == cards.get(j).getRank().ordinal() && counterA != 4 ){
+                System.out.println(counterA);
+                        counterA ++;
+                    }
+                }
+            }
+            if(counterA == 4){
+                found = true;
+            }else{
+                //Case if the player has a minimum of 5 in a straight with the same suit
+                if(!includesSpecialCards(cards)){
+                    System.out.println("eingetretten");
+                    Collections.sort(cards);
+                    for (int k = 0; k < cards.size()-1; k++){
+                        System.out.println((cards.get(k).getSuit().toString() == cards.get(k+1).getSuit().toString()) );//wie suits vergleichen?
+                        if((cards.get(k).getRank().ordinal() -1 == cards.get(k+1).getRank().ordinal())
+                        && (cards.get(k).getSuit().toString() == cards.get(k+1).getSuit().toString()) && counterB != 5){
+                           counterB++;
+                           System.out.println(cards.get(k).getSuit());
+                        }
+                    }
+                }
+            }
+            if(counterB == 5){
+                found = true;
+            }
+
+        }
+
+        return found;
     }
 
     public static boolean includesSpecialCards(ArrayList<Srv_Card> cards) { //specialCard played? @author Sandro, Thomas
