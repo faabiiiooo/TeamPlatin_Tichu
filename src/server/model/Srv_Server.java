@@ -7,6 +7,7 @@ import resources.ServiceLocator;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
@@ -57,8 +58,10 @@ public class Srv_Server extends Thread {
 
     public void broadcast(Message msgOut){
         try {
+
             for (Srv_ClientThread c : clientThreads) {
                     c.send(msgOut);
+
                     logger.info("Sent message to ClientThread with ID: " + c.getID());
 
             }

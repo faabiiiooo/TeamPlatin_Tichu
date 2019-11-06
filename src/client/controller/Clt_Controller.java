@@ -26,7 +26,7 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
 
-    public synchronized void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
+    public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
         Message msgOut = null;
 

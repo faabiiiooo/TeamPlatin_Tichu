@@ -50,7 +50,7 @@ public class Srv_ClientThread extends Thread {
                 Message msgIn = this.receive();
                 if(msgIn != null ){ //when a message received redirect it to the Server Controller
                     logger.info("Message received from Client. Message Type: "+msgIn.getType());
-                    Message msgOut = controller.processIncomingMessage(msgIn);
+                    Message msgOut = controller.processIncomingMessage(msgIn); //generating answer to send back to Client
                     if(msgOut != null){
                         this.send(msgOut);
                         logger.info("Message sent back to Client");
@@ -79,7 +79,6 @@ public class Srv_ClientThread extends Thread {
 
         out.writeObject(msgOut);
         out.flush();
-        //out.reset();
 
     }
 
@@ -87,4 +86,9 @@ public class Srv_ClientThread extends Thread {
         return ID;
     }
 
+    public ObjectOutputStream getOut() {
+        return out;
+    }
 }
+
+

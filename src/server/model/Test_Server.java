@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Test_Server {
 
     public static void main(String[] args){
-        //sendMessage(generateMessage());
+
 
         Scanner scan  = new Scanner(System.in);
         String answer = "";
@@ -24,6 +24,7 @@ public class Test_Server {
             if(answer.equals("y")){
                 Message msgOut = generateMessage();
                     testBroadcast(msgOut);
+                    //sendMessage(msgOut);
 
             }
         }

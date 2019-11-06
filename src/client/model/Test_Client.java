@@ -31,11 +31,6 @@ public class Test_Client {
 
                 client.send(msg);
             }
-            try {
-                Message msgIn = client.receive();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
 
         }
 

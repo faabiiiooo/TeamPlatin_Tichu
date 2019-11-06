@@ -3,7 +3,6 @@ package client.model;
 import client.controller.Clt_Controller;
 import resources.Message;
 import resources.ServiceLocator;
-import server.model.Srv_ClientThread;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,6 +25,7 @@ public class Clt_Client extends Thread{
 
 
     public Clt_Client(String serverIP){
+        super("Client");
         this.serverIP = serverIP;
         this.controller = Clt_Controller.getController();
         try{
@@ -50,10 +50,9 @@ public class Clt_Client extends Thread{
                     logger.info("Message received from Server. Message Type: "+msgIn.getType());
 
 
-                        controller.processIncomingMessage(msgIn);
+                      controller.processIncomingMessage(msgIn);
 
                     }
-                Thread.sleep(2);
                 }
 
 
@@ -67,8 +66,9 @@ public class Clt_Client extends Thread{
 
         public Message receive () throws Exception { // Recive Messages from Server /Pascal
 
-            Message msgIn = (Message) in.readObject();
-            return msgIn;
+                Message msgIn = (Message) in.readObject();
+                return msgIn;
+
 
 
         }
@@ -77,10 +77,9 @@ public class Clt_Client extends Thread{
 
         try{
 
-            out.writeObject(msgOut);
-            out.flush();
-            logger.info("Message sent");
-
+                out.writeObject(msgOut);
+                out.flush();
+                logger.info("Message sent");
 
         } catch (IOException e) {
            logger.severe("Could not send a Message");
