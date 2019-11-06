@@ -4,14 +4,20 @@ import client.model.Clt_Model;
 import client.view.Clt_View;
 import javafx.stage.Stage;
 import resources.Message;
+import resources.ServiceLocator;
+
+import java.util.logging.Logger;
 
 //Controllerclass for Client Part of the Game
+
 
 public class Clt_Controller { //Controller is a Singleton
 
     private Stage primaryStage;
     private Clt_View view;
     private Clt_Model model;
+    private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+    private Logger logger = serviceLocator.getLogger();
     private static Clt_Controller controller;
 
     public static Clt_Controller getController(){
@@ -25,10 +31,8 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
-
+    //@author Fabio
     public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
-
-        Message msgOut = null;
 
         switch (msgIn.getType()) {
 
@@ -45,8 +49,13 @@ public class Clt_Controller { //Controller is a Singleton
 
                 break;
 
-        }
+            case "connection-lost": //stop game. A client got disconnected.
+                logger.warning("Client is going to stop becaus of connection loss");
 
+
+                break;
+
+        }
 
     }
 

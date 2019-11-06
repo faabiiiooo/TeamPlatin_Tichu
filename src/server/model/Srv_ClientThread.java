@@ -35,6 +35,7 @@ public class Srv_ClientThread extends Thread {
             this.server = server;
             this.in = new ObjectInputStream(in);
             this.out = new ObjectOutputStream(out);
+            this.setDaemon(true); //autmatically close Thread when program gets halted.
 
             logger.info("Created ClientThread for Client: " + ID);
         } catch (IOException e){
@@ -60,7 +61,8 @@ public class Srv_ClientThread extends Thread {
             }
 
         } catch (Exception e){
-            e.printStackTrace();
+            server.clientDisconnected(); //when thread gets closes, notify server thread to stop game.
+            //e.printStackTrace();
         }
 
 
