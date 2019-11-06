@@ -27,11 +27,12 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     };
 
     private static String[][] XPairCardsTable = {
-            { "5S", "5K", "6S", "6K" },
+            { "6S", "6K", "7S", "7K", "8K", "8S"  },
     };
 
     private static String[][] XPairCardsPlayer = {
-            { "8S", "9K", "9S", "8K", "7K", "7S"  },
+            //{ "8S", "9K", "9S", "8K", "PE", "7S"  }, //with phoenix
+            { "8S", "9K", "9S", "8K", "7K", "7S"  }, //no special card
     };
 
 
@@ -94,6 +95,25 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         for (ArrayList<Srv_Card> handTable : onePairHandsTable) {
             for (ArrayList<Srv_Card> handPlayer : onePairHandsPlayer) {
                 assertTrue(Srv_HandType.OnePair.isHigher(handTable, handPlayer, ht));
+            }
+        }
+    }
+
+    @Test // This is the test method for isHigher in HandType.
+    public void testisHigherXPair() {
+
+        ArrayList<Srv_Card> handTableZero = new ArrayList<Srv_Card>();
+        Srv_HandType ht = Srv_HandType.XPair;
+
+        //Case OnePair Table has 0 Cards
+        for (ArrayList<Srv_Card> handPlayer : XPairHandsPlayer) {
+            assertTrue(Srv_HandType.XPair.isHigher(handTableZero, handPlayer, ht));
+        }
+
+        //Case XPair cards on table
+        for (ArrayList<Srv_Card> handTable : XPairHandsTable) {
+            for (ArrayList<Srv_Card> handPlayer : XPairHandsPlayer) {
+                assertTrue(Srv_HandType.XPair.isHigher(handTable, handPlayer, ht));
             }
         }
     }
