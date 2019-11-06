@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ServiceConfigurationError;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public enum Srv_HandType {
     SingleCard, OnePair, XPair, Tripple, Street, FullHouse, Bomb;
@@ -64,8 +65,41 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isXPair(ArrayList<Srv_Card> tableCards) {
-        return false;
+    public static boolean isXPair(ArrayList<Srv_Card> cards) {
+        boolean pairsFound = true;
+        boolean found = false;
+        int correctCalculation = 0;
+        ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
+        ArrayList<Srv_Card> pairCards = new ArrayList<>();
+        ArrayList<Srv_Card> uniqueList = new ArrayList<>();
+
+        Collections.sort(clonedCards);
+        if(!includesSpecialCards(clonedCards)){
+            for(int i = 0; i < clonedCards.size() && pairsFound; i++){
+                  pairCards.add(clonedCards.get(i)); pairCards.add(clonedCards.get(i+1));
+
+                  if (isOnePair(pairCards)){
+                      uniqueList.add(pairCards.get(0));
+                      pairCards.clear();
+                      i++;
+                  }else{
+                      pairsFound = false;
+                  }
+            }
+            if(pairsFound) {
+                for (int c = 1; c < uniqueList.size(); c++){
+                    correctCalculation = uniqueList.get(c-1).getRank().ordinal() - uniqueList.get(c).getRank().ordinal();
+                    System.out.println(correctCalculation);
+                }
+                if(correctCalculation == 1)
+                    found = true;
+            }
+
+
+        }
+        return found;
+
+
     }
 
     public static boolean isTripple(ArrayList<Srv_Card> tableCards) {
@@ -144,6 +178,7 @@ public enum Srv_HandType {
                         }
                     }
                     break;
+                case XPair:
             }
             return isHigher;
     }

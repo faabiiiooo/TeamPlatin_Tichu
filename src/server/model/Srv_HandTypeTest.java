@@ -26,11 +26,23 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
             { "6S", "PE" },
     };
 
+    private static String[][] XPairCardsTable = {
+            { "5S", "5K", "6S", "6K" },
+    };
+
+    private static String[][] XPairCardsPlayer = {
+            { "8S", "9K", "9S", "8K", "7K", "7S"  },
+    };
+
+
     // This is where we store the translated hands
     ArrayList<ArrayList<Srv_Card>> singleCardHandsTable;
     ArrayList<ArrayList<Srv_Card>> singleCardHandsPlayer;
     ArrayList<ArrayList<Srv_Card>> onePairHandsTable;
     ArrayList<ArrayList<Srv_Card>> onePairHandsPlayer;
+    ArrayList<ArrayList<Srv_Card>> XPairHandsTable;
+    ArrayList<ArrayList<Srv_Card>> XPairHandsPlayer;
+
 
     /**
      * The makeHands method is called before each test method,
@@ -43,6 +55,9 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         singleCardHandsPlayer = makeHands(singleCardCardsPlayer);
         onePairHandsTable = makeHands(onePairCardsTable);
         onePairHandsPlayer = makeHands(onePairCardsPlayer);
+        XPairHandsTable = makeHands(XPairCardsTable);
+        XPairHandsPlayer = makeHands(XPairCardsPlayer);
+
     }
 
     @Test // This is the test method for isHigher in HandType.
@@ -96,6 +111,15 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
                 assertTrue(Srv_HandType.isOnePair(hand));
         }
     }
+
+    @Test // This is the test method for isOnePair in HandType.
+    public void testIsXPair() {
+        for (ArrayList<Srv_Card> hand : XPairHandsPlayer) {
+            assertTrue(Srv_HandType.isXPair(hand));
+        }
+    }
+
+
 
     /**
      * Make an ArrayList of hands from an array of string-arrays
