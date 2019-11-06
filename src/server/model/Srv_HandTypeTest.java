@@ -36,6 +36,50 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     };
 
 
+    private static String[][] trippleCardsTable = {
+            { "5S", "5K", "5P" },
+    };
+
+    private static String[][] trippleCardsPlayer = {
+          //  { "6S", "6K", "6P" }, // case true regular
+            { "6S", "PE", "6P" }, //case true phoenix
+            //{ "6S", "6K", "4P" }, //case false
+    };
+
+    private static String[][] streetCardsTable = {
+            { "4S", "5S", "6K", "7P", "8P" },
+            //{ "4S", "5S", "6K", "7P", "8P", "9P" },
+    };
+
+    private static String[][] streetCardsPlayer = {
+          //  { "5K", "6K", "7P", "8P", "9P" }, //case true 5 cards
+           // { "TK", "JK", "QP", "KP", "AP" }, //case true 5 cards
+          //  { "9K", "TK", "JK", "QP", "KP", "AP" }, //case true 6 cards
+          //  { "ME", "3K", "2P", "4P", "6P" }, //case true with mahjong
+          //  { "PE", "5K", "7P", "8P", "6P" }, //case true with phoenix
+          //  { "PE", "ME", "2P", "3P", "4P" }, //case true with mahjong + phoenix
+          //  { "PE", "ME", "5P", "3P", "4P" }, //case true with mahjong + phoenix
+          //  { "6P", "7P", "8P", "9P", "JP" }, //case false
+          //  { "ME", "3K", "2P", "4P", "6P" }, //case false with mahjong
+          //  { "PE", "9K", "TP", "KP", "AP" }, //case false with phoenix
+          //  { "PE", "ME", "5P", "6P", "4P" }, //case false with mahjong + phoenix
+          //    { "4P", "8K", "5P", "6P", "7P", "9K" }, //case false longer street than table
+    };
+
+    private static String[][] fullHouseCardsTable = {
+            { "2S", "2S", "2K", "3P", "3P" },
+    };
+
+    private static String[][] fullHouseCardsPlayer = {
+         //   { "2S", "2S", "3K", "3P", "3P" }, //case true
+         //   { "2S", "2S", "3K", "3P", "3P" }, //case true
+         //   { "2S", "3S", "3K", "3P", "PE" }, //case true Tripple + SingleCard + Phoenix
+         //   { "5S", "3S", "3K", "3P", "PE" }, //case true Tripple + SingleCard + Phoenix
+            { "2S", "2S", "3K", "3P", "PE" }, //case true TwoPair + Phoenix
+          //  { "2S", "2S", "3K", "3P", "4K" }, //case false
+          //    { "8S", "2S", "3K", "3P", "PE" }, //case false
+    };
+
     // This is where we store the translated hands
     ArrayList<ArrayList<Srv_Card>> singleCardHandsTable;
     ArrayList<ArrayList<Srv_Card>> singleCardHandsPlayer;
@@ -44,6 +88,12 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     ArrayList<ArrayList<Srv_Card>> XPairHandsTable;
     ArrayList<ArrayList<Srv_Card>> XPairHandsPlayer;
 
+    ArrayList<ArrayList<Srv_Card>> trippleHandsTable;
+    ArrayList<ArrayList<Srv_Card>> trippleHandsPlayer;
+    ArrayList<ArrayList<Srv_Card>> streetHandsTable;
+    ArrayList<ArrayList<Srv_Card>> streetHandsPlayer;
+    ArrayList<ArrayList<Srv_Card>> fullHouseHandsTable;
+    ArrayList<ArrayList<Srv_Card>> fullHouseHandsPlayer;
 
     /**
      * The makeHands method is called before each test method,
@@ -59,6 +109,12 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         XPairHandsTable = makeHands(XPairCardsTable);
         XPairHandsPlayer = makeHands(XPairCardsPlayer);
 
+        trippleHandsTable = makeHands(trippleCardsTable);
+        trippleHandsPlayer = makeHands(trippleCardsPlayer);
+        streetHandsTable = makeHands(streetCardsTable);
+        streetHandsPlayer = makeHands(streetCardsPlayer);
+        fullHouseHandsTable = makeHands(fullHouseCardsTable);
+        fullHouseHandsPlayer = makeHands(fullHouseCardsPlayer);
     }
 
     @Test // This is the test method for isHigher in HandType.
@@ -118,6 +174,63 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         }
     }
 
+    @Test // This is the test method for isHigher in HandType.
+    public void testisHigherTripple() {
+
+        ArrayList<Srv_Card> handTableZero = new ArrayList<Srv_Card>();
+        Srv_HandType ht = Srv_HandType.Tripple;
+
+        //Case Tripple Table has 0 Cards
+        for (ArrayList<Srv_Card> handPlayer : trippleHandsPlayer) {
+            assertTrue(Srv_HandType.Tripple.isHigher(handTableZero, handPlayer, ht));
+        }
+
+        //Case Tripple Table has 2 Cards
+        for (ArrayList<Srv_Card> handTable : trippleHandsTable) {
+            for (ArrayList<Srv_Card> handPlayer : trippleHandsPlayer) {
+                assertTrue(Srv_HandType.Tripple.isHigher(handTable, handPlayer, ht));
+            }
+        }
+    }
+
+    @Test // This is the test method for isHigher in HandType.
+    public void testisHigherStreet() {
+
+        ArrayList<Srv_Card> handTableZero = new ArrayList<Srv_Card>();
+        Srv_HandType ht = Srv_HandType.Street;
+
+        //Case Street Table has 0 Cards
+        for (ArrayList<Srv_Card> handPlayer : streetHandsPlayer) {
+            assertTrue(Srv_HandType.Street.isHigher(handTableZero, handPlayer, ht));
+        }
+
+        //Case Street Table has 5 Cards or more
+        for (ArrayList<Srv_Card> handTable : streetHandsTable) {
+            for (ArrayList<Srv_Card> handPlayer : streetHandsPlayer) {
+                assertTrue(Srv_HandType.Street.isHigher(handTable, handPlayer, ht));
+            }
+        }
+    }
+
+    @Test // This is the test method for isHigher in HandType.
+    public void testisHigherFullHouse() {
+
+        ArrayList<Srv_Card> handTableZero = new ArrayList<Srv_Card>();
+        Srv_HandType ht = Srv_HandType.FullHouse;
+
+        //Case FullHouse Table has 0 Cards
+        for (ArrayList<Srv_Card> handPlayer : fullHouseHandsPlayer) {
+            assertTrue(Srv_HandType.FullHouse.isHigher(handTableZero, handPlayer, ht));
+        }
+
+        //Case FullHouse Table has 5 Cards
+        for (ArrayList<Srv_Card> handTable : fullHouseHandsTable) {
+            for (ArrayList<Srv_Card> handPlayer : fullHouseHandsPlayer) {
+                assertTrue(Srv_HandType.FullHouse.isHigher(handTable, handPlayer, ht));
+            }
+        }
+    }
+
     @Test // This is the test method for isOnePair in HandType.
     public void testIsSingleCard() {
         for (ArrayList<Srv_Card> hand : singleCardHandsPlayer) {
@@ -140,6 +253,27 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     }
 
 
+
+    @Test // This is the test method for isTripple in HandType.
+    public void testIsTripple() {
+        for (ArrayList<Srv_Card> hand : trippleHandsPlayer) {
+            assertTrue(Srv_HandType.isTripple(hand));
+        }
+    }
+
+    @Test // This is the test method for isStreet in HandType.
+    public void testIsStreet() {
+        for (ArrayList<Srv_Card> hand : streetHandsPlayer) {
+            assertTrue(Srv_HandType.isStreet(hand));
+        }
+    }
+
+    @Test // This is the test method for isStreet in HandType.
+    public void testIsFullHouse() {
+        for (ArrayList<Srv_Card> hand : fullHouseHandsPlayer) {
+            assertTrue(Srv_HandType.isFullHouse(hand));
+        }
+    }
 
     /**
      * Make an ArrayList of hands from an array of string-arrays
