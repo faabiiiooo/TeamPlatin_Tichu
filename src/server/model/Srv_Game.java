@@ -64,6 +64,11 @@ public class Srv_Game { //@author Thomas
         return table;
     }
 
+    // reset the table Object
+    private void resetTable(){
+        this.table = null;
+    }
+
     //getters and setters
     public ArrayList<Srv_Team> getTeams() { return teams; }
 

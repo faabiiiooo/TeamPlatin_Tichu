@@ -11,10 +11,7 @@ public class Srv_Round extends Srv_Game { //@author Thomas
         this.finisher = new ArrayList<Srv_Player>();
     }
 
-    //set table to null
-    private void resetTable(){
-    this.setTable(null);
-    }
+
 
     private void checkBeginner(){
         //go through all players and their cards
