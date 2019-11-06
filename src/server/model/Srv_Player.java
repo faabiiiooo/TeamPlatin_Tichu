@@ -50,11 +50,13 @@ public class Srv_Player {
 
     }
 
-    public void calculateScore(){
+    public int calculateScore(){
 
         for(Card c : wonCards){
             score += c.getValue();
         }
+
+        return score;
 
     }
 
