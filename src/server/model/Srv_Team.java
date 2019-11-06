@@ -36,15 +36,16 @@ public  class Srv_Team implements Comparable<Srv_Team> {
 
 
     }
-
+        // Add seats to the teamSeats. Add the Player to the right seat and return it.
     private Srv_Seat bookSeat() {
-        while (this.teamSeat.size() < this.getMAX_TEAM_MEMBERS()) ;
-        this.teamSeat.add(this.seat);
-        this.members.add(seat.getPlayer());
-        return seat;
+        while (this.teamSeat.size() < this.getMAX_TEAM_MEMBERS()) {
+            this.teamSeat.add(this.seat);
+            this.members.add(seat.getPlayer());
 
+        }
+        return seat;;
     }
-        //The GameScore is calculated depending on the rounds played.
+        //The gameScore is calculated depending on the rounds played.
         public void calcGameScore () {
             for(int i=1;i<=this.game.getRounds().size();i++) {
             this.gameScore +=this.roundScore;
@@ -66,9 +67,9 @@ public  class Srv_Team implements Comparable<Srv_Team> {
         public void calcRoundScore () {
 
             //A team that is the first and second to loos all the cards gets 200 points.
-            Srv_Round lastRound = game.getRounds().get(game.getRounds().size()-1);//letzte runde zugewiesen
+            Srv_Round lastRound = game.getRounds().get(game.getRounds().size() - 1);//letzte runde zugewiesen
             ArrayList<Player> finisher = lastRound.getFinisher();//finisher aus der letzt gespielten runde
-            if(finisher.get(0).getTeamId() == finisher.get(1).getTeamId() && this.TEAM_ID == finisher.get(0).getTeamId()){
+            if (finisher.get(0).getTeamId() == finisher.get(1).getTeamId() && this.TEAM_ID == finisher.get(0).getTeamId()) {
                 roundScore = 200;
             }
 
@@ -77,15 +78,15 @@ public  class Srv_Team implements Comparable<Srv_Team> {
             the player has finished the round first. Then he gets + 100 points, otherwise -100 points.*/
 
             if (player.isSaidSmallTichu() == true) {
-                if (player.getPLAYER_ID() == finisher.getFinischer().get(0)&&this.TEAM_ID==finisher.getTeamId()) {
+                if (player.getPLAYER_ID() == finisher.getFinischer().get(0) && this.TEAM_ID == finisher.getTeamId()) {
                     this.roundScore += 100;
                 } else {
                     this.roundScore -= 100;
                 }
                 /*If a big Tichu has been called, it is checked whether
-            the player has finished the round first. Then he gets + 100 points, otherwise -2 00 points.*/
+            the player has finished the round first. Then he gets + 200 points, otherwise -200 points.*/
                 if (player.isSaidBigTichu() == true) {
-                    if (player.getPLAYER_ID() == finisher.getFinischer().get(0)&&this.TEAM_ID==finisher.getTeamId()) {
+                    if (player.getPLAYER_ID() == finisher.getFinischer().get(0) && this.TEAM_ID == finisher.getTeamId()) {
                         this.roundScore += 200;
                     } else {
                         this.roundScore -= 200;
@@ -93,14 +94,18 @@ public  class Srv_Team implements Comparable<Srv_Team> {
 
                     }
 
+                    //Check the score of each member from a team and add it to the roundScore
+                    for (Srv_Player p : this.members) {
+                        this.roundScore += p.getScore();
 
-
-
+                        //calculateScore() rückgabe wert int?
+                    }
 
 
                 }
 
-                    }
+            }
+        }
 
 
 
