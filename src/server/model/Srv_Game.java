@@ -30,7 +30,6 @@ public class Srv_Game { //@author Thomas
     //create a new round
     public Srv_Round newRound(){
         Srv_Round round = new Srv_Round();
-        round.getFinisher().clear(); // reset the list from finishing players
         for(int i = 0; i < teams.size(); i++){//reset all the important lists from the players and variables to start a new round
             teams.get(i).setRoundScore(0); //reset the roundScore from each team
 
