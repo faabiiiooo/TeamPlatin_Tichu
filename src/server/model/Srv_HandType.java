@@ -2,9 +2,7 @@ package server.model;
 
 import resources.ServiceLocator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.ServiceConfigurationError;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -313,38 +311,68 @@ public enum Srv_HandType {
         boolean found = false;
         int counterA = 1;
         int counterB = 1;
-        Collections.sort(cards);
+        int countCards= 0;
+        List<Srv_Card> pagodaCards = new ArrayList<>();
+        List<Srv_Card> jadeCards = new ArrayList<>();
+        List<Srv_Card> starsCards = new ArrayList<>();
+        List<Srv_Card> swordsCards = new ArrayList<>();
+        ArrayList<List<Srv_Card>> listOfSuitLists = new ArrayList<>();
+
+        ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
+        Collections.sort(clonedCards);
+
+        //first we need to remove the special cards from the deck of the players
+        for(int g = 0; g < clonedCards.size()-1; g++){
+            if(clonedCards.get(g).getSuit() == Srv_Suit.SpecialCards) {
+                clonedCards.remove(clonedCards.get(g));
+
+            }
+        }
         // case if the player has 4 cards of the same Rank
-        if(!includesSpecialCards(cards)){
-            for(int i = 0; i < cards.size();i++){
+        if(!includesSpecialCards(clonedCards)){
+            for(int i = 0; i < clonedCards.size();i++){
                 counterA = 1;
-                System.out.println(cards);
-                for(int j = cards.size()-1 ; j >= 0; j--){
-                    if(cards.get(i).getRank().ordinal() == cards.get(j).getRank().ordinal() && counterA != 4 ){
-                System.out.println(counterA);
+                for(int j = clonedCards.size()-1 ; j >= 0; j--){// check if four cards ae of the same ordinal --> if not reset the counter and check the next
+                    if(clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() && counterA != 4 ){
                         counterA ++;
                     }
                 }
             }
-            if(counterA == 4){
+            if(counterA == 4){ // if the counter reaches 4 there set found to true
+                System.out.println("4er gefunden");
                 found = true;
             }else{
                 //Case if the player has a minimum of 5 in a straight with the same suit
-                if(!includesSpecialCards(cards)){
-                    System.out.println("eingetretten");
-                    Collections.sort(cards);
-                    for (int k = 0; k < cards.size()-1; k++){
-                        System.out.println((cards.get(k).getSuit().toString() == cards.get(k+1).getSuit().toString()) );//wie suits vergleichen?
-                        if((cards.get(k).getRank().ordinal() -1 == cards.get(k+1).getRank().ordinal())
-                        && (cards.get(k).getSuit().toString() == cards.get(k+1).getSuit().toString()) && counterB != 5){
-                           counterB++;
-                           System.out.println(cards.get(k).getSuit());
+                if(!includesSpecialCards(clonedCards)){
+                    /*
+                    put all the different suits in different list, to make them easier to check.
+                    then put these lists in a 2D List to iterate trough every list in our loop
+                     */
+                    starsCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Stars).sorted().collect(Collectors.toList());
+                    pagodaCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Pagodas).sorted().collect(Collectors.toList());
+                    swordsCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Swords).sorted().collect(Collectors.toList());
+                    jadeCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Jade).sorted().collect(Collectors.toList());
+                    listOfSuitLists.add(starsCards); listOfSuitLists.add(pagodaCards); listOfSuitLists.add(swordsCards); listOfSuitLists.add(jadeCards);
+
+                    /*
+                    check every suit separately if the first number is only 1 higher than the next.
+                    if 5 cards are found set found to true.
+                     */
+                    for (int k = 0; k < listOfSuitLists.size()-1 && counterB!=5; k++){
+                        counterB = 1;
+                        countCards=0;
+
+                        for(int u = countCards; u < listOfSuitLists.get(k).size()-1; u++) {
+
+                            if ((listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 == listOfSuitLists.get(k).get(u+1).getRank().ordinal())) {
+                                counterB++;
+                            }
                         }
                     }
+                    if(counterB == 5){
+                        found = true;
+                    }
                 }
-            }
-            if(counterB == 5){
-                found = true;
             }
 
         }
