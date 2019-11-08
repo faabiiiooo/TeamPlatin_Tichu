@@ -307,7 +307,9 @@ public enum Srv_HandType {
         return foundFullHouse;
     }
 
-    public static boolean isBomb(ArrayList<Srv_Card> cards) {
+    public static boolean isBombOnHand(ArrayList<Srv_Card> cards) { //@author thomas
+        //method it is  written to check the whole deck from the players for bombs
+        //create all the variables we need for the checks
         boolean found = false;
         int counterA = 1;
         int counterB = 1;
@@ -321,7 +323,7 @@ public enum Srv_HandType {
         ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
         Collections.sort(clonedCards);
 
-        //first we need to remove the special cards from the deck of the players
+        //first we need to remove the special cards from the deck of the players (no special cards can be played with bomb)
         for(int g = 0; g < clonedCards.size()-1; g++){
             if(clonedCards.get(g).getSuit() == Srv_Suit.SpecialCards) {
                 clonedCards.remove(clonedCards.get(g));
@@ -329,7 +331,7 @@ public enum Srv_HandType {
             }
         }
         // case if the player has 4 cards of the same Rank
-        if(!includesSpecialCards(clonedCards)){
+        if(clonedCards.size() >= 4){
             for(int i = 0; i < clonedCards.size();i++){
                 counterA = 1;
                 for(int j = clonedCards.size()-1 ; j >= 0; j--){// check if four cards ae of the same ordinal --> if not reset the counter and check the next
@@ -339,11 +341,10 @@ public enum Srv_HandType {
                 }
             }
             if(counterA == 4){ // if the counter reaches 4 there set found to true
-                System.out.println("4er gefunden");
                 found = true;
             }else{
                 //Case if the player has a minimum of 5 in a straight with the same suit
-                if(!includesSpecialCards(clonedCards)){
+                if(clonedCards.size() >=5){
                     /*
                     put all the different suits in different list, to make them easier to check.
                     then put these lists in a 2D List to iterate trough every list in our loop
@@ -355,7 +356,7 @@ public enum Srv_HandType {
                     listOfSuitLists.add(starsCards); listOfSuitLists.add(pagodaCards); listOfSuitLists.add(swordsCards); listOfSuitLists.add(jadeCards);
 
                     /*
-                    check every suit separately if the first number is only 1 higher than the next.
+                    check every suit separately, if the first checked number is only 1 higher than the next.
                     if 5 cards are found set found to true.
                      */
                     for (int k = 0; k < listOfSuitLists.size()-1 && counterB!=5; k++){
@@ -379,6 +380,47 @@ public enum Srv_HandType {
 
         return found;
     }
+
+    public static boolean isBomb(ArrayList<Srv_Card> cards){//@author thomas
+        //method to check out the played bomb cards
+        boolean found = false;
+        int counterA = 1;
+
+        ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
+        Collections.sort(clonedCards);
+
+        // case if the player has 4 cards of the same Rank
+        if(clonedCards.size() == 4 && !includesSpecialCards(clonedCards)) {
+            System.out.println(clonedCards);
+            for (int i = 0; i < clonedCards.size() - 1; i++) {
+                // check if four cards ae of the same ordinal --> if not reset the counter and check the next
+                if (clonedCards.get(i + 1).getRank().ordinal() == clonedCards.get(i).getRank().ordinal()) {
+                    System.out.println(clonedCards.get(i + 1).getRank().ordinal() == clonedCards.get(i).getRank().ordinal());
+                    counterA++;
+                }
+            }
+            if (counterA == 4) { // if the counter reaches 4 there set found to true
+                found = true;
+
+            }
+        }else{
+                System.out.println("else");
+                //Case if the player has a minimum of 5 in a straight with the same suit
+                if(clonedCards.size() >=5 && !includesSpecialCards(clonedCards)){
+                    for (int k = 0; k < clonedCards.size()-1; k++){
+                            if ((clonedCards.get(k).getRank().ordinal() - 1 == clonedCards.get(k+1).getRank().ordinal()) &&
+                                    (clonedCards.get(k).getSuit() == clonedCards.get(k+1).getSuit())) {
+                                found = true;
+                                System.out.println(found);
+                            }else{
+                                found = false;
+                            }
+                    }
+                }
+            }
+        return found;
+        }
+
 
     public static boolean includesSpecialCards(ArrayList<Srv_Card> cards) { //specialCard played? @author Sandro, Thomas
         boolean found = false;
@@ -416,6 +458,10 @@ public enum Srv_HandType {
 
         public static boolean isHigher (ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards, Srv_HandType handType) { //@author Sandro, Thomas
             boolean isHigher = false;
+            boolean bombFourPlayer = false;
+            boolean bombStreetPlayer = false;
+            boolean bombFourTable = false;
+            boolean bombStreetTable = false;
 
             switch (handType) {
                 case SingleCard:
@@ -502,6 +548,22 @@ public enum Srv_HandType {
                         }
                     }
                     break;
+                case Bomb:
+                    Collections.sort(tableCards); Collections.sort(playerCards);
+                    if(!includesSpecialCards(playerCards)) {
+
+
+                        //if the playercards are the first cards played/no special cards are included/ size of playercards is 4 set isHigher to true
+                        // is also true when the "street" from the player is higher than that on the table
+                        if (tableCards.size() < playerCards.size() ) {
+                            isHigher = true;
+                        } else {
+                            // if both players played the same amount of cards check if the highest card from the player is higher than the one played last
+                            if (tableCards.size() == playerCards.size() && tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal()){
+                                isHigher = true;
+                            }
+                        }
+                    }
             }
             return isHigher;
     }

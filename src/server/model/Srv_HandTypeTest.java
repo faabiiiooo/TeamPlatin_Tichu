@@ -81,16 +81,30 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     };
 
     private static String[][] bombCardsTable = {
-            //{ "4S", "4K", "4P", "4J" },
-            { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
+           { "4S", "4K", "4P", "4J"},
+           // { "8S", "9S", "7S", "6S", "5S", }
 
     };
 
     private static String[][] bombCardsPlayer = {
-            { "5S", "5K", "5P", "5J" },
+            { "5S", "5K", "5P", "5J"},
+            //{ "8S", "9S", "7S", "6S", "5S","4S" }
+
+
+    };
+
+    private static String[][] bombCardsTableFullHand = {
+            { "4S", "4K", "4P", "4J"},
             { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
-            { "5K", "4K", "6K", "7K","8J", "9J", "5S", "8S", "6S", "8K", "PE"},
+
+    };
+
+    private static String[][] bombCardsPlayerFullHand = {
+            { "5S", "5K", "5P", "5J"},
+            //{ "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
+            //{ "5K", "4K", "6K", "7K","8J", "9J", "5S", "8S", "6S", "8K", "PE"},
             { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K","PE"}, //4er + straight + special card
+
 
     };
 
@@ -110,6 +124,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     ArrayList<ArrayList<Srv_Card>> fullHouseHandsPlayer;
     ArrayList<ArrayList<Srv_Card>> bombHandsTable;
     ArrayList<ArrayList<Srv_Card>> bombHandsPlayer;
+    ArrayList<ArrayList<Srv_Card>> bombHandsTableFullHand;
+    ArrayList<ArrayList<Srv_Card>> bombHandsPlayerFullHand;
 
     /**
      * The makeHands method is called before each test method,
@@ -133,6 +149,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         fullHouseHandsPlayer = makeHands(fullHouseCardsPlayer);
         bombHandsTable = makeHands(bombCardsTable);
         bombHandsPlayer = makeHands(bombCardsPlayer);
+        bombHandsTableFullHand = makeHands(bombCardsTableFullHand);
+        bombHandsPlayerFullHand = makeHands(bombCardsPlayerFullHand);
     }
 
     @Test // This is the test method for isHigher in HandType.
@@ -249,6 +267,25 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         }
     }
 
+    @Test // This is the test method for isHigher in HandType.
+    public void testisHigherBomb() {
+
+        ArrayList<Srv_Card> handTableZero = new ArrayList<Srv_Card>();
+        Srv_HandType ht = Srv_HandType.Bomb;
+
+        //Case Bomb Table has 0 Cards
+        for (ArrayList<Srv_Card> handPlayer : bombHandsPlayer) {
+            assertTrue(Srv_HandType.Bomb.isHigher(handTableZero, handPlayer, ht));
+        }
+
+        //Case Bomb Table has Bomb also
+        for (ArrayList<Srv_Card> handTable : bombHandsTable) {
+            for (ArrayList<Srv_Card> handPlayer : bombHandsPlayer) {
+                assertTrue(Srv_HandType.Bomb.isHigher(handTable, handPlayer, ht));
+            }
+        }
+    }
+
     @Test // This is the test method for isOnePair in HandType.
     public void testIsSingleCard() {
         for (ArrayList<Srv_Card> hand : singleCardHandsPlayer) {
@@ -297,6 +334,13 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     public void testIsBomb() {
         for (ArrayList<Srv_Card> hand : bombHandsPlayer) {
             assertTrue(Srv_HandType.isBomb(hand));
+        }
+    }
+
+    @Test // This is the test method for isStreet in HandType.
+    public void testIsBombOnHand() {
+        for (ArrayList<Srv_Card> hand : bombHandsPlayerFullHand) {
+            assertTrue(Srv_HandType.isBombOnHand(hand));
         }
     }
 
