@@ -86,7 +86,6 @@ public enum Srv_HandType {
                   }
             }
             if(pairsFound) { //if all the sent cards are pairs, we need to check if the pairs are successively
-                System.out.println("pairsFound");
                 for (int c = 1; c < uniqueList.size(); c++){
                     /*we iterate through our unique list and subtract always
                     the first coming card value from the next coming card value in the list.
@@ -391,11 +390,9 @@ public enum Srv_HandType {
 
         // case if the player has 4 cards of the same Rank
         if(clonedCards.size() == 4 && !includesSpecialCards(clonedCards)) {
-            System.out.println(clonedCards);
             for (int i = 0; i < clonedCards.size() - 1; i++) {
                 // check if four cards ae of the same ordinal --> if not reset the counter and check the next
                 if (clonedCards.get(i + 1).getRank().ordinal() == clonedCards.get(i).getRank().ordinal()) {
-                    System.out.println(clonedCards.get(i + 1).getRank().ordinal() == clonedCards.get(i).getRank().ordinal());
                     counterA++;
                 }
             }
@@ -404,14 +401,12 @@ public enum Srv_HandType {
 
             }
         }else{
-                System.out.println("else");
                 //Case if the player has a minimum of 5 in a straight with the same suit
                 if(clonedCards.size() >=5 && !includesSpecialCards(clonedCards)){
                     for (int k = 0; k < clonedCards.size()-1; k++){
                             if ((clonedCards.get(k).getRank().ordinal() - 1 == clonedCards.get(k+1).getRank().ordinal()) &&
                                     (clonedCards.get(k).getSuit() == clonedCards.get(k+1).getSuit())) {
                                 found = true;
-                                System.out.println(found);
                             }else{
                                 found = false;
                             }
