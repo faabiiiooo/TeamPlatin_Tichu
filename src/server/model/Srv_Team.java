@@ -36,7 +36,7 @@ public  class Srv_Team implements Comparable<Srv_Team> {
 
 
     }
-        // Add seats to the teamSeats. Add the Player to the right seat and return it.
+        // Add seats to the teamSeats. Add the Player to the right seat and return it
     private Srv_Seat bookSeat() {
         while (this.teamSeat.size() < this.getMAX_TEAM_MEMBERS()) {
             this.teamSeat.add(this.seat);
