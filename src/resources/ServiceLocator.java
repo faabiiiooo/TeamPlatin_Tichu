@@ -1,10 +1,13 @@
 package resources;
 
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 import client.Tichu_Clt;
+import client.model.Clt_Client;
+import server.model.Srv_Server;
 
 /**
  * Copyright 2015, FHNW, Prof. Dr. Brad Richards. All rights reserved. This code
@@ -31,15 +34,30 @@ public class ServiceLocator {
     private Logger logger;
     //private Configuration configuration;
     private Translator translator;
+    private Clt_Client client;
+    private Srv_Server server;
 
     /**
      * Factory method for returning the singleton
      */
     public static ServiceLocator getServiceLocator() {
-        if (serviceLocator == null)
+        if (serviceLocator == null) {
             serviceLocator = new ServiceLocator();
+            serviceLocator.setLogger(configureLogging());
+        }
         return serviceLocator;
     }
+
+    private static Logger configureLogging(){
+
+        Logger rootLogger = Logger.getLogger("");
+        Logger ourLogger = Logger.getLogger(serviceLocator.getAPP_NAME());
+        ourLogger.setLevel(Level.INFO);
+
+        return ourLogger;
+
+    }
+
 
     /**
      * Private constructor, because this class is a singleton
@@ -72,6 +90,22 @@ public class ServiceLocator {
     /*public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }*/
+
+    public Clt_Client getClient() {
+        return client;
+    }
+
+    public void setClient(Clt_Client client) {
+        this.client = client;
+    }
+
+    public Srv_Server getServer() {
+        return server;
+    }
+
+    public void setServer(Srv_Server server) {
+        this.server = server;
+    }
 
     public Locale[] getLocales() {
         return locales;
