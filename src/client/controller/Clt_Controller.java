@@ -50,7 +50,7 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "connection-lost": //stop game. A client got disconnected.
-                logger.warning("Client is going to stop becaus of connection loss");
+                logger.warning("Client is going to stop because of connection loss");
 
 
                 break;
