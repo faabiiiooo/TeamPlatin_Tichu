@@ -96,9 +96,8 @@ public  class Srv_Team implements Comparable<Srv_Team> {
 
                     //Check the score of each member from a team and add it to the roundScore
                     for (Srv_Player p : this.members) {
-                        this.roundScore += p.getScore();
+                        this.roundScore += p.calculateScore();
 
-                        //calculateScore() rückgabe wert int?
                     }
 
 
