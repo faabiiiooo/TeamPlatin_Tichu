@@ -33,17 +33,17 @@ public class Srv_Game { //@author Thomas
         for(int i = 0; i < teams.size(); i++){//reset all the important lists from the players and variables to start a new round
             teams.get(i).setRoundScore(0); //reset the roundScore from each team
 
-            for(int j = 0; j <teams.getMembers().size(); j++){ //reset all the important lists from the players and variables to start a new round
-                teams.get(i).getMembers.get(j).getWonCards().clear(); //delete all won cards from the player
-                teams.get(i).getMembers.get(j).setScore(0); // set the players score to 0
-                teams.get(i).getMembers.get(j).setIsActive(false); // set everybody to not active
+            for(int j = 0; j < teams.get(0).getMembers().size(); j++){ //reset all the important lists from the players and variables to start a new round
+                teams.get(i).getMembers().get(j).getWonCards().clear(); //delete all won cards from the player
+                teams.get(i).getMembers().get(j).setScore(0); // set the players score to 0
+                teams.get(i).getMembers().get(j).setActive(false); // set everybody to not active
 
             }
         }
         this.rounds.add(round); // add the round to the list and return it
 
         //create a new Deck, shuffle it, deal it and then check the beginner
-        Srv_Deck deck = createDeck(); deck.shuffle(); table.dealCards(); round.checkBeginner();
+        Srv_Deck deck = table.createDeck(); deck.shuffle(); table.dealCards(); round.checkBeginner();
 
         return round;
     }
@@ -90,4 +90,7 @@ public class Srv_Game { //@author Thomas
 
     public void setTable(Srv_Table t){ this.table = t; }
 
+    public ArrayList<Srv_Round> getRounds() {
+        return rounds;
+    }
 }
