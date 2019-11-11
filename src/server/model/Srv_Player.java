@@ -16,8 +16,8 @@ public class Srv_Player {
     private Translator translator;
     private Logger logger;
 
-    private final ArrayList<Card> handCards;
-    private final ArrayList<Card> wonCards;
+    private final ArrayList<Srv_Card> handCards;
+    private final ArrayList<Srv_Card> wonCards;
 
     private boolean isActive;
     private int teamID;
@@ -35,7 +35,7 @@ public class Srv_Player {
         logger = serviceLocator.getLogger();
 
         PLAYER_ID = idgenerator++;
-        name = translator.getString("model.player") + " "+ PLAYER_ID;
+        name = translator.getString("model.player") + " " + PLAYER_ID;
         handCards = new ArrayList<>();
         wonCards = new ArrayList<>();
 
@@ -52,7 +52,7 @@ public class Srv_Player {
 
     public int calculateScore(){
 
-        for(Card c : wonCards){
+        for(Srv_Card c : wonCards){
             score += c.getValue();
         }
 
@@ -60,11 +60,17 @@ public class Srv_Player {
 
     }
 
-    public ArrayList<Card> getHandCards() {
+    @Override  //Two players are equal if they have the same id
+    public boolean equals(Srv_Player otherPlayer) {
+
+        return this.PLAYER_ID == otherPlayer.getPLAYER_ID();
+    }
+
+    public ArrayList<Srv_Card> getHandCards() {
         return handCards;
     }
 
-    public ArrayList<Card> getWonCards() {
+    public ArrayList<Srv_Card> getWonCards() {
         return wonCards;
     }
 
