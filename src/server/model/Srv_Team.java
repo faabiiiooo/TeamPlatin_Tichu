@@ -8,7 +8,7 @@ public  class Srv_Team implements Comparable<Srv_Team> {
     private final int MAX_TEAM_MEMBERS =2;
     private final String EVEN_ODD;
     private ArrayList<Srv_Player>members;
-    private ArrayList<Srv_Seat>teamSeat;
+    private ArrayList<Srv_Seat>teamSeats;
     private Srv_Game game;
     private int gameScore;
     private int roundScore;
@@ -21,7 +21,7 @@ public  class Srv_Team implements Comparable<Srv_Team> {
     public Srv_Team(int TEAM_ID, Srv_Game game, String evenOdd){
         this.TEAM_ID=TEAM_ID;
         this.members=new ArrayList<Srv_Player>();
-        this.teamSeat=new ArrayList<Srv_Seat>();
+        this.teamSeats=new ArrayList<Srv_Seat>();
         this.gameScore= 0;
         this.roundScore= 0;
         this.game=game;
@@ -32,18 +32,18 @@ public  class Srv_Team implements Comparable<Srv_Team> {
 
 
 
-        // Add seats to the teamSeats. Add the Player to the right seat and return it
+        // If the SEAT_ID odd(1 & 3) add it to teamSeats. If even (2 & 4) add it to the teamSeats
     private void bookSeat() {
-        while (this.teamSeat.size() < this.getMAX_TEAM_MEMBERS()) {
+        while (this.teamSeats.size() < this.getMAX_TEAM_MEMBERS()) {
 
             ArrayList<Srv_Seat> seats = game.getTable().getSeats();
             for(Srv_Seat s : seats){
                 if(s.getSEAT_ID() % 2 > 0 && EVEN_ODD.equals("odd")){
-                    teamSeat.add(s);
+                    teamSeats.add(s);
                     members.add(s.getPlayer());
                 } else {
                     if(s.getSEAT_ID() % 2 == 0 && EVEN_ODD.equals("even")){
-                        teamSeat.add(s);
+                        teamSeats.add(s);
                         members.add(s.getPlayer());
                     }
                 }
@@ -65,15 +65,18 @@ public  class Srv_Team implements Comparable<Srv_Team> {
 
    public int calcRoundScore () {
 
-       //A team that is the first and second to loos all the cards gets 200 points.
-       Srv_Round lastRound = game.getRounds().get(game.getRounds().size() - 1);//letzte runde zugewiesen
-       ArrayList<Srv_Player> finisher = lastRound.getFinisher();//finisher aus der letzt gespielten runde
+       //Check the last round and add it to lastRound.
+       Srv_Round lastRound = game.getRounds().get(game.getRounds().size() - 1);
+       ArrayList<Srv_Player> finisher = lastRound.getFinisher();
 
+        //If the finisher is at places 1 and 2 from the same team, then set the roundScore to 200 and return to
        if (finisher.get(0).getTeamId() == finisher.get(1).getTeamId() && this.TEAM_ID == finisher.get(0).getTeamId()) {
             roundScore = 200;
             return roundScore;
        }
-
+        /*Check if a player on the team called out a small tichu.
+         If the player finishes the round first increase the roundScore by 100.
+          Otherwise decrease it by 100.*/
       for(int i = 0; i < members.size(); i++) {
           Srv_Player p = members.get(i);
           if (p.isSaidSmallTichu()) {
@@ -82,6 +85,9 @@ public  class Srv_Team implements Comparable<Srv_Team> {
               } else {
                   this.roundScore -= 100;
               }
+
+              /*Check if a player on the team called out a big tichu.
+               If the player finishes the round first increase the roundScore by 200. Otherwise decrease it by 200.*/
           } else {
               if (p.isSaidBigTichu()) {
                   if (p.equals(finisher.get(0))) {
@@ -92,7 +98,7 @@ public  class Srv_Team implements Comparable<Srv_Team> {
               }
           }
       }
-
+      // Check all Scores from the Team and add it to the roundScore
       for(Srv_Player p : this.members){
           this.roundScore += p.calculateScore();
       }
