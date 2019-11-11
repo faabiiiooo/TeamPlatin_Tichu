@@ -60,7 +60,7 @@ public class Srv_Player {
 
     }
 
-    @Override  //Two players are equal if they have the same id
+    //Two players are equal if they have the same id
     public boolean equals(Srv_Player otherPlayer) {
 
         return this.PLAYER_ID == otherPlayer.getPLAYER_ID();
