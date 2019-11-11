@@ -70,7 +70,7 @@ public  class Srv_Team implements Comparable<Srv_Team> {
        ArrayList<Srv_Player> finisher = lastRound.getFinisher();
 
         //If the finisher is at places 1 and 2 from the same team, then set the roundScore to 200 and return to
-       if (finisher.get(0).getTeamId() == finisher.get(1).getTeamId() && this.TEAM_ID == finisher.get(0).getTeamId()) {
+       if (finisher.get(0).getTeamID() == finisher.get(1).getTeamID() && this.TEAM_ID == finisher.get(0).getTeamID()) {
             roundScore = 200;
             return roundScore;
        }

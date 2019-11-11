@@ -7,7 +7,6 @@ public class Srv_Seat {
 
     public Srv_Seat(int SEAT_ID) {
         this.SEAT_ID = SEAT_ID;
-        this.player = player;
 
     }
 
