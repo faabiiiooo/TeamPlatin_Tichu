@@ -16,15 +16,33 @@ public enum Srv_HandType {
     public static boolean evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
         Srv_HandType handType = null;
 
-        if (isSingleCard(playerCards) && isSingleCard(tableCards) || tableCards.size()== 0 && isSingleCard(playerCards)) handType = SingleCard;
-        if (isOnePair(playerCards) && isOnePair(tableCards) || tableCards.size() == 0 && isOnePair(playerCards)) handType = OnePair;
-        if (isXPair(playerCards)) handType = XPair;
-        if (isTripple(playerCards)) handType = Tripple;
-        if (isStreet(playerCards)) handType = Street;
-        if (isFullHouse(playerCards)) handType = FullHouse;
-        if (isBomb(playerCards)) handType = Bomb;
+        boolean canPlay = false;
+        // evaluate handtype from player and last played cards
+        if (isSingleCard(playerCards) && isSingleCard(tableCards) || tableCards.size() == 0 && isSingleCard(playerCards)){
+            handType = SingleCard;
+        if (isOnePair(playerCards) && isOnePair(tableCards) || tableCards.size() == 0 && isOnePair(playerCards))
+            handType = OnePair;
+        if (isXPair(playerCards) && isXPair(tableCards) || tableCards.size() == 0 && isXPair(playerCards))
+            handType = XPair;
+        if (isTripple(playerCards) && isTripple(tableCards) || tableCards.size() == 0 && isTripple(playerCards))
+            handType = Tripple;
+        if (isStreet(playerCards) && isStreet(tableCards) || tableCards.size() == 0 && isStreet(playerCards))
+            handType = Street;
+        if (isFullHouse(playerCards) && isFullHouse(tableCards) || tableCards.size() == 0 && isFullHouse(playerCards))
+            handType = FullHouse;
+        if (isBomb(playerCards) && isBomb(tableCards) || isBomb(playerCards) && tableCards.size() == 0)
+            handType = Bomb;
+        // if same handtype evualte which is higher
+        canPlay = isHigher(tableCards, playerCards, handType);
+    }
+        //special case --> special card dog cannot be bombed
+        if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.get(0).getRank() != Srv_Rank.Dog  ){
+            canPlay = true;
 
-        return isHigher(tableCards,playerCards, handType);
+            }
+
+
+        return canPlay;
     }
 
     public static boolean isSingleCard(ArrayList<Srv_Card> cards) { //@author Sandro, Thomas
@@ -275,7 +293,7 @@ public enum Srv_HandType {
                     foundOnePair = true;
                     logger.info("foundOnePair");
                 }
-            } else { // special card included?
+            } else { // special card included
                 if (clonedCards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
                     logger.info("Check isFullHouse with Phoenix");
                     clonedCards.remove(0); //delete phoenix from clonedCards

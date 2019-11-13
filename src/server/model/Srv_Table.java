@@ -26,7 +26,7 @@ public class Srv_Table {
         return deck;
 
     }
-
+    //@author thomas
     protected void dealCards() {
         //deal 1 card to each player until everyone got 8 cards
         do {
@@ -38,6 +38,7 @@ public class Srv_Table {
     }
 
     //when every player decided, or the countdown has ended, deal the rest od the cards.
+    //@author thomas
     protected void dealRestOfCards(){
         do {
             for (int i = 0; i < playersAtTable.size(); i++) {
