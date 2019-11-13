@@ -36,7 +36,6 @@ public class Srv_Table {
             }
         } while (deck.getRemainingCards() != 24);
 
-        return null;
     }
 
     //when every player decided, or the countdown has ended, deal the rest od the cards.
@@ -217,7 +216,6 @@ public class Srv_Table {
 
     }
 
-    }
 
     private void dogPlayed(){ //@author Sandro
         skipToTeamMember();
