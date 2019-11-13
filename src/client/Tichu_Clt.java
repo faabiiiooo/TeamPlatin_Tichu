@@ -11,7 +11,7 @@ public class Tichu_Clt extends Application {
     private static Tichu_Clt clt; //singleton
 
     public static void main(String[] args){
-
+        launch(args);
     }
 
     @Override
