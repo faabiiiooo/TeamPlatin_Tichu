@@ -213,6 +213,10 @@ public class Srv_Table {
 
     }
 
+    public ArrayList<Srv_Seat> getSeats() {
+        return seats;
+    }
+
     //getter setter
     public Srv_Card getMahJongWishCard(){ return this.mahJongWishCard; }
 
