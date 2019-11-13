@@ -125,13 +125,13 @@ public class Srv_Table {
 
     }
     //@author thomas
-    private void mahJongPlayed(){
+    protected void mahJongPlayed(){
    //controller sollte hier Popup anzeigen damit der SPieler den Wunsch angeben kann. Danach sollte die Karte hinterlegt werden.
 
     }
 
 
-    private void dogPlayed(){ //SkiptoTeamMember @author Sandro
+    protected void dogPlayed(){ //SkiptoTeamMember @author Sandro
         for(int i = 0; i < seats.size(); i++) { //looking for IsActive player
             if (seats.get(i).getPlayer().isActive() == true) { //found isActive player
                 switch (seats.get(i).getSEAT_ID()) { //Check seat of isActivePlayer
@@ -196,11 +196,11 @@ public class Srv_Table {
         }
     }
 
-    private void dragonPlayed(){
+    protected void dragonPlayed(){
 
     }
     //@author Pascal
-    private void phoenixPlayed(){
+    protected void phoenixPlayed(){
             for(int i=0;i<this.lastPlayedCards.size();i++){
                 if(lastPlayedCards.get(i).equals(Srv_Rank.Phoenix)){
                     //not finish

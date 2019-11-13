@@ -11,6 +11,7 @@ public enum Srv_HandType {
 
     private static ServiceLocator sl = ServiceLocator.getServiceLocator();
     private static Logger logger = sl.getLogger();
+    private static Srv_Table table = sl.getTable();
 
     public static boolean evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
         Srv_HandType handType = null;
@@ -430,19 +431,19 @@ public enum Srv_HandType {
         for (int i =0; i < cards.size(); i++) {
             switch (cards.get(i).getRank()) { //Check each card
                 case Phoenix:
-                    //Srv_Table.phoenixPlayed();
+                    table.phoenixPlayed();
                     logger.info("PhoenixPlayed");
                     break;
                 case Dragon:
-                    //Srv_Table.dragonPlayed();
+                    table.dragonPlayed();
                     logger.info("DragonPlayed");
                     break;
                 case Dog:
-                    //Srv_Table.dogPlayed();
+                    table.dogPlayed();
                     logger.info("DogPlayed");
                     break;
                 case Mahjong:
-                    //Srv_Table.mahjongPlayed();
+                    table.mahJongPlayed();
                     logger.info("MahjongPlayed");
                     break;
             }

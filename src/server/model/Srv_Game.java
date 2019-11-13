@@ -1,5 +1,7 @@
 package server.model;
 
+import resources.ServiceLocator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -10,6 +12,8 @@ public class Srv_Game { //@author Thomas
     protected Srv_Team winner;
     private ArrayList<Srv_Round> rounds;
     private Srv_Table table;
+
+    private final ServiceLocator sl = ServiceLocator.getServiceLocator();
 
     public Srv_Game(){
         this.teams = createTeams();
@@ -81,7 +85,8 @@ public class Srv_Game { //@author Thomas
 
     //create a new table
     protected Srv_Table createTable(){
-    this.table = new Srv_Table();
+        this.table = new Srv_Table();
+        sl.setTable(table);
         return table;
     }
 

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import client.Tichu_Clt;
 import client.model.Clt_Client;
 import server.model.Srv_Server;
+import server.model.Srv_Table;
 
 /**
  * Copyright 2015, FHNW, Prof. Dr. Brad Richards. All rights reserved. This code
@@ -36,6 +37,7 @@ public class ServiceLocator {
     private Translator translator;
     private Clt_Client client;
     private Srv_Server server;
+    private Srv_Table table;
 
     /**
      * Factory method for returning the singleton
@@ -117,5 +119,13 @@ public class ServiceLocator {
     
     public void setTranslator(Translator translator) {
         this.translator = translator;
+    }
+
+    public Srv_Table getTable() {
+        return table;
+    }
+
+    public void setTable(Srv_Table table) {
+        this.table = table;
     }
 }
