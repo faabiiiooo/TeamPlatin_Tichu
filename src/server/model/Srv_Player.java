@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 // @author Fabio
-public class Srv_Player {
+public class
+Srv_Player {
 
     private final int PLAYER_ID;
     private static int idgenerator = -1;
