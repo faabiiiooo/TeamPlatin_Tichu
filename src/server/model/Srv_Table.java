@@ -130,7 +130,30 @@ public class Srv_Table {
 
     }
 
-    public void skipToTeamMember() { //@author Sandro
+    //@author Pascal
+    //Create new Seats with ID 1-4 and add it to the List
+    private Srv_Seat createSeat(){
+        for(int i=0;i<4;i++){
+            Srv_Seat s=new Srv_Seat(i+1);
+            this.seats.add(s);
+
+        }
+
+
+        return null;
+    }
+
+    public void transferCards(Srv_Player player){
+
+    }
+    //@author thomas
+    private void mahJongPlayed(){
+   //controller sollte hier Popup anzeigen damit der SPieler den Wunsch angeben kann. Danach sollte die Karte hinterlegt werden.
+
+    }
+
+
+    private void dogPlayed(){ //SkiptoTeamMember @author Sandro
         for(int i = 0; i < seats.size(); i++) { //looking for IsActive player
             if (seats.get(i).getPlayer().isActive() == true) { //found isActive player
                 switch (seats.get(i).getSEAT_ID()) { //Check seat of isActivePlayer
@@ -193,32 +216,6 @@ public class Srv_Table {
                 }
             }
         }
-    }
-    //@author Pascal
-    //Create new Seats with ID 1-4 and add it to the List
-    private Srv_Seat createSeat(){
-        for(int i=0;i<4;i++){
-            Srv_Seat s=new Srv_Seat(i+1);
-            this.seats.add(s);
-
-        }
-
-
-        return null;
-    }
-
-    public void transferCards(Srv_Player player){
-
-    }
-    //@author thomas
-    private void mahJongPlayed(){
-   //controller sollte hier Popup anzeigen damit der SPieler den Wunsch angeben kann. Danach sollte die Karte hinterlegt werden.
-
-    }
-
-
-    private void dogPlayed(){ //@author Sandro
-        skipToTeamMember();
     }
 
     private void dragonPlayed(){
