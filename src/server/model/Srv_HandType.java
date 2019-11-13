@@ -12,7 +12,7 @@ public enum Srv_HandType {
     private static ServiceLocator sl = ServiceLocator.getServiceLocator();
     private static Logger logger = sl.getLogger();
 
-    public static Srv_HandType evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
+    public static boolean evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
         Srv_HandType handType = null;
 
         if (isSingleCard(playerCards) && isSingleCard(tableCards) || tableCards.size()== 0 && isSingleCard(playerCards)) handType = SingleCard;
@@ -23,9 +23,7 @@ public enum Srv_HandType {
         if (isFullHouse(playerCards)) handType = FullHouse;
         if (isBomb(playerCards)) handType = Bomb;
 
-        isHigher(tableCards,playerCards, handType);
-
-        return handType;
+        return isHigher(tableCards,playerCards, handType);
     }
 
     public static boolean isSingleCard(ArrayList<Srv_Card> cards) { //@author Sandro, Thomas
@@ -556,6 +554,10 @@ public enum Srv_HandType {
                             }
                         }
                     }
+                    break;
+                default:
+                    isHigher = false;
+                    break;
             }
             return isHigher;
     }

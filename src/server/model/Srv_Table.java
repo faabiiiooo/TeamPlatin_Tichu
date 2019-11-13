@@ -13,7 +13,6 @@ public class Srv_Table {
     private Srv_Card mahJongWishCard;
 
     private int timeTillNextPlayer;
-    private Srv_Player activePlayer;
 
     public Srv_Table(){
 
@@ -107,27 +106,6 @@ public class Srv_Table {
                 }
             }
         }
-    }
-    //@author/ Pascal
-    public void smallTichu(){
-        if(this.activePlayer.getHandCards().size()<=8){
-            this.activePlayer.setSaidSmallTichu(true);
-
-        }else{
-            this.activePlayer.isSaidSmallTichu();
-        }
-
-    }
-    //@author/ Pascal
-    public void bigTichu(){
-        if(this.activePlayer.getHandCards().size()>8){
-            this.activePlayer.setSaidBigTichu(true);
-
-        }else{
-            this.activePlayer.isSaidBigTichu();
-        }
-
-
     }
 
     public void skipToTeamMember() { //@author Sandro
@@ -234,9 +212,6 @@ public class Srv_Table {
 
                 }
             }
-
-
-
     }
 
     public ArrayList<Srv_Seat> getSeats() {
