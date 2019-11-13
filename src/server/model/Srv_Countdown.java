@@ -12,6 +12,11 @@ public class Srv_Countdown extends Thread { //@author Sandro Countdown is a Thre
     private int maximum = 30; //30 second time for a move
     private boolean pause = true;
 
+    public Srv_Countdown() {
+        super("Srv_CountdownThread");
+        this.setDaemon(true); //automatically close Thread if program close
+    }
+
     public void run() {
         while (true) {
             try {
