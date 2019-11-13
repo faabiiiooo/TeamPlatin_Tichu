@@ -40,20 +40,13 @@ public enum Srv_HandType {
             canPlay = true;
 
             }
-
-
         return canPlay;
     }
 
     public static boolean isSingleCard(ArrayList<Srv_Card> cards) { //@author Sandro, Thomas
         boolean found = false;
-        if (cards.size() == 1 && includesSpecialCards(cards) == false) { //normal SingleCard?
+        if (cards.size() == 1) {
             found = true;
-        } else {
-            if (cards.size() == 1 && includesSpecialCards(cards) == true) { //specialCard?
-                callSpecialCard(cards);
-                found = true;
-            }
         }
         return found;
     }
@@ -476,12 +469,21 @@ public enum Srv_HandType {
                 case SingleCard:
                     if (tableCards.size() == 0) { // No card on the table -> Player has automatically the higher SingleCard
                         isHigher = true;
+                        if (includesSpecialCards(playerCards) == true) { //specialCard?
+                            callSpecialCard(playerCards);
+                        }
                         logger.info("Player SingleCard isHigher");
                     } else {
-                        if (tableCards.size() == 1) { //One Card is on the table
-                            if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal()) { //Which card is higher?
-                                isHigher = true;
-                                logger.info("Player SingleCard isHigher");
+                        if (tableCards.size() == 1 && playerCards.get(0).getRank() != Srv_Rank.Dog) { //One Card is on the table / Dog not allowed to play in a running game
+                            if (tableCards.get(0).getRank() == Srv_Rank.Phoenix) { //on the Table a Phoenix?
+                                if (tableCards.get(0).getPhoenixRank() < playerCards.get(0).getRank().ordinal()+2) { //compare with phoenixRank
+                                    isHigher = true;
+                                }
+                            } else {
+                                if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal()) { //compare with normal rank
+                                    isHigher = true;
+                                    logger.info("Player SingleCard isHigher");
+                                }
                             }
                         }
                     }

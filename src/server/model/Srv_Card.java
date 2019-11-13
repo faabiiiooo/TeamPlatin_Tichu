@@ -5,11 +5,14 @@ public class Srv_Card implements Comparable<Srv_Card> { //@author Sandro ; Impor
     private Srv_Rank rank;
     private int playerId;
     private int value;
+    private double phoenixRank;
 
-    public Srv_Card (Srv_Suit suit, Srv_Rank rank, int value) {
+
+    public Srv_Card (Srv_Suit suit, Srv_Rank rank, int value, double phoenixRank) {
         this.suit = suit;
         this.rank = rank;
-        this.value = value;
+        this.value = value; //value for calculateScore
+        this.phoenixRank = phoenixRank; //New given rank of the phoenix (+0.5 of the last card)
     }
 
     public int compareTo (Srv_Card card) { //new compareTo method to compare Cards
@@ -42,5 +45,13 @@ public class Srv_Card implements Comparable<Srv_Card> { //@author Sandro ; Impor
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public double getPhoenixRank() {
+        return phoenixRank;
+    }
+
+    public void setPhoenixRank(double phoenixRank) {
+        this.phoenixRank = phoenixRank;
     }
 }
