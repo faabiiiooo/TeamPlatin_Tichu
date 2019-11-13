@@ -36,7 +36,7 @@ public  class Srv_Team implements Comparable<Srv_Team> {
     private void bookSeat() {
         while (this.teamSeats.size() < this.getMAX_TEAM_MEMBERS()) {
 
-            ArrayList<Srv_Seat> seats = game.getTable().getSeats();
+           ArrayList<Srv_Seat> seats = game.getTable().getSeats();
             for(Srv_Seat s : seats){
                 if(s.getSEAT_ID() % 2 > 0 && EVEN_ODD.equals("odd")){
                     teamSeats.add(s);

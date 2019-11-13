@@ -19,8 +19,14 @@ public class Srv_Game { //@author Thomas
     }
     //create two teams and add them to the a list
     public ArrayList<Srv_Team> createTeams(){
+        int teamID = 0;
+        String even = "even"; String odd = "odd";
+        ArrayList<String> evenOddList = new ArrayList<>();
+        evenOddList.add(even); evenOddList.add(odd);
+        Collections.shuffle(evenOddList);
         for(int i = 0; i < 2; i++){
-            Srv_Team t = new Srv_Team();
+            teamID++;
+            Srv_Team t = new Srv_Team(teamID,this, evenOddList.get(i) );
             this.teams.add(t);
 
         }
@@ -41,9 +47,10 @@ public class Srv_Game { //@author Thomas
             }
         }
         this.rounds.add(round); // add the round to the list and return it
+        table.setMahJongWishCard(null);//reset the wished card from mahjong
 
-        //create a new Deck, shuffle it, deal it and then check the beginner
-        Srv_Deck deck = table.createDeck(); deck.shuffle(); table.dealCards(); round.checkBeginner();
+        //create a new Deck deal it and then check the beginner
+        table.createDeck();
 
         return round;
     }
