@@ -81,7 +81,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     };
 
     private static String[][] bombCardsTable = {
-           { "4S", "4K", "4P", "4J"},
+           { "4S", "4K", "4P"},
            // { "8S", "9S", "7S", "6S", "5S", }
 
     };
@@ -390,4 +390,5 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
         return new Srv_Card(suit, rank, 0); //For HandType-testing: value not relevant
     }
+
 }

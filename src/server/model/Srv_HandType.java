@@ -15,8 +15,8 @@ public enum Srv_HandType {
     public static Srv_HandType evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
         Srv_HandType handType = null;
 
-        if (isSingleCard(playerCards)) handType = SingleCard;
-        if (isOnePair(playerCards)) handType = OnePair;
+        if (isSingleCard(playerCards) && isSingleCard(tableCards) || tableCards.size()== 0 && isSingleCard(playerCards)) handType = SingleCard;
+        if (isOnePair(playerCards) && isOnePair(tableCards) || tableCards.size() == 0 && isOnePair(playerCards)) handType = OnePair;
         if (isXPair(playerCards)) handType = XPair;
         if (isTripple(playerCards)) handType = Tripple;
         if (isStreet(playerCards)) handType = Street;
@@ -453,10 +453,7 @@ public enum Srv_HandType {
 
         public static boolean isHigher (ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards, Srv_HandType handType) { //@author Sandro, Thomas
             boolean isHigher = false;
-            boolean bombFourPlayer = false;
-            boolean bombStreetPlayer = false;
-            boolean bombFourTable = false;
-            boolean bombStreetTable = false;
+
 
             switch (handType) {
                 case SingleCard:
