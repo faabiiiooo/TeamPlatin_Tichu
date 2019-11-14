@@ -55,15 +55,19 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
           //  { "5K", "6K", "7P", "8P", "9P" }, //case true 5 cards
            // { "TK", "JK", "QP", "KP", "AP" }, //case true 5 cards
           //  { "9K", "TK", "JK", "QP", "KP", "AP" }, //case true 6 cards
-          //  { "ME", "3K", "2P", "4P", "6P" }, //case true with mahjong
-          //  { "PE", "5K", "7P", "8P", "6P" }, //case true with phoenix
-          //  { "PE", "ME", "2P", "3P", "4P" }, //case true with mahjong + phoenix
+          //  { "ME", "3K", "2P", "4P", "5P" }, //case true with mahjong
+           // { "PE", "5K", "7P", "8P", "6P" }, //case true with phoenix
+          //  { "PE", "ME", "2P", "3P", "4P", "5K" }, //case true with mahjong + phoenix
           //  { "PE", "ME", "5P", "3P", "4P" }, //case true with mahjong + phoenix
           //  { "6P", "7P", "8P", "9P", "JP" }, //case false
           //  { "ME", "3K", "2P", "4P", "6P" }, //case false with mahjong
           //  { "PE", "9K", "TP", "KP", "AP" }, //case false with phoenix
           //  { "PE", "ME", "5P", "6P", "4P" }, //case false with mahjong + phoenix
           //    { "4P", "8K", "5P", "6P", "7P", "9K" }, //case false longer street than table
+           // { "4P", "8K", "5P", "6P", "7P", "9K", "JK", "KK" }, //case false 2 cards not in ordinal
+           // { "ME", "3K", "2P", "4P", "5P", "6K", "8K" }, //case false with mahjong 2 cards not in ordinal
+           //   { "PE", "9K", "TP", "KP", "KP", "AP" }, //case false with phoenix 2 cards not in ordinal
+           //  { "PE", "ME", "5P", "3P", "4P", "7P" }, //case false with mahjong + phoenix
     };
 
     private static String[][] fullHouseCardsTable = {
@@ -388,7 +392,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         if (s == 'K') suit = Srv_Suit.Swords; //Swords = Knife
         if (s == 'E') suit = Srv_Suit.SpecialCards; //SpecialCards = Extra
 
-        return new Srv_Card(suit, rank, 0); //For HandType-testing: value not relevant
+        return new Srv_Card(suit, rank, 0, 0); //For HandType-testing: value not relevant
     }
 
 }
