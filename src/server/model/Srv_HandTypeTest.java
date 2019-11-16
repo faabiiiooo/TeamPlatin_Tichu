@@ -350,7 +350,6 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     public void testIsMjWishStreetOnHand() {
         for (ArrayList<Srv_Card> hand : mJStreetWishHandPlayer) {
             for (ArrayList<Srv_Card> handTable : mJStreetWishHandTable) {
-                System.out.println(hand.get(3));
                 assertTrue(Srv_HandType.mahJongWishStreet(hand, handTable, hand.get(3)));
             }
         }
