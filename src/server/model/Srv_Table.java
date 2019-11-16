@@ -289,9 +289,16 @@ public class Srv_Table {
         }
     }
 
+    //@author Fabio
     protected void dragonPlayed(){
+        if(lastPlayedCards.size() == 1){
+            
+        } else {
+
+        }
 
     }
+
     //@author Pascal
     protected void phoenixPlayed(){
 

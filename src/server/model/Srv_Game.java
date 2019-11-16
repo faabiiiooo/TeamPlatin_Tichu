@@ -87,7 +87,7 @@ public class Srv_Game { //@author Thomas
 
     //create a new table
     protected Srv_Table createTable(){
-        this.table = new Srv_Table();
+        this.table = new Srv_Table(this);
         sl.setTable(table);
         return table;
     }
