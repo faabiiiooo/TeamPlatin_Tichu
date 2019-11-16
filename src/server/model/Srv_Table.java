@@ -13,6 +13,7 @@ public class Srv_Table {
     private final ArrayList<Srv_Card> lastPlayedCards = new ArrayList<>();
     private final ArrayList<Srv_Card> allPlayedCards = new ArrayList<>();
     private Srv_Deck deck;
+    private Srv_Game game;
 
     private Srv_Card mahJongWishCard;
 
@@ -22,7 +23,8 @@ public class Srv_Table {
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
 
-    public Srv_Table(){
+    public Srv_Table(Srv_Game game){
+        this.game = game;
 
 
     }
@@ -131,22 +133,52 @@ public class Srv_Table {
     }
 
     //@author Fabio
-    public void transferCards(Srv_Player player, ArrayList<Srv_Card> handCards){
+    public void transferCards(Srv_Player player){ //at game end, method has to be called twice, once with @param plaxer, once with @param null.
 
-        if(handCards != null){
-            for (Srv_Card c : handCards){
+        ArrayList<Srv_Player> finisher = game.getRounds().get(game.getRounds().size()-1).getFinisher(); //getting finishers
+
+        if(finisher.size() < 3 && player != null){ //if true, game is still playing only transfer table cards
+            for (Srv_Card c : allPlayedCards){
                 player.getWonCards().add(c);
             }
-            logger.info("Transferred handCards of looser to Player: " + player.getPLAYER_ID());
-        } else {
-            for(Srv_Card c : allPlayedCards){  //add every played card to the winners
-                player.getWonCards().add(c);
+        } else { //else transfer cards from looser to winner and rival team
+            Srv_Player winner = finisher.get(0); //get winner of the round
+            Srv_Player looser = null;
+            for(Srv_Player p : playersAtTable){
+                if(p.getHandCards().size() > 0){ //get looser, the only player with cards on his hand.
+                    looser = p;
+                }
             }
-            logger.info("Transferred allPlayedCards from table to Player: " + player.getPLAYER_ID());
-            allPlayedCards.clear();
-            lastPlayedCards.clear();
-            logger.info("Cleared allPlayedCards, lastPlayedCards");
+
+
+            for(Srv_Card c : looser.getWonCards()){ //always add the wonCards of looser to the wonCards of winner
+                winner.getWonCards().add(c);
+            }
+
+            if(looser.getTeamID() == winner.getTeamID()){ //if winner and looser are in same team
+
+                Srv_Player plrFromOtherTeam = null;
+                for(Srv_Player p : finisher){   //get a player from the other team
+                    if(p.getTeamID() != looser.getTeamID()){
+                        plrFromOtherTeam = p;
+                        break;
+                    }
+                }
+
+                for(Srv_Card c : looser.getHandCards()){ //add the hand cards of the looser to the player from the rival team
+                    plrFromOtherTeam.getWonCards().add(c);
+                }
+            }
+
+            if(looser.getTeamID() != winner.getTeamID()){ //if winner and looser are not in same team, transfer hand cards also to winner
+                for(Srv_Card c : looser.getHandCards()){
+                    winner.getWonCards().add(c);
+                }
+            }
+
+
         }
+
     }
 
     //@author thomas
