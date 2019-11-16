@@ -1,5 +1,6 @@
 package server.model;
 
+import javax.smartcardio.Card;
 import java.util.ArrayList;
 
 public class Srv_Table {
@@ -11,6 +12,7 @@ public class Srv_Table {
     private Srv_Deck deck;
 
     private Srv_Card mahJongWishCard;
+
 
     private int timeTillNextPlayer;
 
@@ -238,15 +240,23 @@ public class Srv_Table {
     }
     //@author Pascal
     protected void phoenixPlayed(){
-            for(int i=0;i<this.lastPlayedCards.size();i++){
-                if(lastPlayedCards.get(i).equals(Srv_Rank.Phoenix)){
-                    //not finish
 
+            for(Srv_Card c:lastPlayedCards) { //Check last played Cards
+                if (lastPlayedCards.size() == 1) { //If it a single Card
+                    c.setPhoenixRank(c.getRank().ordinal()+2.5);//The Phonix has the rank from the last played Card +0.5
 
-
+                }else {
+                    //If Dog played is the rank of the Phonix 1.5;
+                    if (c.getRank() == Srv_Rank.Dog) {
+                        c.setPhoenixRank(1.5);
+                    }
                 }
+
             }
     }
+
+
+
 
     public ArrayList<Srv_Seat> getSeats() {
         return seats;

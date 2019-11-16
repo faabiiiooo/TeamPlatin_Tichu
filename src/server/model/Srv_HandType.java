@@ -187,7 +187,7 @@ public enum Srv_HandType {
                         logger.info("Counter: "+counter);
                     }
                 }
-                if (counter >= 5) { // -> 5 Ordinals or more in succesion = Street
+                if (counter == cards.size()) { // -> All Ordinals in succesion = Street
                     found = true;
                 }
             } else { // special card included?
@@ -195,14 +195,15 @@ public enum Srv_HandType {
                     logger.info("Check isStreet with Mahjong");
                     if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two) { //Lowest card must be a 2
                         logger.info("Lowest Card is a 2");
-                        for(int i = 1; i < cards.size()-1; i++) {
+                        counter++; //Two and Mahjong = Ordinals in succesion
+                        for(int i = 1; i < cards.size()-1; i++) { //Check rest of cards
                             if (cards.get(i).getRank().ordinal() == cards.get(i + 1).getRank().ordinal() + 1) {
                                 counter++;
                                 logger.info("Counter: " + counter);
                             }
                         }
                     }
-                    if (counter >= 4) { // -> 4 Ordinals or more in succesion + Mahjong = Street
+                    if (counter == cards.size()) { // -> All Ordinals in succesion + Mahjong = Street
                         callSpecialCard(cards);
                         found = true;
                     }
@@ -213,16 +214,26 @@ public enum Srv_HandType {
                     for(int i = 1; i < cards.size()-1; i++) {
                         if(cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+1) {
                             counter++;
+                            logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
                             logger.info("Counter: "+counter);
                         } else {
                             if(phoenixUsed == false && cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+2) { //Use Phoenix as Joker
-                                counter++;
+                                counter+=2; //phoenix as joker -> 2 ordinals in succesion
                                 phoenixUsed = true; //phoenix only one time available
+                                logger.info("Use Phoenix as Joker");
+                                logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
                                 logger.info("Counter: "+counter);
                             }
                         }
                     }
-                    if (counter >= 4) { // -> 4 Ordinals or more in succesion + Phoenix = Street
+
+                    if (phoenixUsed == false) { //If phoenix not used -> Use Phoenix as highest Card in the street
+                        counter++;
+                        logger.info("Use Phoenix as Joker for the highest Card");
+                        logger.info("Counter: " + counter);
+                    }
+
+                    if (counter == cards.size()) { // -> All Ordinals in succesion + Phoenix = Street
                         callSpecialCard(cards);
                         found = true;
                     }
@@ -231,22 +242,44 @@ public enum Srv_HandType {
                     logger.info("Check isStreet with Mahjong & Phoenix");
                     boolean phoenixUsed = false;
 
-                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two || cards.get(cards.size()-1).getRank() == Srv_Rank.Three) { //Lowest card must be a 2 or a 3
-                        logger.info("Lowest Card is a 2 or a 3");
-                        for(int i = 2; i < cards.size()-1; i++) {
+                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two) { //Lowest card is a 2
+                        counter++; //Mahjong + 2 = Ordinals in succesion
+                        logger.info("Lowest Card is a 2");
+                        for(int i = 2; i < cards.size()-1; i++) { //check rest of cards
+                            logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
                             if (cards.get(i).getRank().ordinal() == cards.get(i + 1).getRank().ordinal() + 1) {
                                 counter++;
                                 logger.info("Counter: " + counter);
                             } else {
-                                if(phoenixUsed == false && cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+2) { //Use Phoenix as Joker
-                                    counter++;
+                                logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
+                                if(phoenixUsed == false && (cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+2)) { //Use Phoenix as Joker
+                                    counter+=2; //phoenix as joker -> 2 ordinals in succesion
                                     phoenixUsed = true; //phoenix only one time available
+                                    logger.info("Use Phoenix as Joker");
                                     logger.info("Counter: "+counter);
                                 }
                             }
                         }
+                        if (phoenixUsed == false) { //If phoenix not used -> Use Phoenix as highest Card in the street
+                            counter++;
+                            logger.info("Use Phoenix as Joker for the highest Card");
+                            logger.info("Counter: " + counter);
+                        }
                     }
-                    if (counter >= 3) { // -> 3 Ordinals or more in succesion + Mahjong + Phoenix = Street
+                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Three) { //Lowest card is a 3
+                        counter+=2; //Mahjong + Phoenix + 3 -> 2 ordinals in succesion
+                        logger.info("Lowest Card is a 2 or a 3");
+                        logger.info("Use Phoenix as Joker for a Two");
+                        for(int i = 2; i < cards.size()-1; i++) {
+                            logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
+                            if (cards.get(i).getRank().ordinal() == cards.get(i + 1).getRank().ordinal() + 1) {
+                                counter++;
+                                logger.info("Counter: " + counter);
+                            }
+                        }
+                    }
+
+                    if (counter == cards.size()) { // -> All Ordinals in succesion + Mahjong + Phoenix = Street
                         callSpecialCard(cards);
                         found = true;
                     }
