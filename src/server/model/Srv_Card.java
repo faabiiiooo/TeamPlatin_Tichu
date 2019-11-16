@@ -19,6 +19,9 @@ public class Srv_Card implements Comparable<Srv_Card> { //@author Sandro ; Impor
         return card.getRank().ordinal() - this.rank.ordinal();
     }
 
+
+
+
     public String toString() {
         return this.suit.toString() + " " + this.rank.toString() + " Value:" + this.value;
     }

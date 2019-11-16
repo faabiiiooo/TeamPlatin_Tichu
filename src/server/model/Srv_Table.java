@@ -127,7 +127,43 @@ public class Srv_Table {
     }
     //@author thomas
     protected void mahJongPlayed(){
-   //controller sollte hier Popup anzeigen damit der SPieler den Wunsch angeben kann. Danach sollte die Karte hinterlegt werden.
+    ArrayList<Srv_Player> playersWithWishedCard = new ArrayList<>();
+
+    //add all the players who have the wished card from mahjong
+    for(int i = 0; i < playersAtTable.size(); i++){
+        for (int j = 0; j < playersAtTable.get(i).getHandCards().size();j++){
+            if(playersAtTable.get(i).getHandCards().get(j).getRank() == mahJongWishCard.getRank()){
+                playersWithWishedCard.add(playersAtTable.get(i));
+            }
+        }
+    }
+    //if the last played handtype was a singlecard and the player has the wished card on the hand set hasWishedCard to true
+    if(lastPlayedCards.size() == 1 ){
+        for(Srv_Player p: playersWithWishedCard){
+            p.setHasWishedCard(true);
+        }
+        // if the last played cards where a street with mahjong card in it, check if a player has the wished card on the hand and could play it
+    }else if (Srv_HandType.isStreet(lastPlayedCards)){
+        for(Srv_Player p: playersWithWishedCard){
+            if(Srv_HandType.mahJongWishStreet(p.getHandCards(),lastPlayedCards,mahJongWishCard) ){
+                p.setHasWishedCard(true); //if the player has the card set the variable to true
+            }
+        }
+
+    }
+
+    }
+    //@author thomas
+    //we need a method which checks if the MJ wish card is already played or cant be played anymore
+    protected void checkIfMJWishIsActive(){
+        for(int i = 0; i < lastPlayedCards.size(); i++){
+            // if the wished card is already played or it cant be played anymore set every player to false
+            if(lastPlayedCards.get(i).getRank() == mahJongWishCard.getRank() || lastPlayedCards.get(lastPlayedCards.size()-1).getRank().ordinal() < mahJongWishCard.getRank().ordinal() ){
+                for(Srv_Player p: playersAtTable){
+                    p.setHasWishedCard(false);
+                }
+            }
+        }
 
     }
 

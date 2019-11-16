@@ -28,6 +28,7 @@ Srv_Player {
     private boolean hasBomb;
     private boolean saidBigTichu;
     private boolean saidSmallTichu;
+    private boolean hasWishedCard = false;
 
     public Srv_Player(){
 
@@ -134,4 +135,8 @@ Srv_Player {
     public int getPLAYER_ID() {
         return PLAYER_ID;
     }
+
+    public boolean isHasWishedCard() { return hasWishedCard; }
+
+    public void setHasWishedCard(boolean hasWishedCard) { this.hasWishedCard = hasWishedCard; }
 }
