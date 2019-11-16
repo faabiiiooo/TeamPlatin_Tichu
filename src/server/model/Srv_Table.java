@@ -1,7 +1,10 @@
 package server.model;
 
+import resources.ServiceLocator;
+
 import javax.smartcardio.Card;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class Srv_Table {
 
@@ -15,6 +18,9 @@ public class Srv_Table {
 
 
     private int timeTillNextPlayer;
+
+    private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+    private final Logger logger = serviceLocator.getLogger();
 
     public Srv_Table(){
 
@@ -124,9 +130,25 @@ public class Srv_Table {
         return null;
     }
 
-    public void transferCards(Srv_Player player){
+    //@author Fabio
+    public void transferCards(Srv_Player player, ArrayList<Srv_Card> handCards){
 
+        if(handCards != null){
+            for (Srv_Card c : handCards){
+                player.getWonCards().add(c);
+            }
+            logger.info("Transferred handCards of looser to Player: " + player.getPLAYER_ID());
+        } else {
+            for(Srv_Card c : allPlayedCards){  //add every played card to the winners
+                player.getWonCards().add(c);
+            }
+            logger.info("Transferred allPlayedCards from table to Player: " + player.getPLAYER_ID());
+            allPlayedCards.clear();
+            lastPlayedCards.clear();
+            logger.info("Cleared allPlayedCards, lastPlayedCards");
+        }
     }
+
     //@author thomas
     protected void mahJongPlayed(){
     ArrayList<Srv_Player> playersWithWishedCard = new ArrayList<>();
