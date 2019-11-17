@@ -20,8 +20,8 @@ public class Srv_Deck { //@author Sandro
         for (Srv_Suit suit : Srv_Suit.values()) {
             for (Srv_Rank rank : Srv_Rank.values()) {
                 if (suit == Srv_Suit.SpecialCards && rank == Srv_Rank.Phoenix) { //create specialCards
-                    Srv_Card card = new Srv_Card(suit, rank, -25); //Phoenix as firstCard = 1.5
-                    card.setPhoenixRank(1.5);
+                    Srv_Card card = new Srv_Card(suit, rank, -25);
+                    card.setPhoenixRank(1.5); //Phoenix as firstCard = 1.5
                     this.cards.add(card);
                 }
                 if (suit == Srv_Suit.SpecialCards && rank == Srv_Rank.Dragon) {
