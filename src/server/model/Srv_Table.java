@@ -211,7 +211,7 @@ public class Srv_Table {
 
                 }else {
                     //If Dog played is the rank of the Phonix 1.5;
-                    if (c.getRank() == Srv_Rank.Dog) {
+                    if (lastPlayedCards.get(0).getRank() == Srv_Rank.Dog) {
                         c.setPhoenixRank(1.5);
                     }
                 }
