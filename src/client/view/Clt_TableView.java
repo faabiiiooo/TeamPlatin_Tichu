@@ -67,9 +67,6 @@ public class Clt_TableView extends BorderPane {
         this.primaryStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.primaryStage.show();
 
-
-
-
     }
 
     public StackPane getRoot() {
