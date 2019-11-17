@@ -6,7 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import resources.ServiceLocator;
 import resources.Translator;
 
@@ -74,10 +76,12 @@ public class Clt_StartScreen extends StackPane {
 
         Scene startScene = new Scene(this);
         startScene.getStylesheets().add(getClass().getResource("StartScreen.css").toExternalForm());
+        //startScene.setFill(Color.TRANSPARENT);
         this.startStage.setScene(startScene);
         this.startStage.setResizable(false);
         this.startStage.setWidth(875);
         this.startStage.setHeight(502);
+        this.startStage.initStyle(StageStyle.TRANSPARENT);
         this.setId("start-pane");
         this.startStage.setTitle(translator.getString("program.name"));
         this.startStage.getIcons().add(new Image("./resources/images/logo.jpg"));
