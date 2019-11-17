@@ -112,6 +112,21 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
     };
 
+    private static String[][] mJStreetWishCardsHandPlayer = {
+             //{ "2P", "3P", "4P","5K", "6K", "6P","7K", "8P","TK","AP","AS" },
+            // { "2P","3P","5K","6S","TK","JK","AK","KS","PE" },
+            { "3P","5K","6S","7K","8K","TK","JK","QP", "KS","PE","WE" },
+
+
+    };
+
+    private static String[][] mJStreetWishCardsHandsTable = {
+            //{ "2P", "3P", "4P","5K", "6K", "6P","7K", "8P","TK","AP","AS" },
+            {  "ME", "2S", "3P", "4P","5K", }, //case true 5 cards
+
+
+    };
+
     // This is where we store the translated hands
     ArrayList<ArrayList<Srv_Card>> singleCardHandsTable;
     ArrayList<ArrayList<Srv_Card>> singleCardHandsPlayer;
@@ -130,6 +145,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     ArrayList<ArrayList<Srv_Card>> bombHandsPlayer;
     ArrayList<ArrayList<Srv_Card>> bombHandsTableFullHand;
     ArrayList<ArrayList<Srv_Card>> bombHandsPlayerFullHand;
+    ArrayList<ArrayList<Srv_Card>> mJStreetWishHandPlayer;
+    ArrayList<ArrayList<Srv_Card>> mJStreetWishHandTable;
 
     /**
      * The makeHands method is called before each test method,
@@ -155,6 +172,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         bombHandsPlayer = makeHands(bombCardsPlayer);
         bombHandsTableFullHand = makeHands(bombCardsTableFullHand);
         bombHandsPlayerFullHand = makeHands(bombCardsPlayerFullHand);
+        mJStreetWishHandPlayer = makeHands(mJStreetWishCardsHandPlayer);
+        mJStreetWishHandTable = makeHands(mJStreetWishCardsHandsTable);
     }
 
     @Test // This is the test method for isHigher in HandType.
@@ -324,6 +343,15 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     public void testIsStreet() {
         for (ArrayList<Srv_Card> hand : streetHandsPlayer) {
             assertTrue(Srv_HandType.isStreet(hand));
+        }
+    }
+
+    @Test // This is the test method for checking if some players has the wished card and the lastplayed card was a street with mahjong
+    public void testIsMjWishStreetOnHand() {
+        for (ArrayList<Srv_Card> hand : mJStreetWishHandPlayer) {
+            for (ArrayList<Srv_Card> handTable : mJStreetWishHandTable) {
+                assertTrue(Srv_HandType.mahJongWishStreet(hand, handTable, hand.get(3)));
+            }
         }
     }
 
