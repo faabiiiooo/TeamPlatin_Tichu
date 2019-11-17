@@ -71,4 +71,45 @@ public class Clt_TableView extends BorderPane {
 
 
     }
+
+    public StackPane getRoot() {
+        return root;
+    }
+
+    public RivalPaneL getRivalLeft() {
+        return rivalLeft;
+    }
+
+    public RivalPaneR getRivalRight() {
+        return rivalRight;
+    }
+
+    public RivalPaneT getRivalTop() {
+        return rivalTop;
+    }
+
+    public PlayerView getPlayerView() {
+        return playerView;
+    }
+
+    public PointView getPointView() {
+        return pointView;
+    }
+
+    public ControlView getControls() {
+        return controls;
+    }
+
+
+    public VBox getBottomBox() {
+        return bottom;
+    }
+
+    public HBox getTopBox() {
+        return top;
+    }
+
+    public Label getCountdown() {
+        return countdown;
+    }
 }
