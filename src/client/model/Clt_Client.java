@@ -27,7 +27,7 @@ public class Clt_Client extends Thread{
     public Clt_Client(String serverIP){
         super("Client");
         this.serverIP = serverIP;
-        this.controller = Clt_Controller.getController();
+        this.controller = serviceLocator.getCltController();
         try{
             socket=new Socket(this.serverIP,PORT);
 

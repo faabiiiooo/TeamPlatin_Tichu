@@ -27,6 +27,10 @@ public class Clt_View {
 
     }
 
+    public void startTableView(){
+
+    }
+
 
     //Start displaying View
     public void start(){
@@ -39,5 +43,11 @@ public class Clt_View {
 
     public Clt_Model getModel() {
         return model;
+    }
+
+    public Clt_StartScreen getStartScreen() { return startScreen; }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 }

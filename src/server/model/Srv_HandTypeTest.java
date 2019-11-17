@@ -420,7 +420,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         if (s == 'K') suit = Srv_Suit.Swords; //Swords = Knife
         if (s == 'E') suit = Srv_Suit.SpecialCards; //SpecialCards = Extra
 
-        return new Srv_Card(suit, rank, 0, 0); //For HandType-testing: value not relevant
+        return new Srv_Card(suit, rank, 0); //For HandType-testing: value not relevant
     }
 
 }
