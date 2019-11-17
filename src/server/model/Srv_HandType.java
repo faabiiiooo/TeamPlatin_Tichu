@@ -639,7 +639,7 @@ public enum Srv_HandType {
         for (int i =0; i < cards.size(); i++) {
             switch (cards.get(i).getRank()) { //Check each card
                 case Phoenix:
-                    table.phoenixPlayed();
+                    table.phoenixPlayed(cards.get(i));
                     logger.info("PhoenixPlayed");
                     break;
                 case Dragon:

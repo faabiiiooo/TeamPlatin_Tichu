@@ -140,6 +140,7 @@ public class Srv_Table {
         if(finisher.size() < 3 && player != null){ //if true, game is still playing only transfer table cards
             for (Srv_Card c : allPlayedCards){
                 player.getWonCards().add(c);
+                allPlayedCards.clear();
             }
         } else { //else transfer cards from looser to winner and rival team
             Srv_Player winner = finisher.get(0); //get winner of the round
@@ -300,20 +301,20 @@ public class Srv_Table {
     }
 
     //@author Pascal
-    protected void phoenixPlayed(){
+    protected void phoenixPlayed(Srv_Card phoenix){
 
-            for(Srv_Card c:lastPlayedCards) { //Check last played Cards
-                if (lastPlayedCards.size() == 1) { //If it a single Card
-                    c.setPhoenixRank(c.getRank().ordinal()+2.5);//The Phonix has the rank from the last played Card +0.5
 
-                }else {
-                    //If Dog played is the rank of the Phonix 1.5;
-                    if (lastPlayedCards.get(0).getRank() == Srv_Rank.Dog) {
-                        c.setPhoenixRank(1.5);
-                    }
-                }
+        if (lastPlayedCards.size() == 1) { //If it a single Card
+            phoenix.setPhoenixRank(lastPlayedCards.get(0).getRank().ordinal()+2.5);
 
-            }
+        }else {
+            //If Dog played is the rank of the Phonix 1.5;
+             if (lastPlayedCards.get(0).getRank() == Srv_Rank.Dog) {
+              phoenix.setPhoenixRank(1.5);
+             }
+        }
+
+
     }
 
 
