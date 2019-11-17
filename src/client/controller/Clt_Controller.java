@@ -8,7 +8,7 @@ import resources.ServiceLocator;
 
 import java.util.logging.Logger;
 
-//Controllerclass for Client Part of the Game
+//Controller for Client Part of the Game
 
 
 public class Clt_Controller { //Controller is a Singleton
