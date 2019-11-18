@@ -8,7 +8,7 @@ import resources.ServiceLocator;
 
 import java.util.logging.Logger;
 
-//Controllerclass for Client Part of the Game
+//Controller for Client Part of the Game
 
 
 public class Clt_Controller { //Controller is a Singleton
@@ -18,16 +18,52 @@ public class Clt_Controller { //Controller is a Singleton
     private Clt_Model model;
     private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private Logger logger = serviceLocator.getLogger();
-    private static Clt_Controller controller;
 
-    public static Clt_Controller getController(){
-        if(controller == null){
-            controller = new Clt_Controller();
-        }
-        return controller;
+
+    public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model){
+        this.primaryStage = primaryStage;
+        this.view = view;
+        this.model = model;
+        serviceLocator.setCltController(this);
+        this.setViewOnAction();
+
     }
 
-    private Clt_Controller(){//private constructor becaus Srv_Controller is a singleton
+    private void setViewOnAction(){
+        view.getStartScreen().getBtnNext().setOnAction(e -> startScreenBtnNext());
+        view.getStartScreen().getBeServer().setOnAction(e -> {
+            if (view.getStartScreen().getBeServer().isSelected()){
+              view.getStartScreen().getTxtIpAddress().setText("127.0.0.1");
+              view.getStartScreen().getTxtIpAddress().setDisable(true);
+            } else {
+                view.getStartScreen().getTxtIpAddress().setText("");
+                view.getStartScreen().getTxtIpAddress().setDisable(false);
+            }
+        });
+    }
+
+    //@author Fabio
+    private void startScreenBtnNext(){
+
+        if(view.getStartScreen().getBeServer().isSelected()){ //if user wants to be server, start server and client
+            model.startServer();
+            model.startClient("127.0.0.1");
+
+            Stage mainStage = new Stage(); //start client view
+            this.primaryStage = mainStage;
+            view.setPrimaryStage(mainStage);
+
+        } else { //else just start client with connection to entered ip address
+            String serverIp = view.getStartScreen().getTxtIpAddress().getText();
+            model.startClient(serverIp);
+
+            Stage mainStage = new Stage(); //start client view
+            this.primaryStage = mainStage;
+            view.setPrimaryStage(mainStage);
+
+            view.startTableView();
+
+        }
 
     }
 
@@ -61,13 +97,5 @@ public class Clt_Controller { //Controller is a Singleton
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
-    }
-
-    public void setView(Clt_View view) {
-        this.view = view;
-    }
-
-    public void setModel(Clt_Model model) {
-        this.model = model;
     }
 }

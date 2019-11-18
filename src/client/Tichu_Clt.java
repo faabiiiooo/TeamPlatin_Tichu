@@ -6,9 +6,12 @@ import client.view.Clt_View;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import resources.ServiceLocator;
+import resources.Translator;
 
 public class Tichu_Clt extends Application {
     private static Tichu_Clt clt; //singleton
+    private ServiceLocator serviceLocator;
 
     public static void main(String[] args){
         launch(args);
@@ -27,13 +30,24 @@ public class Tichu_Clt extends Application {
     // @author Fabio
     public void start(Stage primaryStage){
 
+        initialize();
+
         //Creating MVC for main Client Application
         Clt_Model model = new Clt_Model();
         Clt_View view = new Clt_View(primaryStage, model);
-        Clt_Controller controller = Clt_Controller.getController();
-        controller.setPrimaryStage(primaryStage);
-        controller.setView(view);
-        controller.setModel(model);
+        Clt_Controller controller = new Clt_Controller(primaryStage,view,model);
+
+
+    }
+    //@author Fabio
+    public void initialize() {
+
+        //create ServiceLocator
+        serviceLocator = ServiceLocator.getServiceLocator();
+
+        //Initialize Resources in ServiceLocator
+        serviceLocator.setTranslator(new Translator("de_CH"));
+
 
     }
 }

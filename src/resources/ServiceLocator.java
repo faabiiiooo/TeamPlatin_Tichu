@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 
 import client.Tichu_Clt;
+import client.controller.Clt_Controller;
 import client.model.Clt_Client;
 import server.model.Srv_Server;
 import server.model.Srv_Table;
@@ -38,6 +39,7 @@ public class ServiceLocator {
     private Clt_Client client;
     private Srv_Server server;
     private Srv_Table table;
+    private Clt_Controller cltController;
 
     /**
      * Factory method for returning the singleton
@@ -81,9 +83,13 @@ public class ServiceLocator {
         return logger;
     }
 
+    public Clt_Controller getCltController() { return cltController; }
+
     public void setLogger(Logger logger) {
         this.logger = logger;
     }
+
+    public void setCltController(Clt_Controller cltController){ this.cltController = cltController;}
 
     /*public Configuration getConfiguration() {
         return configuration;
