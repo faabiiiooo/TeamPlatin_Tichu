@@ -380,7 +380,8 @@ public enum Srv_HandType {
 
             for (int i = cardsClone.size() - 1; i > 0; i--) {//add all the cards which have 1 difference to the next card to possibleStreetWihCard
                 int j = i-1;
-                if (cardsClone.get(i).getRank().ordinal() == cardsClone.get(i - 1).getRank().ordinal() - 1) {
+                if (cardsClone.get(i).getRank().ordinal() == cardsClone.get(i - 1).getRank().ordinal() - 1 ||
+                        cardsClone.get(i).getRank().ordinal() == cardsClone.get(i - 1).getRank().ordinal() - 2 ) {
                     if(j != 0){ j--;}
                     if (!possibleStreetWithWish.contains(cardsClone.get(i))) {
                         possibleStreetWithWish.add(cardsClone.get(i));
@@ -404,12 +405,14 @@ public enum Srv_HandType {
                 }else if (cardsClone.size() - i <= 3 ){
                     i = 0;
                 }
+
             }
             // to the same checks like above but start from the other side of the list.
             Collections.sort(possibleStreetWithWish);
             for (int i = 0; i < possibleStreetWithWish.size()-1; i++) {//add all the cards which have 1 difference to the next card to possibleStreetWihCard
                 int j = i+1;
-                    if (possibleStreetWithWish.get(i).getRank().ordinal() == possibleStreetWithWish.get(i + 1).getRank().ordinal() + 1) {
+                    if (possibleStreetWithWish.get(i).getRank().ordinal() == possibleStreetWithWish.get(i + 1).getRank().ordinal() + 1 ||
+                            possibleStreetWithWish.get(i).getRank().ordinal() == possibleStreetWithWish.get(i + 1).getRank().ordinal() + 2 ) {
                         if(j != possibleStreetWithWish.size()-1){ j++;}
                             if (!testedStreetWithWish.contains(possibleStreetWithWish.get(i))) {
                                    testedStreetWithWish.add(possibleStreetWithWish.get(i));

@@ -57,10 +57,21 @@ public class Srv_Table {
         }while (deck.getRemainingCards() != 0);
 
     }
+    //@author thomas
+    // method to play out the cards from the active player
+    protected boolean playCards(ArrayList<Srv_Card> playerCards){
+        boolean canPlay = false;
+        //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
+        if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)){
+            //add the last played cards to the allPlayedCards list and clear the lastPlayedCards list for the next cards
+            allPlayedCards.addAll(lastPlayedCards); lastPlayedCards.clear();
+            //add the new played cards to the list
+            lastPlayedCards.addAll(playerCards);
+            canPlay = true;
 
-    public boolean playCards(ArrayList<Srv_Card> playerCards){
+        }
 
-        return false;
+        return canPlay;
     }
 
     public void skip(){ //@author Sandro
@@ -211,7 +222,7 @@ public class Srv_Table {
 
     }
     //@author thomas
-    //we need a method which checks if the MJ wish card is already played or cant be played anymore
+    //method checks if the MJ wish card is already played or cant be played anymore
     protected void checkIfMJWishIsActive(){
         for(int i = 0; i < lastPlayedCards.size(); i++){
             // if the wished card is already played or it cant be played anymore set every player to false
