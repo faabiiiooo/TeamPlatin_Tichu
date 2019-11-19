@@ -6,6 +6,7 @@ import javafx.scene.layout.HBox;
 import resources.ServiceLocator;
 import resources.Translator;
 
+//@author thomas
 public class ControlView extends HBox {
 
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();

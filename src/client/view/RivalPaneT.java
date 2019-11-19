@@ -9,9 +9,9 @@ import javafx.scene.layout.VBox;
 public class RivalPaneT extends VBox {
 
     private Label avatarLabel, cardsLabel, rice;
-    private Image team2 = new Image(getClass().getResourceAsStream("team2_avatar.png"));
-    private Image cardBack = new Image(getClass().getResourceAsStream("card_back.png"));
-    private Image riceImg = new Image(getClass().getResourceAsStream("rice.png"));
+    private Image team2 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team2_avatar.png"));
+    private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
+    private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
     private final HBox hBox = new HBox();
 
     public RivalPaneT(){
