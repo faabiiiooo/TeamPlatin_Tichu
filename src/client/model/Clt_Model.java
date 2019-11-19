@@ -22,7 +22,7 @@ public class Clt_Model {
 
     //@author Fabio
     public void startServer(){ //Start Server if user wants to be Server
-        Tichu_Srv.main(new String[]{}); //always start client on localhost if he wants to be server
+        Tichu_Srv.main(new String[]{});
 
     }
 
