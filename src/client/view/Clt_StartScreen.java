@@ -100,4 +100,8 @@ public class Clt_StartScreen extends StackPane {
     public Button getBtnNext() {
         return btnNext;
     }
+
+    public void close(){
+        this.startStage.close();
+    }
 }

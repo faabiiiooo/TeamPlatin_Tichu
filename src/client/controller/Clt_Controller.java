@@ -30,11 +30,11 @@ public class Clt_Controller { //Controller is a Singleton
         this.view = view;
         this.model = model;
         serviceLocator.setCltController(this);
-        this.setViewOnAction();
+        this.setStartScreenOnAction();
 
     }
 
-    private void setViewOnAction(){
+    private void setStartScreenOnAction(){
         view.getStartScreen().getBtnNext().setOnAction(e -> startScreenBtnNext());
         view.getStartScreen().getBeServer().setOnAction(e -> {
             if (view.getStartScreen().getBeServer().isSelected()){
@@ -45,6 +45,10 @@ public class Clt_Controller { //Controller is a Singleton
                 view.getStartScreen().getTxtIpAddress().setDisable(false);
             }
         });
+
+    }
+
+    private void setTableViewOnAction(){
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
     }
 
@@ -55,21 +59,19 @@ public class Clt_Controller { //Controller is a Singleton
             model.startServer();
             model.startClient("127.0.0.1");
 
-            Stage mainStage = new Stage(); //start client view
-            this.primaryStage = mainStage;
-            view.setPrimaryStage(mainStage);
 
         } else { //else just start client with connection to entered ip address
             String serverIp = view.getStartScreen().getTxtIpAddress().getText();
             model.startClient(serverIp);
 
-            Stage mainStage = new Stage(); //start client view
-            this.primaryStage = mainStage;
-            view.setPrimaryStage(mainStage);
-
-            view.startTableView();
-
         }
+
+        Stage mainStage = new Stage(); //start client view
+        this.primaryStage = mainStage;
+        view.setPrimaryStage(mainStage);
+        view.getStartScreen().close();
+        view.startTableView();
+        this.setTableViewOnAction();
 
     }
 
