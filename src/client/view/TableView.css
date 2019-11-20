@@ -11,3 +11,12 @@
     -fx-max-height: 800;
     -fx-background-color: white;
 }
+
+.cardBack{
+    -fx-min-width: 50;
+    -fx-pref-width: 111;
+    -fx-max-width: 500;
+    -fx-min-height: 80;
+    -fx-pref-height: 162;
+    -fx-max-height: 800;
+}

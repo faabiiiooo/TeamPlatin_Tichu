@@ -29,6 +29,8 @@ public class RivalPaneL extends HBox {
         this.vBox.getChildren().addAll(avatarLabel, rice);
 
         this.getChildren().addAll(vBox, cardsLabel);
+
+        cardsLabel.getStyleClass().add("cardBack");
     }
 
     public Label getCardsLabel() {
