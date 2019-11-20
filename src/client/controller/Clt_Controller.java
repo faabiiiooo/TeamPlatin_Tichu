@@ -8,7 +8,7 @@ import resources.Message;
 import resources.MessageResponse;
 import resources.MessageStats;
 import resources.ServiceLocator;
-import server.model.Srv_Card;
+import resources.Card;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -78,7 +78,7 @@ public class Clt_Controller { //Controller is a Singleton
 
         boolean successful = false;
 
-        ArrayList<Srv_Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
+        ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         if(cardsToSend.size() > 0){ // if he has cards selected
            successful = model.sendMessage(model.createMessage("card",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand

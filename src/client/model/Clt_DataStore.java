@@ -3,7 +3,7 @@ package client.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
-import server.model.Srv_Card;
+import resources.Card;
 
 import java.util.ArrayList;
 
@@ -12,11 +12,11 @@ public class Clt_DataStore {
 
     private static Clt_DataStore dataStore;
 
-    private final ObservableList<Srv_Card> handCards = FXCollections.observableArrayList();
-    private final ArrayList<Srv_Card> cardsToSend = new ArrayList<>();
+    private final ObservableList<Card> handCards = FXCollections.observableArrayList();
+    private final ArrayList<Card> cardsToSend = new ArrayList<>();
     private final ArrayList<Message> waitingForResponse = new ArrayList<>();
 
-    private final ObservableList<Srv_Card> tableCards = FXCollections.observableArrayList();
+    private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
 
     public static Clt_DataStore getDataStore(){
         if(dataStore == null){
@@ -29,15 +29,15 @@ public class Clt_DataStore {
 
     }
 
-    public void addCardsToSend(Srv_Card card){ //gets Called when a CardLabel gets klicked
+    public void addCardsToSend(Card card){ //gets Called when a CardLabel gets klicked
         cardsToSend.add(card);
     }
 
-    public ArrayList<Srv_Card> getCardsToSend(){ //get the cards to send them
+    public ArrayList<Card> getCardsToSend(){ //get the cards to send them
         return cardsToSend;
     }
 
-    public void removeCardsFromHand(ArrayList<Srv_Card> sentCards){ //remove successfully sent cards
+    public void removeCardsFromHand(ArrayList<Card> sentCards){ //remove successfully sent cards
         handCards.removeAll(sentCards);
     }
 

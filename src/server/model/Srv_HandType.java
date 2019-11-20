@@ -1,6 +1,9 @@
 package server.model;
 
+import resources.Card;
+import resources.Rank;
 import resources.ServiceLocator;
+import resources.Suit;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -13,7 +16,7 @@ public enum Srv_HandType {
     private static Logger logger = sl.getLogger();
     private static Srv_Table table = sl.getTable();
 
-    public static boolean evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
+    public static boolean evaluateHand(ArrayList<Card> tableCards, ArrayList<Card> playerCards) { //@author Sandro, Thomas
         Srv_HandType handType = null;
 
         boolean canPlay = false;
@@ -36,14 +39,14 @@ public enum Srv_HandType {
         canPlay = isHigher(tableCards, playerCards, handType);
     }
         //special case --> special card dog cannot be bombed
-        if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.get(0).getRank() != Srv_Rank.Dog  ){
+        if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.get(0).getRank() != Rank.Dog  ){
             canPlay = true;
 
             }
         return canPlay;
     }
 
-    public static boolean isSingleCard(ArrayList<Srv_Card> cards) { //@author Sandro, Thomas
+    public static boolean isSingleCard(ArrayList<Card> cards) { //@author Sandro, Thomas
         boolean found = false;
         if (cards.size() == 1) {
             found = true;
@@ -51,7 +54,7 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isOnePair(ArrayList<Srv_Card> cards) { //@author Sandro, Thomas
+    public static boolean isOnePair(ArrayList<Card> cards) { //@author Sandro, Thomas
         boolean found = false;
         Collections.sort(cards);
         if (cards.size() == 2) { //only 2 cards allowed
@@ -64,7 +67,7 @@ public enum Srv_HandType {
                     }
                 }
             } else { // special card included?
-                if (cards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
+                if (cards.get(0).getRank() == Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
                     callSpecialCard(cards);
                     found = true; // 1 card and phoenix as joker = onePair
                 }
@@ -73,13 +76,13 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isXPair(ArrayList<Srv_Card> cards) { //@author Thomas
+    public static boolean isXPair(ArrayList<Card> cards) { //@author Thomas
         boolean pairsFound = true;
         boolean found = false;
         int correctCalculation = 0;
-        ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
-        ArrayList<Srv_Card> pairCards = new ArrayList<>();
-        ArrayList<Srv_Card> uniqueList = new ArrayList<>();
+        ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
+        ArrayList<Card> pairCards = new ArrayList<>();
+        ArrayList<Card> uniqueList = new ArrayList<>();
 
         Collections.sort(clonedCards); //sort our lists with the cards
         Collections.sort(cards);
@@ -149,7 +152,7 @@ public enum Srv_HandType {
 
     }
 
-    public static boolean isTripple(ArrayList<Srv_Card> cards) { //@author Sandro
+    public static boolean isTripple(ArrayList<Card> cards) { //@author Sandro
         logger.info("CASE isTripple");
         boolean found = false;
         Collections.sort(cards);
@@ -159,7 +162,7 @@ public enum Srv_HandType {
                     found = true; //3 cards with same rank = Tripple
                 }
             } else { // special card included?
-                if (cards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
+                if (cards.get(0).getRank() == Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
                     if (cards.get(1).getRank() == cards.get(2).getRank()) { //Other 2 cards same rank?
                         callSpecialCard(cards);
                         found = true; //2 cards with same rank and Phoenix as joker = Tripple
@@ -171,7 +174,7 @@ public enum Srv_HandType {
 
     }
 
-    public static boolean isStreet(ArrayList<Srv_Card> cards) { //@author Sandro
+    public static boolean isStreet(ArrayList<Card> cards) { //@author Sandro
         boolean found = false;
         int counter = 1; // Counter of the correct cards
         Collections.sort(cards); // Sort the cards from high to low ordinal
@@ -191,9 +194,9 @@ public enum Srv_HandType {
                     found = true;
                 }
             } else { // special card included?
-                if (cards.get(0).getRank() == Srv_Rank.Mahjong && cards.get(1).getRank() != Srv_Rank.Phoenix) { //Is it a mahjong?
+                if (cards.get(0).getRank() == Rank.Mahjong && cards.get(1).getRank() != Rank.Phoenix) { //Is it a mahjong?
                     logger.info("Check isStreet with Mahjong");
-                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two) { //Lowest card must be a 2
+                    if (cards.get(cards.size()-1).getRank() == Rank.Two) { //Lowest card must be a 2
                         logger.info("Lowest Card is a 2");
                         counter++; //Two and Mahjong = Ordinals in succesion
                         for(int i = 1; i < cards.size()-1; i++) { //Check rest of cards
@@ -208,7 +211,7 @@ public enum Srv_HandType {
                         found = true;
                     }
                 }
-                if (cards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix?
+                if (cards.get(0).getRank() == Rank.Phoenix) { //Is it a phoenix?
                     logger.info("Check isStreet with Phoenix");
                     boolean phoenixUsed = false;
                     for(int i = 1; i < cards.size()-1; i++) {
@@ -238,11 +241,11 @@ public enum Srv_HandType {
                         found = true;
                     }
                 }
-                if (cards.get(0).getRank() == Srv_Rank.Mahjong && cards.get(1).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix and a mahjong?
+                if (cards.get(0).getRank() == Rank.Mahjong && cards.get(1).getRank() == Rank.Phoenix) { //Is it a phoenix and a mahjong?
                     logger.info("Check isStreet with Mahjong & Phoenix");
                     boolean phoenixUsed = false;
 
-                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two) { //Lowest card is a 2
+                    if (cards.get(cards.size()-1).getRank() == Rank.Two) { //Lowest card is a 2
                         counter++; //Mahjong + 2 = Ordinals in succesion
                         logger.info("Lowest Card is a 2");
                         for(int i = 2; i < cards.size()-1; i++) { //check rest of cards
@@ -266,7 +269,7 @@ public enum Srv_HandType {
                             logger.info("Counter: " + counter);
                         }
                     }
-                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Three) { //Lowest card is a 3
+                    if (cards.get(cards.size()-1).getRank() == Rank.Three) { //Lowest card is a 3
                         counter+=2; //Mahjong + Phoenix + 3 -> 2 ordinals in succesion
                         logger.info("Lowest Card is a 2 or a 3");
                         logger.info("Use Phoenix as Joker for a Two");
@@ -290,10 +293,10 @@ public enum Srv_HandType {
     }
     //@author Thomas
     // hands need to be checked when some player played the mahjong card and wishes a card
-    public static boolean mahJongWishStreet(ArrayList<Srv_Card> cards, ArrayList<Srv_Card> lastPlayedCards, Srv_Card mahJongWishCard) {
-        ArrayList<Srv_Card> possibleStreetWithWish = new ArrayList<>();
-        ArrayList<Srv_Card> testedStreetWithWish = new ArrayList<>();
-        ArrayList<Srv_Card> cardsClone = (ArrayList<Srv_Card>) cards.clone();
+    public static boolean mahJongWishStreet(ArrayList<Card> cards, ArrayList<Card> lastPlayedCards, Card mahJongWishCard) {
+        ArrayList<Card> possibleStreetWithWish = new ArrayList<>();
+        ArrayList<Card> testedStreetWithWish = new ArrayList<>();
+        ArrayList<Card> cardsClone = (ArrayList<Card>) cards.clone();
         boolean found = false;
         boolean phoenixFound = false;
 
@@ -307,11 +310,11 @@ public enum Srv_HandType {
         }
         //check if there is a phoenix in the cards list (if yes set true) and remove it. After that check the list on other special cards and remove all of them from the list from the hand
         for(int o = cardsClone.size()-1 ; o >= 0; o--){
-            if(cardsClone.get(o).getRank() == Srv_Rank.Phoenix){
+            if(cardsClone.get(o).getRank() == Rank.Phoenix){
                 phoenixFound = true;
                 cardsClone.remove(cardsClone.get(o));
             }else {
-                if (cardsClone.get(o).getRank() == Srv_Rank.Dog || cardsClone.get(o).getRank() == Srv_Rank.Dragon) {
+                if (cardsClone.get(o).getRank() == Rank.Dog || cardsClone.get(o).getRank() == Rank.Dragon) {
                     logger.info("Dog or Dragon? "+cardsClone.get(o));
                     cardsClone.remove(cardsClone.get(o));
                 }
@@ -362,7 +365,7 @@ public enum Srv_HandType {
                 }
             Collections.sort(testedStreetWithWish);
             //check if the street contains the wished card from Mah Jong and check if the third card has the higher ordinal than the last played cards (first and second card could be special cards)
-            for(Srv_Card c : testedStreetWithWish){
+            for(Card c : testedStreetWithWish){
                 logger.info("check if wish card is inside: "+ (c.getRank().ordinal() == mahJongWishCard.getRank().ordinal() ) + "Card: "+ c );
                 logger.info("streetWish "+ testedStreetWithWish);
                 logger.info("lastplayedCards "+ lastPlayedCards);
@@ -442,7 +445,7 @@ public enum Srv_HandType {
                 Collections.sort(testedStreetWithWish);
                 Collections.sort(lastPlayedCards);
                 //check if the street contains the wished card from Mah Jong and check if the third card has the higher ordinal than the last played cards
-                for(Srv_Card c : testedStreetWithWish){
+                for(Card c : testedStreetWithWish){
                     if(c.getRank().ordinal() == mahJongWishCard.getRank().ordinal() &&
 
                             testedStreetWithWish.get(2).getRank().ordinal() > lastPlayedCards.get(2).getRank().ordinal()){
@@ -455,11 +458,11 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isFullHouse(ArrayList<Srv_Card> cards) { //@author Sandro
+    public static boolean isFullHouse(ArrayList<Card> cards) { //@author Sandro
         boolean foundFullHouse = false;
         boolean foundTripple = false;
         boolean foundOnePair = false;
-        ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
+        ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
         Collections.sort(clonedCards); // Sort the cards from high to low ordinal
         logger.info("CASE isFullHouse");
         logger.info("Cards: "+clonedCards);
@@ -487,7 +490,7 @@ public enum Srv_HandType {
                     logger.info("foundOnePair");
                 }
             } else { // special card included
-                if (clonedCards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
+                if (clonedCards.get(0).getRank() == Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
                     logger.info("Check isFullHouse with Phoenix");
                     clonedCards.remove(0); //delete phoenix from clonedCards
                     if (clonedCards.get(0).getRank() == clonedCards.get(1).getRank() && clonedCards.get(1).getRank() == clonedCards.get(2).getRank()) { //First three cards same rank?
@@ -516,25 +519,25 @@ public enum Srv_HandType {
         return foundFullHouse;
     }
 
-    public static boolean isBombOnHand(ArrayList<Srv_Card> cards) { //@author thomas
+    public static boolean isBombOnHand(ArrayList<Card> cards) { //@author thomas
         //method it is  written to check the whole deck from the players for bombs
         //create all the variables we need for the checks
         boolean found = false;
         int counterA = 1;
         int counterB = 1;
         int countCards= 0;
-        List<Srv_Card> pagodaCards = new ArrayList<>();
-        List<Srv_Card> jadeCards = new ArrayList<>();
-        List<Srv_Card> starsCards = new ArrayList<>();
-        List<Srv_Card> swordsCards = new ArrayList<>();
-        ArrayList<List<Srv_Card>> listOfSuitLists = new ArrayList<>();
+        List<Card> pagodaCards = new ArrayList<>();
+        List<Card> jadeCards = new ArrayList<>();
+        List<Card> starsCards = new ArrayList<>();
+        List<Card> swordsCards = new ArrayList<>();
+        ArrayList<List<Card>> listOfSuitLists = new ArrayList<>();
 
-        ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
+        ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
         Collections.sort(clonedCards);
 
         //first we need to remove the special cards from the deck of the players (no special cards can be played with bomb)
         for(int g = 0; g < clonedCards.size()-1; g++){
-            if(clonedCards.get(g).getSuit() == Srv_Suit.SpecialCards) {
+            if(clonedCards.get(g).getSuit() == Suit.SpecialCards) {
                 clonedCards.remove(clonedCards.get(g));
 
             }
@@ -558,10 +561,10 @@ public enum Srv_HandType {
                     put all the different suits in different list, to make them easier to check.
                     then put these lists in a 2D List to iterate trough every list in our loop
                      */
-                    starsCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Stars).sorted().collect(Collectors.toList());
-                    pagodaCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Pagodas).sorted().collect(Collectors.toList());
-                    swordsCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Swords).sorted().collect(Collectors.toList());
-                    jadeCards = clonedCards.stream().filter(t -> t.getSuit() == Srv_Suit.Jade).sorted().collect(Collectors.toList());
+                    starsCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Stars).sorted().collect(Collectors.toList());
+                    pagodaCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Pagodas).sorted().collect(Collectors.toList());
+                    swordsCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Swords).sorted().collect(Collectors.toList());
+                    jadeCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Jade).sorted().collect(Collectors.toList());
                     listOfSuitLists.add(starsCards); listOfSuitLists.add(pagodaCards); listOfSuitLists.add(swordsCards); listOfSuitLists.add(jadeCards);
 
                     /*
@@ -590,12 +593,12 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isBomb(ArrayList<Srv_Card> cards){//@author thomas
+    public static boolean isBomb(ArrayList<Card> cards){//@author thomas
         //method to check out the played bomb cards
         boolean found = false;
         int counterA = 1;
 
-        ArrayList<Srv_Card> clonedCards = (ArrayList<Srv_Card>) cards.clone();
+        ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
         Collections.sort(clonedCards);
 
         // case if the player has 4 cards of the same Rank
@@ -627,16 +630,16 @@ public enum Srv_HandType {
         }
 
 
-    public static boolean includesSpecialCards(ArrayList<Srv_Card> cards) { //specialCard played? @author Sandro, Thomas
+    public static boolean includesSpecialCards(ArrayList<Card> cards) { //specialCard played? @author Sandro, Thomas
         boolean found = false;
         Collections.sort(cards);
-        if (cards.get(0).getSuit() == Srv_Suit.SpecialCards) { //SpecialCards would be always the highest card
+        if (cards.get(0).getSuit() == Suit.SpecialCards) { //SpecialCards would be always the highest card
             found = true;
         }
         return found;
     }
 
-    public static void callSpecialCard(ArrayList<Srv_Card> cards) { //Call the right specialCard method in Table @author Sandro, Thomas
+    public static void callSpecialCard(ArrayList<Card> cards) { //Call the right specialCard method in Table @author Sandro, Thomas
         Collections.sort(cards);
         logger.info("SpecialCardPlayed");
         for (int i =0; i < cards.size(); i++) {
@@ -661,7 +664,7 @@ public enum Srv_HandType {
         }
     }
 
-        public static boolean isHigher (ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards, Srv_HandType handType) { //@author Sandro, Thomas
+        public static boolean isHigher (ArrayList<Card> tableCards, ArrayList<Card> playerCards, Srv_HandType handType) { //@author Sandro, Thomas
             boolean isHigher = false;
 
 
@@ -674,8 +677,8 @@ public enum Srv_HandType {
                         }
                         logger.info("Player SingleCard isHigher");
                     } else {
-                        if (tableCards.size() == 1 && playerCards.get(0).getRank() != Srv_Rank.Dog) { //One Card is on the table / Dog not allowed to play in a running game
-                            if (tableCards.get(0).getRank() == Srv_Rank.Phoenix) { //on the Table a Phoenix?
+                        if (tableCards.size() == 1 && playerCards.get(0).getRank() != Rank.Dog) { //One Card is on the table / Dog not allowed to play in a running game
+                            if (tableCards.get(0).getRank() == Rank.Phoenix) { //on the Table a Phoenix?
                                 if (tableCards.get(0).getPhoenixRank() < playerCards.get(0).getRank().ordinal()+2) { //compare with phoenixRank
                                     isHigher = true;
                                 }

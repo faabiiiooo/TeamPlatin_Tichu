@@ -1,8 +1,9 @@
 package server.model;
 
+import resources.Card;
+import resources.Rank;
 import resources.ServiceLocator;
 
-import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -10,12 +11,12 @@ public class Srv_Table {
 
     private final ArrayList<Srv_Player> playersAtTable = new ArrayList<>();
     private final ArrayList<Srv_Seat> seats = new ArrayList<>();
-    private final ArrayList<Srv_Card> lastPlayedCards = new ArrayList<>();
-    private final ArrayList<Srv_Card> allPlayedCards = new ArrayList<>();
+    private final ArrayList<Card> lastPlayedCards = new ArrayList<>();
+    private final ArrayList<Card> allPlayedCards = new ArrayList<>();
     private Srv_Deck deck;
     private Srv_Game game;
 
-    private Srv_Card mahJongWishCard;
+    private Card mahJongWishCard;
 
 
     private int timeTillNextPlayer;
@@ -59,7 +60,7 @@ public class Srv_Table {
     }
     //@author thomas
     // method to play out the cards from the active player
-    protected boolean playCards(ArrayList<Srv_Card> playerCards){
+    protected boolean playCards(ArrayList<Card> playerCards){
         boolean canPlay = false;
         //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
         if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)){
@@ -149,7 +150,7 @@ public class Srv_Table {
         ArrayList<Srv_Player> finisher = game.getRounds().get(game.getRounds().size()-1).getFinisher(); //getting finishers
 
         if(finisher.size() < 3 && player != null){ //if true, game is still playing only transfer table cards
-            for (Srv_Card c : allPlayedCards){
+            for (Card c : allPlayedCards){
                 player.getWonCards().add(c);
                 allPlayedCards.clear();
             }
@@ -163,7 +164,7 @@ public class Srv_Table {
             }
 
 
-            for(Srv_Card c : looser.getWonCards()){ //always add the wonCards of looser to the wonCards of winner
+            for(Card c : looser.getWonCards()){ //always add the wonCards of looser to the wonCards of winner
                 winner.getWonCards().add(c);
             }
 
@@ -177,13 +178,13 @@ public class Srv_Table {
                     }
                 }
 
-                for(Srv_Card c : looser.getHandCards()){ //add the hand cards of the looser to the player from the rival team
+                for(Card c : looser.getHandCards()){ //add the hand cards of the looser to the player from the rival team
                     plrFromOtherTeam.getWonCards().add(c);
                 }
             }
 
             if(looser.getTeamID() != winner.getTeamID()){ //if winner and looser are not in same team, transfer hand cards also to winner
-                for(Srv_Card c : looser.getHandCards()){
+                for(Card c : looser.getHandCards()){
                     winner.getWonCards().add(c);
                 }
             }
@@ -323,7 +324,7 @@ public class Srv_Table {
     }
 
     //@author Pascal
-    protected void phoenixPlayed(Srv_Card phoenix){
+    protected void phoenixPlayed(Card phoenix){
 
 
         if (lastPlayedCards.size() == 1) { //If it a single Card
@@ -332,7 +333,7 @@ public class Srv_Table {
 
         }else {
             //If Dog played is the rank of the Phonix 1.5;
-             if (lastPlayedCards.get(0).getRank() == Srv_Rank.Dog) {
+             if (lastPlayedCards.get(0).getRank() == Rank.Dog) {
               phoenix.setPhoenixRank(1.5);
              }
         }
@@ -348,8 +349,8 @@ public class Srv_Table {
     }
 
     //getter setter
-    public Srv_Card getMahJongWishCard(){ return this.mahJongWishCard; }
+    public Card getMahJongWishCard(){ return this.mahJongWishCard; }
 
-    public void setMahJongWishCard(Srv_Card wishCard){ this.mahJongWishCard = wishCard; }
+    public void setMahJongWishCard(Card wishCard){ this.mahJongWishCard = wishCard; }
 
 }

@@ -1,20 +1,20 @@
-package server.model;
+package resources;
 
-public class Srv_Card implements Comparable<Srv_Card> { //@author Sandro ; Import Comparable to compare Cards
-    private Srv_Suit suit;
-    private Srv_Rank rank;
+public class Card implements Comparable<Card> { //@author Sandro ; Import Comparable to compare Cards
+    private Suit suit;
+    private Rank rank;
     private int playerId;
     private int value;
     private double phoenixRank;
 
 
-    public Srv_Card (Srv_Suit suit, Srv_Rank rank, int value) {
+    public Card(Suit suit, Rank rank, int value) {
         this.suit = suit;
         this.rank = rank;
         this.value = value; //value for calculateScore
     }
 
-    public int compareTo (Srv_Card card) { //new compareTo method to compare Cards
+    public int compareTo (Card card) { //new compareTo method to compare Cards
         return card.getRank().ordinal() - this.rank.ordinal();
     }
 
@@ -25,11 +25,11 @@ public class Srv_Card implements Comparable<Srv_Card> { //@author Sandro ; Impor
         return this.suit.toString() + " " + this.rank.toString() + " Value:" + this.value;
     }
 
-    public Srv_Suit getSuit() {
+    public Suit getSuit() {
         return suit;
     }
 
-    public Srv_Rank getRank() {
+    public Rank getRank() {
         return rank;
     }
 

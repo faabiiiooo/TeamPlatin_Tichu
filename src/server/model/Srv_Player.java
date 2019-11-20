@@ -1,5 +1,6 @@
 package server.model;
 
+import resources.Card;
 import resources.ServiceLocator;
 import resources.Translator;
 
@@ -17,8 +18,8 @@ Srv_Player {
     private Translator translator;
     private Logger logger;
 
-    private final ArrayList<Srv_Card> handCards;
-    private final ArrayList<Srv_Card> wonCards;
+    private final ArrayList<Card> handCards;
+    private final ArrayList<Card> wonCards;
 
     private boolean isActive;
     private int teamID;
@@ -54,7 +55,7 @@ Srv_Player {
 
     public int calculateScore(){
 
-        for(Srv_Card c : wonCards){
+        for(Card c : wonCards){
             score += c.getValue();
         }
 
@@ -68,11 +69,11 @@ Srv_Player {
         return this.PLAYER_ID == otherPlayer.getPLAYER_ID();
     }
 
-    public ArrayList<Srv_Card> getHandCards() {
+    public ArrayList<Card> getHandCards() {
         return handCards;
     }
 
-    public ArrayList<Srv_Card> getWonCards() {
+    public ArrayList<Card> getWonCards() {
         return wonCards;
     }
 

@@ -1,6 +1,6 @@
-package server.model;
+package resources;
 
-public enum Srv_Suit { //@author Sandro
+public enum Suit { //@author Sandro
     Jade, Pagodas, Stars, Swords, SpecialCards;
 
     public String toString() {
