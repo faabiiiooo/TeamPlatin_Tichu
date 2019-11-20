@@ -1,5 +1,6 @@
 package client.view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -21,6 +22,7 @@ public class Clt_TableView extends BorderPane {
     private final PlayerView playerView;
     private final PointView pointView;
     private final ControlView controls;
+    private final TableCards tableCards;
     private final VBox bottom;
     private final HBox top;
     private final Label countdown;
@@ -46,6 +48,7 @@ public class Clt_TableView extends BorderPane {
         this.top = new HBox();
         this.countdown = new Label();
         this.controls = new ControlView();
+        this.tableCards = new TableCards();
 
         this.setLeft(rivalLeft);
         this.setRight(rivalRight);
@@ -56,8 +59,11 @@ public class Clt_TableView extends BorderPane {
         bottom.getChildren().addAll(playerView,controls);
         this.setBottom(bottom);
 
+        this.setCenter(tableCards);
+
 
         root.getChildren().addAll(this);
+        StackPane.setAlignment(this, Pos.CENTER);
 
         Scene tableScene = new Scene(root);
         tableScene.getStylesheets().add(getClass().getResource("TableView.css").toExternalForm());

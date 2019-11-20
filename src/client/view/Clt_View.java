@@ -13,6 +13,7 @@ public class Clt_View {
     private Clt_Model model;
 
     private final Clt_StartScreen startScreen;
+    private Clt_TableView tableView;
 
 
 
@@ -22,13 +23,10 @@ public class Clt_View {
 
         startScreen = new Clt_StartScreen(primaryStage);
 
-
-
-
     }
 
     public void startTableView(){
-
+        tableView = new Clt_TableView(primaryStage);
     }
 
 
