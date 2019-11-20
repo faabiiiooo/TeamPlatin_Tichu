@@ -45,6 +45,8 @@ public class Clt_View {
 
     public Clt_StartScreen getStartScreen() { return startScreen; }
 
+    public Clt_TableView getTableView() { return tableView; }
+
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }

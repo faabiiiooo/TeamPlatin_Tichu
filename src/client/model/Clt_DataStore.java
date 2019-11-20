@@ -1,0 +1,68 @@
+package client.model;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import resources.Message;
+import server.model.Srv_Card;
+
+import java.util.ArrayList;
+
+//@author Fabio
+public class Clt_DataStore {
+
+    private static Clt_DataStore dataStore;
+
+    private final ObservableList<Srv_Card> handCards = FXCollections.observableArrayList();
+    private final ArrayList<Srv_Card> cardsToSend = new ArrayList<>();
+    private final ArrayList<Message> waitingForResponse = new ArrayList<>();
+
+    private final ObservableList<Srv_Card> tableCards = FXCollections.observableArrayList();
+
+    public static Clt_DataStore getDataStore(){
+        if(dataStore == null){
+            dataStore = new Clt_DataStore();
+        }
+        return dataStore;
+    }
+
+    private Clt_DataStore(){ //Datastore is a singleton because it should only exist one datastore per client.
+
+    }
+
+    public void addCardsToSend(Srv_Card card){ //gets Called when a CardLabel gets klicked
+        cardsToSend.add(card);
+    }
+
+    public ArrayList<Srv_Card> getCardsToSend(){ //get the cards to send them
+        return cardsToSend;
+    }
+
+    public void removeCardsFromHand(ArrayList<Srv_Card> sentCards){ //remove successfully sent cards
+        handCards.removeAll(sentCards);
+    }
+
+    public void addMessageToQueue(Message sentMsg){
+        waitingForResponse.add(sentMsg);
+    }
+
+    public void removeMessageFromQueue(String msgId){ //remove Message based on messageID.
+        ArrayList<Message> tempQueue = (ArrayList<Message>) waitingForResponse.clone();
+        for (int i = 0; i < tempQueue.size(); i++){
+            if(tempQueue.get(i).getMessageID().equals(msgId)){
+                waitingForResponse.remove(i);
+            }
+        }
+    }
+
+    public ArrayList<Message> getWaitingForResponse(){return waitingForResponse;}
+
+    public boolean queueContains(String messageID){
+        boolean containsMessage = false;
+        for(Message m : waitingForResponse){
+            if (m.getMessageID().equals(messageID)){
+                containsMessage = true;
+            }
+        }
+        return containsMessage;
+    }
+}

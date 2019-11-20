@@ -2,20 +2,22 @@ package resources;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
 
 //@author Fabio
 public class Message implements Serializable {
 
-    private static final long serialVersionUID= 1;
+    protected static final long serialVersionUID= 1;
 
-    private static long messageID = 0;
-    private long id;
+    protected final String messageID;
 
-    private final ArrayList<Object> objects = new ArrayList<>();
-    private String type;
+    protected final ArrayList<Object> objects = new ArrayList<>();
+    protected String type;
+
+    protected MessageStats messageStatus;
 
     public Message(String type, Object ... obj){
-        this.id = messageID++;
+        messageID = UUID.randomUUID().toString();
         this.type = type;
         for(Object o : obj) {
             objects.add(o);
@@ -29,4 +31,10 @@ public class Message implements Serializable {
     public String getType() {
         return type;
     }
+
+    public String getMessageID(){ return messageID; }
+
+    public void setMessageStatus(MessageStats messageStatus){ this.messageStatus = messageStatus;}
+
+    public MessageStats getMessageStatus(){ return messageStatus; }
 }
