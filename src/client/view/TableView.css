@@ -13,30 +13,63 @@
 }
 
 .cardBack{
-    -fx-min-width: 50;
-    -fx-pref-width: 111;
+    -fx-min-width: 80;
+    -fx-pref-width: 151;
     -fx-max-width: 500;
-    -fx-min-height: 80;
-    -fx-pref-height: 162;
+    -fx-min-height: 120;
+    -fx-pref-height: 202;
     -fx-max-height: 800;
 }
 
 .avatar{
     -fx-min-width: 50;
-    -fx-pref-width: 111;
+    -fx-pref-width: 166;
     -fx-max-width: 500;
     -fx-min-height: 80;
-    -fx-pref-height: 162;
+    -fx-pref-height: 242;
     -fx-max-height: 800;
+
+
 
 }
 
 .rice{
     -fx-min-width: 50;
-    -fx-pref-width: 111;
+    -fx-pref-width: 88;
     -fx-max-width: 500;
     -fx-min-height: 80;
-    -fx-pref-height: 162;
+    -fx-pref-height: 110;
     -fx-max-height: 800;
 
 }
+
+#cardBackTop{
+    -fx-min-width: 25;
+    -fx-pref-width: 58;
+    -fx-max-width: 250;
+    -fx-min-height: 40;
+    -fx-pref-height: 98;
+    -fx-max-height: 400;
+
+}
+
+#riceTop{
+    -fx-min-width: 50;
+    -fx-pref-width: 141;
+    -fx-max-width: 500;
+    -fx-min-height: 80;
+    -fx-pref-height: 202;
+    -fx-max-height: 800;
+
+}
+
+.tableCards{
+    -fx-min-width: 300;
+    -fx-min-height: 50;
+    -fx-pref-height: 50;
+    -fx-pref-width: 300;
+    -fx-background-color:#efdf8d;
+
+}
+
+

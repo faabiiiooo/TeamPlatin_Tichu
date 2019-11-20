@@ -1,12 +1,15 @@
 package client.view;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import resources.ServiceLocator;
 import resources.Translator;
 
+
+
 public class PlayerView extends HBox {
 
-    private  final  CardView cardView = new CardView();
+    private  final  Label cardView = new Label();
 
     public PlayerView(){
         super();

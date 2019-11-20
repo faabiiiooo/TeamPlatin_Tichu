@@ -1,5 +1,6 @@
 package client.view;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,9 +44,9 @@ public class RivalPaneL extends HBox {
         this.rice.getStyleClass().add("rice");
         imgViewRice.setPreserveRatio(true);
 
+        this.setPadding(new Insets(0,80,0,30));
+
         this.vBox.getChildren().addAll(avatarLabel, rice);
-
-
 
         this.getChildren().addAll(vBox,cardsLabel);
 
