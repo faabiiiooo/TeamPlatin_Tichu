@@ -1,0 +1,103 @@
+package client.view;
+
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import resources.ServiceLocator;
+import resources.Translator;
+
+import java.util.Stack;
+
+public class Clt_StartScreen extends StackPane {
+
+    private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+    private final Translator translator = serviceLocator.getTranslator();
+
+    private final CheckBox beServer;
+    private final TextField txtIpAddress;
+    private final ToggleButton toggleDE, toggleEN;
+    private final Label lblLanguage, lblBeServer, lblIpAddress, lblTitle;
+    private final Button btnNext;
+    private final Stage startStage;
+
+    private final GridPane gridPane = new GridPane();
+
+    public Clt_StartScreen(Stage startStage){
+        this.startStage = startStage;
+
+        this.beServer = new CheckBox();
+        this.txtIpAddress = new TextField();
+
+        this.btnNext = new Button(translator.getString("button.next"));
+
+        this.lblTitle = new Label(translator.getString("label.welcome")+"\n\n");
+        this.lblTitle.setId("lblTitle");
+        this.lblLanguage = new Label(translator.getString("label.language"));
+        this.lblBeServer = new Label(translator.getString("label.beServer"));
+        this.lblIpAddress = new Label(translator.getString("label.serverIp"));
+
+
+        ToggleGroup language = new ToggleGroup();
+        this.toggleDE = new ToggleButton("DE");
+        this.toggleEN = new ToggleButton("EN");
+        toggleDE.setToggleGroup(language);
+        toggleDE.setSelected(true);
+        toggleEN.setToggleGroup(language);
+
+        gridPane.add(lblTitle,0,0, 2,1);
+
+
+        gridPane.add(lblBeServer,0,1);
+        gridPane.add(beServer,1,1);
+
+        gridPane.add(lblIpAddress,0,2);
+        gridPane.add(txtIpAddress,1,2);
+
+        gridPane.add(btnNext,0,3);
+
+
+        gridPane.add(lblLanguage,2,1);
+        gridPane.add(toggleDE,3,1);
+        gridPane.add(toggleEN,4,1);
+
+        this.getChildren().add(gridPane);
+        gridPane.setAlignment(Pos.CENTER);
+        StackPane.setAlignment(gridPane,Pos.CENTER);
+
+        gridPane.setHgap(15);
+        gridPane.setVgap(20);
+
+
+        Scene startScene = new Scene(this);
+        startScene.getStylesheets().add(getClass().getResource("StartScreen.css").toExternalForm());
+        //startScene.setFill(Color.TRANSPARENT);
+        this.startStage.setScene(startScene);
+        this.startStage.setResizable(false);
+        this.startStage.setWidth(875);
+        this.startStage.setHeight(502);
+        //this.startStage.initStyle(StageStyle.TRANSPARENT);
+        this.setId("start-pane");
+        this.startStage.setTitle(translator.getString("program.name"));
+        this.startStage.getIcons().add(new Image("./resources/images/logo.jpg"));
+        this.startStage.show();
+
+    }
+
+    public CheckBox getBeServer() {
+        return beServer;
+    }
+
+    public TextField getTxtIpAddress() {
+        return txtIpAddress;
+    }
+
+    public Button getBtnNext() {
+        return btnNext;
+    }
+}

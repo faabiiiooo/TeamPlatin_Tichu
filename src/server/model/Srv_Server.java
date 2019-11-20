@@ -33,10 +33,7 @@ public class Srv_Server extends Thread {
     public Srv_Server(){
         super("Srv_ServerThread");
         logger.info("Srv_Server created.");
-        this.setDaemon(true); //autmatically close Thread when program gets halted.
-
-
-
+        this.setDaemon(true); //autmatically close Thread when program halt.
 
     }
 
@@ -75,7 +72,7 @@ public class Srv_Server extends Thread {
             }
         } catch (Exception e){
             logger.info("Can't send broadcast to Client Thread");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

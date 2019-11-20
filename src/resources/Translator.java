@@ -29,7 +29,7 @@ public class Translator {
         }
         
         // Load the resource strings
-        resourceBundle = ResourceBundle.getBundle(sl.getAPP_CLASS().getName(), locale);
+        resourceBundle = ResourceBundle.getBundle("TeamPlatin_Tichu", locale);
         Locale.setDefault(locale); // Change VM default (for dialogs, etc.)
         currentLocale = locale;
         

@@ -55,15 +55,19 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
           //  { "5K", "6K", "7P", "8P", "9P" }, //case true 5 cards
            // { "TK", "JK", "QP", "KP", "AP" }, //case true 5 cards
           //  { "9K", "TK", "JK", "QP", "KP", "AP" }, //case true 6 cards
-          //  { "ME", "3K", "2P", "4P", "6P" }, //case true with mahjong
-          //  { "PE", "5K", "7P", "8P", "6P" }, //case true with phoenix
-          //  { "PE", "ME", "2P", "3P", "4P" }, //case true with mahjong + phoenix
+          //  { "ME", "3K", "2P", "4P", "5P" }, //case true with mahjong
+           // { "PE", "5K", "7P", "8P", "6P" }, //case true with phoenix
+          //  { "PE", "ME", "2P", "3P", "4P", "5K" }, //case true with mahjong + phoenix
           //  { "PE", "ME", "5P", "3P", "4P" }, //case true with mahjong + phoenix
           //  { "6P", "7P", "8P", "9P", "JP" }, //case false
           //  { "ME", "3K", "2P", "4P", "6P" }, //case false with mahjong
           //  { "PE", "9K", "TP", "KP", "AP" }, //case false with phoenix
           //  { "PE", "ME", "5P", "6P", "4P" }, //case false with mahjong + phoenix
           //    { "4P", "8K", "5P", "6P", "7P", "9K" }, //case false longer street than table
+           // { "4P", "8K", "5P", "6P", "7P", "9K", "JK", "KK" }, //case false 2 cards not in ordinal
+           // { "ME", "3K", "2P", "4P", "5P", "6K", "8K" }, //case false with mahjong 2 cards not in ordinal
+           //   { "PE", "9K", "TP", "KP", "KP", "AP" }, //case false with phoenix 2 cards not in ordinal
+           //  { "PE", "ME", "5P", "3P", "4P", "7P" }, //case false with mahjong + phoenix
     };
 
     private static String[][] fullHouseCardsTable = {
@@ -81,7 +85,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     };
 
     private static String[][] bombCardsTable = {
-           { "4S", "4K", "4P", "4J"},
+           { "4S", "4K", "4P"},
            // { "8S", "9S", "7S", "6S", "5S", }
 
     };
@@ -108,6 +112,21 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
     };
 
+    private static String[][] mJStreetWishCardsHandPlayer = {
+             //{ "2P", "3P", "4P","5K", "6K", "6P","7K", "8P","TK","AP","AS" },
+            // { "2P","3P","5K","6S","TK","JK","AK","KS","PE" },
+            { "3P","5K","6S","7K","8K","TK","JK","QP", "KS","PE","WE" },
+
+
+    };
+
+    private static String[][] mJStreetWishCardsHandsTable = {
+            //{ "2P", "3P", "4P","5K", "6K", "6P","7K", "8P","TK","AP","AS" },
+            {  "ME", "2S", "3P", "4P","5K", }, //case true 5 cards
+
+
+    };
+
     // This is where we store the translated hands
     ArrayList<ArrayList<Srv_Card>> singleCardHandsTable;
     ArrayList<ArrayList<Srv_Card>> singleCardHandsPlayer;
@@ -126,6 +145,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     ArrayList<ArrayList<Srv_Card>> bombHandsPlayer;
     ArrayList<ArrayList<Srv_Card>> bombHandsTableFullHand;
     ArrayList<ArrayList<Srv_Card>> bombHandsPlayerFullHand;
+    ArrayList<ArrayList<Srv_Card>> mJStreetWishHandPlayer;
+    ArrayList<ArrayList<Srv_Card>> mJStreetWishHandTable;
 
     /**
      * The makeHands method is called before each test method,
@@ -151,6 +172,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         bombHandsPlayer = makeHands(bombCardsPlayer);
         bombHandsTableFullHand = makeHands(bombCardsTableFullHand);
         bombHandsPlayerFullHand = makeHands(bombCardsPlayerFullHand);
+        mJStreetWishHandPlayer = makeHands(mJStreetWishCardsHandPlayer);
+        mJStreetWishHandTable = makeHands(mJStreetWishCardsHandsTable);
     }
 
     @Test // This is the test method for isHigher in HandType.
@@ -323,6 +346,15 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         }
     }
 
+    @Test // This is the test method for checking if some players has the wished card and the lastplayed card was a street with mahjong
+    public void testIsMjWishStreetOnHand() {
+        for (ArrayList<Srv_Card> hand : mJStreetWishHandPlayer) {
+            for (ArrayList<Srv_Card> handTable : mJStreetWishHandTable) {
+                assertTrue(Srv_HandType.mahJongWishStreet(hand, handTable, hand.get(3)));
+            }
+        }
+    }
+
     @Test // This is the test method for isStreet in HandType.
     public void testIsFullHouse() {
         for (ArrayList<Srv_Card> hand : fullHouseHandsPlayer) {
@@ -390,4 +422,5 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
         return new Srv_Card(suit, rank, 0); //For HandType-testing: value not relevant
     }
+
 }

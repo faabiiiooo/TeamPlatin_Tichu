@@ -2,6 +2,7 @@ package client.model;
 
 import client.controller.Clt_Controller;
 import resources.Message;
+import resources.ServiceLocator;
 
 import java.util.Scanner;
 
@@ -11,9 +12,11 @@ public class Test_Client {
     private static Clt_Controller controller;
     private static Clt_Client client;
 
+    private static ServiceLocator sl = ServiceLocator.getServiceLocator();
+
     public static void main(String[] args){
 
-        controller = Clt_Controller.getController();
+        controller = sl.getCltController();
         client = new Clt_Client("127.0.0.1");
         client.start();
 

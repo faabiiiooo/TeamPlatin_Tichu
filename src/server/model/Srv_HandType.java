@@ -11,32 +11,42 @@ public enum Srv_HandType {
 
     private static ServiceLocator sl = ServiceLocator.getServiceLocator();
     private static Logger logger = sl.getLogger();
+    private static Srv_Table table = sl.getTable();
 
-    public static Srv_HandType evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
+    public static boolean evaluateHand(ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards) { //@author Sandro, Thomas
         Srv_HandType handType = null;
 
-        if (isSingleCard(playerCards)) handType = SingleCard;
-        if (isOnePair(playerCards)) handType = OnePair;
-        if (isXPair(playerCards)) handType = XPair;
-        if (isTripple(playerCards)) handType = Tripple;
-        if (isStreet(playerCards)) handType = Street;
-        if (isFullHouse(playerCards)) handType = FullHouse;
-        if (isBomb(playerCards)) handType = Bomb;
+        boolean canPlay = false;
+        // evaluate handtype from player and last played cards
+        if (isSingleCard(playerCards) && isSingleCard(tableCards) || tableCards.size() == 0 && isSingleCard(playerCards)){
+            handType = SingleCard;
+        if (isOnePair(playerCards) && isOnePair(tableCards) || tableCards.size() == 0 && isOnePair(playerCards))
+            handType = OnePair;
+        if (isXPair(playerCards) && isXPair(tableCards) || tableCards.size() == 0 && isXPair(playerCards))
+            handType = XPair;
+        if (isTripple(playerCards) && isTripple(tableCards) || tableCards.size() == 0 && isTripple(playerCards))
+            handType = Tripple;
+        if (isStreet(playerCards) && isStreet(tableCards) || tableCards.size() == 0 && isStreet(playerCards))
+            handType = Street;
+        if (isFullHouse(playerCards) && isFullHouse(tableCards) || tableCards.size() == 0 && isFullHouse(playerCards))
+            handType = FullHouse;
+        if (isBomb(playerCards) && isBomb(tableCards) || isBomb(playerCards) && tableCards.size() == 0)
+            handType = Bomb;
+        // if same handtype evualte which is higher
+        canPlay = isHigher(tableCards, playerCards, handType);
+    }
+        //special case --> special card dog cannot be bombed
+        if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.get(0).getRank() != Srv_Rank.Dog  ){
+            canPlay = true;
 
-        isHigher(tableCards,playerCards, handType);
-
-        return handType;
+            }
+        return canPlay;
     }
 
     public static boolean isSingleCard(ArrayList<Srv_Card> cards) { //@author Sandro, Thomas
         boolean found = false;
-        if (cards.size() == 1 && includesSpecialCards(cards) == false) { //normal SingleCard?
+        if (cards.size() == 1) {
             found = true;
-        } else {
-            if (cards.size() == 1 && includesSpecialCards(cards) == true) { //specialCard?
-                callSpecialCard(cards);
-                found = true;
-            }
         }
         return found;
     }
@@ -158,6 +168,7 @@ public enum Srv_HandType {
             }
         }
         return found;
+
     }
 
     public static boolean isStreet(ArrayList<Srv_Card> cards) { //@author Sandro
@@ -176,7 +187,7 @@ public enum Srv_HandType {
                         logger.info("Counter: "+counter);
                     }
                 }
-                if (counter >= 5) { // -> 5 Ordinals or more in succesion = Street
+                if (counter == cards.size()) { // -> All Ordinals in succesion = Street
                     found = true;
                 }
             } else { // special card included?
@@ -184,14 +195,15 @@ public enum Srv_HandType {
                     logger.info("Check isStreet with Mahjong");
                     if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two) { //Lowest card must be a 2
                         logger.info("Lowest Card is a 2");
-                        for(int i = 1; i < cards.size()-1; i++) {
+                        counter++; //Two and Mahjong = Ordinals in succesion
+                        for(int i = 1; i < cards.size()-1; i++) { //Check rest of cards
                             if (cards.get(i).getRank().ordinal() == cards.get(i + 1).getRank().ordinal() + 1) {
                                 counter++;
                                 logger.info("Counter: " + counter);
                             }
                         }
                     }
-                    if (counter >= 4) { // -> 4 Ordinals or more in succesion + Mahjong = Street
+                    if (counter == cards.size()) { // -> All Ordinals in succesion + Mahjong = Street
                         callSpecialCard(cards);
                         found = true;
                     }
@@ -202,16 +214,26 @@ public enum Srv_HandType {
                     for(int i = 1; i < cards.size()-1; i++) {
                         if(cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+1) {
                             counter++;
+                            logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
                             logger.info("Counter: "+counter);
                         } else {
                             if(phoenixUsed == false && cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+2) { //Use Phoenix as Joker
-                                counter++;
+                                counter+=2; //phoenix as joker -> 2 ordinals in succesion
                                 phoenixUsed = true; //phoenix only one time available
+                                logger.info("Use Phoenix as Joker");
+                                logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
                                 logger.info("Counter: "+counter);
                             }
                         }
                     }
-                    if (counter >= 4) { // -> 4 Ordinals or more in succesion + Phoenix = Street
+
+                    if (phoenixUsed == false) { //If phoenix not used -> Use Phoenix as highest Card in the street
+                        counter++;
+                        logger.info("Use Phoenix as Joker for the highest Card");
+                        logger.info("Counter: " + counter);
+                    }
+
+                    if (counter == cards.size()) { // -> All Ordinals in succesion + Phoenix = Street
                         callSpecialCard(cards);
                         found = true;
                     }
@@ -220,28 +242,216 @@ public enum Srv_HandType {
                     logger.info("Check isStreet with Mahjong & Phoenix");
                     boolean phoenixUsed = false;
 
-                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two || cards.get(cards.size()-1).getRank() == Srv_Rank.Three) { //Lowest card must be a 2 or a 3
-                        logger.info("Lowest Card is a 2 or a 3");
-                        for(int i = 2; i < cards.size()-1; i++) {
+                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Two) { //Lowest card is a 2
+                        counter++; //Mahjong + 2 = Ordinals in succesion
+                        logger.info("Lowest Card is a 2");
+                        for(int i = 2; i < cards.size()-1; i++) { //check rest of cards
+                            logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
                             if (cards.get(i).getRank().ordinal() == cards.get(i + 1).getRank().ordinal() + 1) {
                                 counter++;
                                 logger.info("Counter: " + counter);
                             } else {
-                                if(phoenixUsed == false && cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+2) { //Use Phoenix as Joker
-                                    counter++;
+                                logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
+                                if(phoenixUsed == false && (cards.get(i).getRank().ordinal() == cards.get(i+1).getRank().ordinal()+2)) { //Use Phoenix as Joker
+                                    counter+=2; //phoenix as joker -> 2 ordinals in succesion
                                     phoenixUsed = true; //phoenix only one time available
+                                    logger.info("Use Phoenix as Joker");
                                     logger.info("Counter: "+counter);
                                 }
                             }
                         }
+                        if (phoenixUsed == false) { //If phoenix not used -> Use Phoenix as highest Card in the street
+                            counter++;
+                            logger.info("Use Phoenix as Joker for the highest Card");
+                            logger.info("Counter: " + counter);
+                        }
                     }
-                    if (counter >= 3) { // -> 3 Ordinals or more in succesion + Mahjong + Phoenix = Street
+                    if (cards.get(cards.size()-1).getRank() == Srv_Rank.Three) { //Lowest card is a 3
+                        counter+=2; //Mahjong + Phoenix + 3 -> 2 ordinals in succesion
+                        logger.info("Lowest Card is a 2 or a 3");
+                        logger.info("Use Phoenix as Joker for a Two");
+                        for(int i = 2; i < cards.size()-1; i++) {
+                            logger.info(cards.get(i).getRank()+" and "+cards.get(i+1).getRank());
+                            if (cards.get(i).getRank().ordinal() == cards.get(i + 1).getRank().ordinal() + 1) {
+                                counter++;
+                                logger.info("Counter: " + counter);
+                            }
+                        }
+                    }
+
+                    if (counter == cards.size()) { // -> All Ordinals in succesion + Mahjong + Phoenix = Street
                         callSpecialCard(cards);
                         found = true;
                     }
                 }
             }
         }
+        return found;
+    }
+    //@author Thomas
+    // hands need to be checked when some player played the mahjong card and wishes a card
+    public static boolean mahJongWishStreet(ArrayList<Srv_Card> cards, ArrayList<Srv_Card> lastPlayedCards, Srv_Card mahJongWishCard) {
+        ArrayList<Srv_Card> possibleStreetWithWish = new ArrayList<>();
+        ArrayList<Srv_Card> testedStreetWithWish = new ArrayList<>();
+        ArrayList<Srv_Card> cardsClone = (ArrayList<Srv_Card>) cards.clone();
+        boolean found = false;
+        boolean phoenixFound = false;
+
+        Collections.sort(cardsClone); // Sort the cards from high to low ordinal
+
+        //remove all the duplicates
+        for(int k = cardsClone.size()-1; k > 0; k--){
+            if(cardsClone.get(k).getRank().ordinal() == cardsClone.get(k-1).getRank().ordinal()){
+                cardsClone.remove(cardsClone.get(k-1));
+            }
+        }
+        //check if there is a phoenix in the cards list (if yes set true) and remove it. After that check the list on other special cards and remove all of them from the list from the hand
+        for(int o = cardsClone.size()-1 ; o >= 0; o--){
+            if(cardsClone.get(o).getRank() == Srv_Rank.Phoenix){
+                phoenixFound = true;
+                cardsClone.remove(cardsClone.get(o));
+            }else {
+                if (cardsClone.get(o).getRank() == Srv_Rank.Dog || cardsClone.get(o).getRank() == Srv_Rank.Dragon) {
+                    logger.info("Dog or Dragon? "+cardsClone.get(o));
+                    cardsClone.remove(cardsClone.get(o));
+                }
+            }
+        }
+        logger.info("list after filtering: "+cardsClone);
+        //case if no phoenix in hand
+        if (cards.size() >= 5) { //only 5 cards or more allowed
+            if (!phoenixFound) { //No special card included? -> regular process
+                logger.info("No specialCard");
+                for (int i = 0; i < cardsClone.size() - 1; i++) {//add all the cards which have 1 difference to the next card to possibleStreetWihCard if they are not already in the list
+                    if (cardsClone.get(i).getRank().ordinal() == cardsClone.get(i + 1).getRank().ordinal() + 1) {
+                        if (!possibleStreetWithWish.contains(cardsClone.get(i))) {
+                            possibleStreetWithWish.add(cardsClone.get(i));
+                        }
+                        if (!possibleStreetWithWish.contains(cardsClone.get(i+1))) {
+                            possibleStreetWithWish.add(cardsClone.get(i + 1));
+                        }
+                        logger.info("List: "+ possibleStreetWithWish);
+                    } else {
+                        //if there are not at least 5 cards in the list and 1 check is false clear the list
+                        if (possibleStreetWithWish.size() < 5) {
+                            logger.info("not true possibleStreetWish: " + possibleStreetWithWish.size());
+                            possibleStreetWithWish.clear();
+                        }
+                    }
+                }
+                logger.info("1. Check " + possibleStreetWithWish.size() + "cards: " +possibleStreetWithWish );
+                /*
+                if the street is in the list but there are also some other cards which were true in the last check --> make the same check by starting from the other side of the list
+                this could be the case when  there are some other subsequent cards in the list, but not enough for a street
+                                                                                                                                                                                       */
+                    for (int i = possibleStreetWithWish.size() - 1; i > 0; i--) {//add all the cards which have 1 difference to the next card to possibleStreetWihCard
+                        logger.info("testedStreetWish in Schlaufe:" + testedStreetWithWish);
+                        if (possibleStreetWithWish.get(i).getRank().ordinal() == possibleStreetWithWish.get(i - 1).getRank().ordinal() - 1) {
+                            if (!testedStreetWithWish.contains(possibleStreetWithWish.get(i))) {
+                                testedStreetWithWish.add(possibleStreetWithWish.get(i));
+                            }
+                            if (!testedStreetWithWish.contains(possibleStreetWithWish.get(i - 1))) {
+                                testedStreetWithWish.add(possibleStreetWithWish.get(i - 1));
+                            }
+                        } else if (testedStreetWithWish.size() < 5) {
+                            logger.info("TESTEDStreetWish: " + testedStreetWithWish);
+                            testedStreetWithWish.clear();
+                        }
+                    }
+                    logger.info("Leer?" + testedStreetWithWish);
+                }
+            Collections.sort(testedStreetWithWish);
+            //check if the street contains the wished card from Mah Jong and check if the third card has the higher ordinal than the last played cards (first and second card could be special cards)
+            for(Srv_Card c : testedStreetWithWish){
+                logger.info("check if wish card is inside: "+ (c.getRank().ordinal() == mahJongWishCard.getRank().ordinal() ) + "Card: "+ c );
+                logger.info("streetWish "+ testedStreetWithWish);
+                logger.info("lastplayedCards "+ lastPlayedCards);
+                if(c.getRank().ordinal() == mahJongWishCard.getRank().ordinal() &&
+
+                        testedStreetWithWish.get(2).getRank().ordinal() > lastPlayedCards.get(2).getRank().ordinal()){
+
+                    found = true;
+                }
+            }
+        }
+        //case if there was a phoenix on the hand from the player
+        if(cards.size()>=5 && phoenixFound){
+                    logger.info("Phoenix");
+
+            for (int i = cardsClone.size() - 1; i > 0; i--) {//add all the cards which have 1 difference to the next card to possibleStreetWihCard
+                int j = i-1;
+                if (cardsClone.get(i).getRank().ordinal() == cardsClone.get(i - 1).getRank().ordinal() - 1 ||
+                        cardsClone.get(i).getRank().ordinal() == cardsClone.get(i - 1).getRank().ordinal() - 2 ) {
+                    if(j != 0){ j--;}
+                    if (!possibleStreetWithWish.contains(cardsClone.get(i))) {
+                        possibleStreetWithWish.add(cardsClone.get(i));
+                    }
+                    if (!possibleStreetWithWish.contains(cardsClone.get(i - 1))) {
+                        possibleStreetWithWish.add(cardsClone.get(i - 1));
+                    }
+                //because there was a phoenix on the hand -> if the cards are not subsequent, check if the card after next would be subsequent
+                } else if (cardsClone.get(i).getRank().ordinal() == cardsClone.get(j).getRank().ordinal() - 2) {
+
+                    if (!possibleStreetWithWish.contains(cardsClone.get(i))) {
+                        possibleStreetWithWish.add(cardsClone.get(i));
+                    }
+                    if (!possibleStreetWithWish.contains(cardsClone.get(j))) {
+                        possibleStreetWithWish.add(cardsClone.get(j));
+                    }
+                    //if nothing from the above is true and the list is smaller than 4 cards clear it for the next test
+                }else if (possibleStreetWithWish.size() < 4){
+                    possibleStreetWithWish.clear();
+                    //if there are not at least 3 cards left to check stop the check
+                }else if (cardsClone.size() - i <= 3 ){
+                    i = 0;
+                }
+
+            }
+            // to the same checks like above but start from the other side of the list.
+            Collections.sort(possibleStreetWithWish);
+            for (int i = 0; i < possibleStreetWithWish.size()-1; i++) {//add all the cards which have 1 difference to the next card to possibleStreetWihCard
+                int j = i+1;
+                    if (possibleStreetWithWish.get(i).getRank().ordinal() == possibleStreetWithWish.get(i + 1).getRank().ordinal() + 1 ||
+                            possibleStreetWithWish.get(i).getRank().ordinal() == possibleStreetWithWish.get(i + 1).getRank().ordinal() + 2 ) {
+                        if(j != possibleStreetWithWish.size()-1){ j++;}
+                            if (!testedStreetWithWish.contains(possibleStreetWithWish.get(i))) {
+                                   testedStreetWithWish.add(possibleStreetWithWish.get(i));
+                               }
+                               if (!testedStreetWithWish.contains(possibleStreetWithWish.get(i +1))) {
+                                   testedStreetWithWish.add(possibleStreetWithWish.get(i + 1));
+                               }
+
+                           } else if (possibleStreetWithWish.get(i).getRank().ordinal() == possibleStreetWithWish.get(j).getRank().ordinal() + 2) {
+
+                               if (!testedStreetWithWish.contains(possibleStreetWithWish.get(i))) {
+                                   testedStreetWithWish.add(possibleStreetWithWish.get(i));
+                               }
+                               if (!testedStreetWithWish.contains(possibleStreetWithWish.get(j))) {
+                                   testedStreetWithWish.add(possibleStreetWithWish.get(j));
+                               }
+                               logger.info("not true possibleStreetWish: " + possibleStreetWithWish.size());
+                           }else if (testedStreetWithWish.size() < 4){
+                               logger.info("OCCURED: size smaller than 4");
+                               testedStreetWithWish.clear();
+                           }else if (possibleStreetWithWish.size() - i <= 3){
+                               logger.info("occured" + (testedStreetWithWish.size() - i ));
+                               i = 0;
+                        }
+                }
+        }
+                Collections.sort(testedStreetWithWish);
+                Collections.sort(lastPlayedCards);
+                //check if the street contains the wished card from Mah Jong and check if the third card has the higher ordinal than the last played cards
+                for(Srv_Card c : testedStreetWithWish){
+                    if(c.getRank().ordinal() == mahJongWishCard.getRank().ordinal() &&
+
+                            testedStreetWithWish.get(2).getRank().ordinal() > lastPlayedCards.get(2).getRank().ordinal()){
+
+                        found = true;
+                    }
+
+            }
+
         return found;
     }
 
@@ -276,7 +486,7 @@ public enum Srv_HandType {
                     foundOnePair = true;
                     logger.info("foundOnePair");
                 }
-            } else { // special card included?
+            } else { // special card included
                 if (clonedCards.get(0).getRank() == Srv_Rank.Phoenix) { //Is it a phoenix? Case 2 specialCard: Phoenix has not the highest rank
                     logger.info("Check isFullHouse with Phoenix");
                     clonedCards.remove(0); //delete phoenix from clonedCards
@@ -369,7 +579,7 @@ public enum Srv_HandType {
                             }
                         }
                     }
-                    if(counterB == 5){
+                    if(counterB <= 5){
                         found = true;
                     }
                 }
@@ -432,19 +642,19 @@ public enum Srv_HandType {
         for (int i =0; i < cards.size(); i++) {
             switch (cards.get(i).getRank()) { //Check each card
                 case Phoenix:
-                    //Srv_Table.phoenixPlayed();
+                    table.phoenixPlayed(cards.get(i));
                     logger.info("PhoenixPlayed");
                     break;
                 case Dragon:
-                    //Srv_Table.dragonPlayed();
+                    table.dragonPlayed();
                     logger.info("DragonPlayed");
                     break;
                 case Dog:
-                    //Srv_Table.dogPlayed();
+                    table.dogPlayed();
                     logger.info("DogPlayed");
                     break;
                 case Mahjong:
-                    //Srv_Table.mahjongPlayed();
+                    table.mahJongPlayed();
                     logger.info("MahjongPlayed");
                     break;
             }
@@ -453,21 +663,27 @@ public enum Srv_HandType {
 
         public static boolean isHigher (ArrayList<Srv_Card> tableCards, ArrayList<Srv_Card> playerCards, Srv_HandType handType) { //@author Sandro, Thomas
             boolean isHigher = false;
-            boolean bombFourPlayer = false;
-            boolean bombStreetPlayer = false;
-            boolean bombFourTable = false;
-            boolean bombStreetTable = false;
+
 
             switch (handType) {
                 case SingleCard:
                     if (tableCards.size() == 0) { // No card on the table -> Player has automatically the higher SingleCard
                         isHigher = true;
+                        if (includesSpecialCards(playerCards) == true) { //specialCard?
+                            callSpecialCard(playerCards);
+                        }
                         logger.info("Player SingleCard isHigher");
                     } else {
-                        if (tableCards.size() == 1) { //One Card is on the table
-                            if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal()) { //Which card is higher?
-                                isHigher = true;
-                                logger.info("Player SingleCard isHigher");
+                        if (tableCards.size() == 1 && playerCards.get(0).getRank() != Srv_Rank.Dog) { //One Card is on the table / Dog not allowed to play in a running game
+                            if (tableCards.get(0).getRank() == Srv_Rank.Phoenix) { //on the Table a Phoenix?
+                                if (tableCards.get(0).getPhoenixRank() < playerCards.get(0).getRank().ordinal()+2) { //compare with phoenixRank
+                                    isHigher = true;
+                                }
+                            } else {
+                                if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal()) { //compare with normal rank
+                                    isHigher = true;
+                                    logger.info("Player SingleCard isHigher");
+                                }
                             }
                         }
                     }
@@ -559,7 +775,13 @@ public enum Srv_HandType {
                             }
                         }
                     }
+                    break;
+                default:
+                    isHigher = false;
+                    break;
             }
             return isHigher;
     }
+
+
 }
