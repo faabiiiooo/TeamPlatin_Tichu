@@ -22,7 +22,7 @@ public class Clt_View {
         this.model = model;
 
         startScreen = new Clt_StartScreen(primaryStage);
-        startTableView();
+
     }
 
     public void startTableView(){
