@@ -303,10 +303,21 @@ public class Srv_Table {
 
     //@author Fabio
     protected void dragonPlayed(){
-        if(lastPlayedCards.size() == 1){
-            
-        } else {
 
+        Srv_Player activePlayer = null;
+        Srv_Player rival = null;
+
+        for(Srv_Player p : playersAtTable){ //check which player is active
+            if(p.isActive()){
+                activePlayer = p;
+            }
+            if(activePlayer != null && p.getTeamID() != activePlayer.getTeamID() && !activePlayer.equals(p)){ //find a rival
+                rival = p;
+            }
+        }
+
+        if(rival != null){ //transfer cards on table to rival
+            transferCards(rival);
         }
 
     }
