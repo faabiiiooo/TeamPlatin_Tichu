@@ -1,8 +1,6 @@
 package server;
 
 import server.controller.Srv_Controller;
-import server.model.Srv_Countdown;
-import server.model.Srv_Deck;
 import server.model.Srv_Model;
 
 public class Tichu_Srv {

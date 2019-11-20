@@ -1,5 +1,6 @@
 package client.view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -62,6 +63,7 @@ public class Clt_TableView extends BorderPane {
 
 
         root.getChildren().addAll(this);
+        StackPane.setAlignment(this, Pos.CENTER);
 
         Scene tableScene = new Scene(root);
         tableScene.getStylesheets().add(getClass().getResource("TableView.css").toExternalForm());

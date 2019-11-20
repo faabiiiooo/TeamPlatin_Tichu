@@ -17,20 +17,38 @@ public class RivalPaneL extends HBox {
     private VBox vBox = new VBox();
 
     public RivalPaneL(){
+
         this.avatarLabel = new Label();
-        this.avatarLabel.setGraphic(new ImageView(team1));
+        ImageView imgViewAvatar = new ImageView(team1);
+        this.avatarLabel.setGraphic(imgViewAvatar);
+        imgViewAvatar.fitHeightProperty().bind(avatarLabel.heightProperty());
+        imgViewAvatar.fitWidthProperty().bind(avatarLabel.widthProperty());
+        avatarLabel.getStyleClass().add("avatar");
+        imgViewAvatar.setPreserveRatio(true);
 
         this.cardsLabel = new Label();
-        this.cardsLabel.setGraphic(new ImageView(cardBack));
+        ImageView imgViewCard = new ImageView(cardBack);
+        this.cardsLabel.setGraphic(imgViewCard);
+        imgViewCard.fitWidthProperty().bind(cardsLabel.widthProperty());
+        imgViewCard.fitHeightProperty().bind(cardsLabel.heightProperty());
+        cardsLabel.getStyleClass().add("cardBack");
+        imgViewCard.setPreserveRatio(true);
+
 
         this.rice = new Label();
-        this.rice.setGraphic(new ImageView(riceImg));
+        ImageView imgViewRice = new ImageView(riceImg);
+        this.rice.setGraphic(imgViewRice);
+        imgViewRice.fitWidthProperty().bind(rice.widthProperty());
+        imgViewRice.fitHeightProperty().bind(rice.heightProperty());
+        this.rice.getStyleClass().add("rice");
+        imgViewRice.setPreserveRatio(true);
 
         this.vBox.getChildren().addAll(avatarLabel, rice);
 
-        this.getChildren().addAll(vBox, cardsLabel);
 
-        cardsLabel.getStyleClass().add("cardBack");
+
+        this.getChildren().addAll(vBox,cardsLabel);
+
     }
 
     public Label getCardsLabel() {

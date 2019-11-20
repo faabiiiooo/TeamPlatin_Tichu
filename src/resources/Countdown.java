@@ -1,9 +1,9 @@
-package server.model;
+package resources;
 
 import resources.ServiceLocator;
 import java.util.logging.Logger;
 
-public class Srv_Countdown extends Thread { //@author Sandro Countdown is a Thread
+public class Countdown extends Thread { //@author Sandro Countdown is a Thread
 
     private static ServiceLocator sl = ServiceLocator.getServiceLocator();
     private static Logger logger = sl.getLogger();
@@ -12,7 +12,7 @@ public class Srv_Countdown extends Thread { //@author Sandro Countdown is a Thre
     private int maximum = 30; //30 second time for a move
     private boolean pause = true;
 
-    public Srv_Countdown() {
+    public Countdown() {
         super("Srv_CountdownThread");
         this.setDaemon(true); //automatically close Thread if program close
     }
