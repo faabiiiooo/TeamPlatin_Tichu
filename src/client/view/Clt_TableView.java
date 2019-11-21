@@ -27,6 +27,7 @@ public class Clt_TableView extends BorderPane {
     private final HBox top;
     private final Label countdown;
 
+
     private final Stage primaryStage;
 
     private final ServiceLocator sl = ServiceLocator.getServiceLocator();

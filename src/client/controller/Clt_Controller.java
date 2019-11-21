@@ -3,13 +3,23 @@ package client.controller;
 import client.model.Clt_DataStore;
 import client.model.Clt_Model;
 import client.view.Clt_View;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import resources.Message;
 import resources.MessageResponse;
 import resources.MessageStats;
 import resources.ServiceLocator;
 import resources.Card;
+import server.model.Srv_Deck;
+import server.model.Srv_Model;
 
+import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -43,13 +53,26 @@ public class Clt_Controller { //Controller is a Singleton
             } else {
                 view.getStartScreen().getTxtIpAddress().setText("");
                 view.getStartScreen().getTxtIpAddress().setDisable(false);
+
             }
         });
 
     }
 
+    private void processTichuButton(){
+        logger.severe("Hallo Muetter");
+
+
+        }
+
+
+
+
+
+
     private void setTableViewOnAction(){
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
+        view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
     }
 
     //@author Fabio

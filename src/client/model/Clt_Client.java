@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-
+//@author Pascal
 public class Clt_Client extends Thread{
 
     private final int PORT=10456;

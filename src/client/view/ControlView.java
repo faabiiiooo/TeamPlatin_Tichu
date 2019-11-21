@@ -15,6 +15,7 @@ public class ControlView extends HBox {
     private Button playButton, passButton, bombButton, callTichuButton;
     private Label countDownLabel;
 
+
     public ControlView(){
         this.playButton = new Button(translator.getString("button.playCards"));
         this.passButton = new Button(translator.getString("button.pass"));
