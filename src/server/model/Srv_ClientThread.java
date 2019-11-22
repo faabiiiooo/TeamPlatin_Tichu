@@ -21,12 +21,15 @@ public class Srv_ClientThread extends Thread {
     private Srv_Server server;
     private Srv_Controller controller;
 
+    private final int playerID;
+
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
 
 
-    public Srv_ClientThread(Srv_Server server, InputStream in, OutputStream out) {
+    public Srv_ClientThread(Srv_Server server, InputStream in, OutputStream out, int playerID) {
         super("ClientThread for Client " + id_generator);
+        this.playerID = playerID;
         controller = Srv_Controller.getController();
         ID = id_generator;
         id_generator++;

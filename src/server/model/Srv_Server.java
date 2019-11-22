@@ -44,7 +44,9 @@ public class Srv_Server extends Thread {
             while(true){ //Create new Thread for each Client.
                 Socket socket = listener.accept();
                 clientSockets.add(socket);  //Keep ClientThreads alive
-                Srv_ClientThread client = new Srv_ClientThread(this,socket.getInputStream(),socket.getOutputStream());
+                Srv_Player newPlayer = new Srv_Player();
+                Srv_ClientThread client = new Srv_ClientThread(this,socket.getInputStream(),socket.getOutputStream(), newPlayer.getPLAYER_ID());
+                newPlayer.setClientID(client.getID());
                 clientThreads.add(client);
                 client.start();
 
