@@ -47,6 +47,7 @@ public class Srv_Server extends Thread {
                 Srv_Player newPlayer = new Srv_Player();
                 Srv_ClientThread client = new Srv_ClientThread(this,socket.getInputStream(),socket.getOutputStream(), newPlayer.getPLAYER_ID());
                 newPlayer.setClientID(client.getID());
+                serviceLocator.getTable().addPlayerToTable(newPlayer); //ad the newly generated player to the table
                 clientThreads.add(client);
                 client.start();
 
