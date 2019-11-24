@@ -16,8 +16,6 @@ import resources.MessageResponse;
 import resources.MessageStats;
 import resources.ServiceLocator;
 import resources.Card;
-import server.model.Srv_Deck;
-import server.model.Srv_Model;
 
 import javax.tools.Tool;
 import java.util.ArrayList;
@@ -59,11 +57,27 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
+    //@author Sandro
+    private void processSkipButton() {
+        logger.info("processSkipButton");
+
+        boolean successful = false;
+        successful = model.sendMessage(model.createMessage("string","skip")); //send skip-string to server and get answer of server
+
+        if(successful){ //does Server accept the cards? if yes, remove the cards from hand
+            logger.info("Skip-String sent to Server.");
+        } else { //else give feedback to the user
+            logger.info("Skipping not possible");
+        }
+    }
+
+
 
 
     private void setTableViewOnAction(){
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
         view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
+        view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
     }
 
     private void processTichuButton(){
