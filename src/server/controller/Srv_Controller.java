@@ -1,13 +1,18 @@
 package server.controller;
 
 import resources.Message;
+import resources.ServiceLocator;
 import server.model.Srv_Model;
 import server.model.Srv_Player;
+
+import java.util.logging.Logger;
 
 public class Srv_Controller { //Servercontroller is generated as a Singleton
 
     private Srv_Model model;
     private static Srv_Controller controller;
+    private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+    private Logger logger = serviceLocator.getLogger();
 
     //@author Fabio
     public static Srv_Controller getController(){
@@ -46,10 +51,19 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 switch (incoming) {
-                    case "skip":
-
+                    case "skip": //@author Sandro
+                        logger.info("Srv_processSkipButton");
+                        for (Srv_Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
+                            if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID?
+                                if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
+                                    logger.info("Skip not allowed - Player must play wished card!");
+                                } else {
+                                    logger.info("Player can skip");
+                                    this.serviceLocator.getTable().skip();
+                                }
+                            }
+                        }
                         break;
-
                     case "tichu"://Pascal
                         // TODO: 24.11.2019 ANtwort an den Client fehlt noch
                         for (Srv_Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel
@@ -62,13 +76,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                     }
                                 }
                             }
-                            }
-
-
                         }
-
                         break;
-
+                    }
                 }
 
                 return msgOut;
