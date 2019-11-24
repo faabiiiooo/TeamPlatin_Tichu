@@ -50,7 +50,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 switch (incoming) {
-                    case "skip":
+                    case "skip": //@author Sandro
                         logger.info("Srv_processSkipButton");
 
                         for(int i = 0; i < this.serviceLocator.getTable().getSeats().size(); i++) {
