@@ -13,6 +13,7 @@ Srv_Player {
 
     private final int PLAYER_ID;
     private static int idgenerator = -1;
+    private int clientID;
 
     private final ServiceLocator serviceLocator;
     private Translator translator;
@@ -140,4 +141,6 @@ Srv_Player {
     public boolean isHasWishedCard() { return hasWishedCard; }
 
     public void setHasWishedCard(boolean hasWishedCard) { this.hasWishedCard = hasWishedCard; }
+
+    public void setClientID(int clientID){ this.clientID = clientID; }
 }
