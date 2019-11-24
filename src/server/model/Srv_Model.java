@@ -16,6 +16,7 @@ public class Srv_Model {
         Srv_Server server = new Srv_Server();
         server.start();
         createGame();
+        serviceLocator.setSrvModel(this);
 
     }
 
@@ -27,7 +28,7 @@ public class Srv_Model {
 
     }
 
-    private void startGame(){
+    public void startGame(){
 
         Srv_Round firstRound = new Srv_Round();
         game.getRounds().add(firstRound);

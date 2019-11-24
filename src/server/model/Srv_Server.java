@@ -27,6 +27,8 @@ public class Srv_Server extends Thread {
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
 
+    private boolean gameAlreadyStarted = false;
+
 
     //Creating Server Thread
 
@@ -50,6 +52,10 @@ public class Srv_Server extends Thread {
                 serviceLocator.getTable().addPlayerToTable(newPlayer); //ad the newly generated player to the table
                 clientThreads.add(client);
                 client.start();
+                if(clientThreads.size() == 4 && !gameAlreadyStarted){ //start game when 4 clients are connected.
+                    logger.info("Going to start first Round!");
+                    this.startGame();
+                }
 
             }
 
@@ -111,5 +117,10 @@ public class Srv_Server extends Thread {
 
        return stoppedClientFound;
 
+    }
+
+    private void startGame(){
+        serviceLocator.getSrvModel().startGame();
+        this.gameAlreadyStarted = true;
     }
 }
