@@ -26,6 +26,8 @@ public class Srv_Table {
 
     public Srv_Table(Srv_Game game){
         this.game = game;
+        this.createSeats();
+        this.createDeck();
 
 
     }
@@ -133,7 +135,7 @@ public class Srv_Table {
 
     //@author Pascal
     //Create new Seats with ID 1-4 and add it to the List
-    private Srv_Seat createSeat(){
+    private Srv_Seat createSeats(){
         for(int i=0;i<4;i++){
             Srv_Seat s=new Srv_Seat(i+1);
             this.seats.add(s);
@@ -341,6 +343,11 @@ public class Srv_Table {
 
     }
 
+    //@author Fabio
+    public void addPlayerToTable(Srv_Player player){
+        this.playersAtTable.add(player);
+    }
+
 
 
 
@@ -353,4 +360,7 @@ public class Srv_Table {
 
     public void setMahJongWishCard(Card wishCard){ this.mahJongWishCard = wishCard; }
 
+    public ArrayList<Srv_Player> getPlayersAtTable() {
+        return playersAtTable;
+    }
 }

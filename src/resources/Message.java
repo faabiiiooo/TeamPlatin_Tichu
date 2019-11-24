@@ -10,6 +10,7 @@ public class Message implements Serializable {
     protected static final long serialVersionUID= 1;
 
     protected final String messageID;
+    protected int senderID;
 
     protected final ArrayList<Object> objects = new ArrayList<>();
     protected String type;
@@ -37,4 +38,6 @@ public class Message implements Serializable {
     public void setMessageStatus(MessageStats messageStatus){ this.messageStatus = messageStatus;}
 
     public MessageStats getMessageStatus(){ return messageStatus; }
+
+    public void setSenderID(int senderID) { this.senderID = senderID; }
 }
