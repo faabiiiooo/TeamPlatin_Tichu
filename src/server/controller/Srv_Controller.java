@@ -2,6 +2,7 @@ package server.controller;
 
 import resources.Message;
 import server.model.Srv_Model;
+import server.model.Srv_Player;
 
 public class Srv_Controller { //Servercontroller is generated as a Singleton
 
@@ -27,34 +28,49 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
     }
 
     //@author Fabio
-    public Message processIncomingMessage(Message msgIn){ // Generates Answermessage for every Incoming Message
+    public Message processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
         Message msgOut = null;
 
-        switch (msgIn.getType()){
+        switch (msgIn.getType()) {
 
             case "card":  //generating a Card from Message
 
-            break;
+                break;
 
             case "player":
 
 
-            break;
+                break;
 
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
-                switch (incoming){
+                switch (incoming) {
                     case "skip":
+
+                        break;
+
+                    case "tichu"://Pascal
+                        // TODO: 24.11.2019 ANtwort an den Client fehlt noch
+                        for (Srv_Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel
+                            if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID
+                                if (p.getHandCards().size() == 14) {//Check if Handcards equals 14
+                                    p.setSaidSmallTichu(true);//Player is abel to call a small Tichu
+                                } else {
+                                    if (p.getHandCards().size() <= 8) {//Check if Handcards <8
+                                        p.setSaidBigTichu(true);//Player is abel to call a bigTichu
+                                    }
+                                }
+                            }
+                            }
+
+
+                        }
 
                         break;
 
                 }
 
-            break;
-
+                return msgOut;
         }
-
-        return msgOut;
     }
-}

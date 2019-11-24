@@ -40,4 +40,8 @@ public class Message implements Serializable {
     public MessageStats getMessageStatus(){ return messageStatus; }
 
     public void setSenderID(int senderID) { this.senderID = senderID; }
+
+    public int getSenderID() {
+        return senderID;
+    }
 }

@@ -11,11 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import resources.Message;
-import resources.MessageResponse;
-import resources.MessageStats;
-import resources.ServiceLocator;
-import resources.Card;
+import resources.*;
 
 import javax.tools.Tool;
 import java.util.ArrayList;
@@ -31,6 +27,7 @@ public class Clt_Controller { //Controller is a Singleton
     private Clt_Model model;
     private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private Logger logger = serviceLocator.getLogger();
+    private final Translator translator = serviceLocator.getTranslator();
 
 
     public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model){
@@ -76,10 +73,20 @@ public class Clt_Controller { //Controller is a Singleton
             logger.info("Skipping not possible");
         }
     }
-
+    //@author Pascal
     private void processTichuButton(){
-        logger.severe("Hallo Muetter");
-        view.getTableView().getTichuLabel().setText("Sali Muetter");
+        logger.info("processTichuButton");
+
+        boolean successful=false;
+        successful=model.sendMessage(model.createMessage("string","tichu"));//Send a tichu String to Server
+        if(successful){
+            logger.info("Tichu-String sent to Server");
+            view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu"));//Show a message in the Gui that the player has announced a Tichu
+            //view.getTableView().getControls().getCallTichuButton().setDisable(true);
+        }else{
+            logger.info("saying tichu is not possible");
+        }// TODO: 24.11.2019 Button Disable fehlt noch
+
 
 
     }

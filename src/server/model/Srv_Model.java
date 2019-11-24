@@ -36,4 +36,8 @@ public class Srv_Model {
         game.getTable().dealCards();
         logger.info("dealed cards");
     }
+
+    public Srv_Game getGame() {
+        return game;
+    }
 }
