@@ -98,3 +98,7 @@ cardBackTop{
 
 
 }
+#start-pane{
+    -fx-background-image: url(../../resources/images/backgrounds/wood.jpg);
+    -fx-background-size: cover;
+}

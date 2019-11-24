@@ -64,7 +64,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             }
                         }
                         break;
-                    case "tichu"://Pascal
+                    case "tichu"://@author Pascal
                         // TODO: 24.11.2019 ANtwort an den Client fehlt noch
                         for (Srv_Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel
                             if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID
