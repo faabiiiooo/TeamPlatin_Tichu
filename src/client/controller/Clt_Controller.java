@@ -59,20 +59,18 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
-    private void processTichuButton(){
-        logger.severe("Hallo Muetter");
-
-
-        }
-
-
-
-
 
 
     private void setTableViewOnAction(){
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
         view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
+    }
+
+    private void processTichuButton(){
+        logger.severe("Hallo Muetter");
+        view.getTableView().getTichuLabel().setText("Sali Muetter");
+
+
     }
 
     //@author Fabio

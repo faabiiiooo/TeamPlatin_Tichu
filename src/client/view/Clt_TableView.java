@@ -26,6 +26,10 @@ public class Clt_TableView extends BorderPane {
     private final VBox bottom;
     private final HBox top;
     private final Label countdown;
+    private final Label tichuLabel;
+
+
+
 
 
     private final Stage primaryStage;
@@ -38,6 +42,8 @@ public class Clt_TableView extends BorderPane {
     public Clt_TableView(Stage primaryStage){
 
         this.primaryStage = primaryStage;
+        this.primaryStage.setMaximized(true);
+       // this.primaryStage.setResizable(false);
 
         this.root = new StackPane();
         this.rivalLeft = new RivalPaneL();
@@ -50,12 +56,14 @@ public class Clt_TableView extends BorderPane {
         this.countdown = new Label();
         this.controls = new ControlView();
         this.tableCards = new TableCards();
+        this.tichuLabel=new Label();
 
         this.setLeft(rivalLeft);
         this.setRight(rivalRight);
 
         top.getChildren().addAll(rivalTop, pointView);
         this.setTop(top);
+
 
         bottom.getChildren().addAll(playerView,controls);
         this.setBottom(bottom);
@@ -64,6 +72,8 @@ public class Clt_TableView extends BorderPane {
 
 
         root.getChildren().addAll(this);
+        root.getChildren().add(tichuLabel);
+
         StackPane.setAlignment(this, Pos.CENTER);
 
         Scene tableScene = new Scene(root);
@@ -73,6 +83,9 @@ public class Clt_TableView extends BorderPane {
         this.primaryStage.setTitle(translator.getString("program.name"));
         this.primaryStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.primaryStage.show();
+
+
+
 
     }
 
@@ -115,5 +128,9 @@ public class Clt_TableView extends BorderPane {
 
     public Label getCountdown() {
         return countdown;
+    }
+
+    public Label getTichuLabel() {
+        return tichuLabel;
     }
 }

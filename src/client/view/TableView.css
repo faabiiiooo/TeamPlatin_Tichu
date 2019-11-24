@@ -23,27 +23,26 @@
 
 .avatar{
     -fx-min-width: 50;
-    -fx-pref-width: 166;
-    -fx-max-width: 500;
+    -fx-pref-width: 150;
+    -fx-max-width: 300;
     -fx-min-height: 80;
-    -fx-pref-height: 242;
-    -fx-max-height: 800;
+    -fx-pref-height: 200;
+    -fx-max-height: 300;
+
 
 
 
 }
 
 .rice{
-    -fx-min-width: 50;
-    -fx-pref-width: 88;
-    -fx-max-width: 500;
-    -fx-min-height: 80;
-    -fx-pref-height: 110;
-    -fx-max-height: 800;
+    -fx-min-width:50;
+    -fx-max-width: 70;
+    -fx-min-height: 50;
+    -fx-max-height: 70;
 
 }
 
-#cardBackTop{
+cardBackTop{
     -fx-min-width: 25;
     -fx-pref-width: 58;
     -fx-max-width: 250;
@@ -51,25 +50,51 @@
     -fx-pref-height: 98;
     -fx-max-height: 400;
 
+
+
 }
 
 #riceTop{
-    -fx-min-width: 50;
-    -fx-pref-width: 141;
-    -fx-max-width: 500;
-    -fx-min-height: 80;
-    -fx-pref-height: 202;
-    -fx-max-height: 800;
+    -fx-min-width:50;
+    -fx-max-width: 70;
+    -fx-min-height: 50;
+    -fx-max-height: 70;
 
 }
 
 .tableCards{
-    -fx-min-width: 300;
-    -fx-min-height: 50;
-    -fx-pref-height: 50;
-    -fx-pref-width: 300;
-    -fx-background-color:#efdf8d;
+     -fx-background-color: rgba(199, 153, 44, 0.52);
+    -fx-border-color: #0a0309;
+    -fx-border-width: 3px;
+    -fx-border-radius:3px;
+
 
 }
+.button {
+    -fx-background-radius: 1em;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-padding: 10, 10, 10, 10;
+
+    -fx-background-color: linear-gradient(rgba(0, 0, 0, 0.8), rgba(102, 115, 255, 0.53));
+    -fx-font-size: 20px;
+}
+.button:pressed {
+    -fx-background-color: linear-gradient(rgba(1, 1, 2, 0.25), rgba(0, 0, 0, 0.13));;
+
+}
+#bottom {
+
+    -fx-spacing: 15.0px;
+    -fx-padding: 5px;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 2px;
+
+}
+.scoreLabels{
+    -fx-font-family: "Arial Black";
 
 
+}

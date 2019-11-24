@@ -5,17 +5,18 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 
-public class RivalPaneT extends VBox {
+public class RivalPaneT extends HBox {
 
     private Label avatarLabel, cardsLabel, rice;
     private Image team2 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team2_avatar.png"));
     private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
     private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
-    private final HBox hBox = new HBox();
+    private GridPane gridPane=new GridPane();
 
     public RivalPaneT(){
         this.getStyleClass().add("RivalPaneT");
@@ -32,11 +33,12 @@ public class RivalPaneT extends VBox {
         ImageView imgViewCard = new ImageView(cardBack);
         imgViewCard.setRotate(90);
         this.cardsLabel.setGraphic(imgViewCard);
-        imgViewCard.fitWidthProperty().bind(cardsLabel.widthProperty());
+       imgViewCard.fitWidthProperty().bind(cardsLabel.widthProperty());
         imgViewCard.fitHeightProperty().bind(cardsLabel.heightProperty());
         cardsLabel.getStyleClass().add("cardBack");
         cardsLabel.setId("cardBackTop");
         imgViewCard.setPreserveRatio(true);
+
 
         this.rice = new Label();
         ImageView imgViewRice = new ImageView(riceImg);
@@ -46,12 +48,13 @@ public class RivalPaneT extends VBox {
         this.rice.setId("riceTop");
         imgViewRice.setPreserveRatio(true);
 
-        this.setPadding(new Insets(0,600,80,600));
 
-        this.hBox.getChildren().addAll(avatarLabel, rice);
-
-
-        this.getChildren().addAll(hBox, cardsLabel);
+        gridPane.setPadding(new Insets(0,450,0,660));
+        gridPane.add(avatarLabel,0,1);
+        gridPane.add(cardsLabel,0,2);
+        gridPane.add(rice,2,1);
+        gridPane.setHgap(8);
+        this.getChildren().add(gridPane);
 
     }
 

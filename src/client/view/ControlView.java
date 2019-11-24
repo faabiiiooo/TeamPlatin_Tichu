@@ -1,5 +1,6 @@
 package client.view;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -16,6 +17,7 @@ public class ControlView extends HBox {
     private Label countDownLabel;
 
 
+
     public ControlView(){
         this.playButton = new Button(translator.getString("button.playCards"));
         this.passButton = new Button(translator.getString("button.pass"));
@@ -23,7 +25,9 @@ public class ControlView extends HBox {
         this.callTichuButton = new Button(translator.getString("button.callTichu"));
         this.countDownLabel = new Label("");
 
+        this.setId("bottom");
         this.getChildren().addAll(countDownLabel,playButton,passButton,bombButton,callTichuButton);
+
 
     }
 

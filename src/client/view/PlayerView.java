@@ -1,5 +1,6 @@
 package client.view;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import resources.ServiceLocator;
@@ -13,7 +14,9 @@ public class PlayerView extends HBox {
 
     public PlayerView(){
         super();
-        this.getStyleClass().add("TableView");
+        //this.getStyleClass().add("TableView");
+
+
 
         this.getChildren().add(cardView);
 

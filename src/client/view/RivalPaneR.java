@@ -4,17 +4,18 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class RivalPaneR extends HBox {
+public class RivalPaneR extends VBox {
 
     private Label avatarLabel, cardsLabel, rice;
     private Image team1 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team1_avatar.png"));
     private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
     private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
 
-    private VBox vBox = new VBox();
+    private GridPane gridPane =new GridPane();
 
     public RivalPaneR(){
         this.avatarLabel = new Label();
@@ -43,11 +44,12 @@ public class RivalPaneR extends HBox {
         imgViewRice.setPreserveRatio(true);
 
         this.setPadding(new Insets(0,30,0,80));
+        gridPane.add(rice,2,2);
+        gridPane.add(cardsLabel,1,3);
+        gridPane.setHgap(5);
 
-
-        this.vBox.getChildren().addAll(avatarLabel, rice);
-
-        this.getChildren().addAll(cardsLabel, vBox);
+        gridPane.add(avatarLabel,2,3);
+        this.getChildren().add(gridPane);
 
     }
 
