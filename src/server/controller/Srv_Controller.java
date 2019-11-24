@@ -1,12 +1,17 @@
 package server.controller;
 
 import resources.Message;
+import resources.ServiceLocator;
 import server.model.Srv_Model;
+
+import java.util.logging.Logger;
 
 public class Srv_Controller { //Servercontroller is generated as a Singleton
 
     private Srv_Model model;
     private static Srv_Controller controller;
+    private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+    private Logger logger = serviceLocator.getLogger();
 
     //@author Fabio
     public static Srv_Controller getController(){
@@ -44,11 +49,21 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
-                switch (incoming){
+                switch (incoming) {
                     case "skip":
+                        logger.info("Srv_processSkipButton");
 
+                        for(int i = 0; i < this.serviceLocator.getTable().getSeats().size(); i++) {
+                            if (this.serviceLocator.getTable().getSeats().get(i).getPlayer().isActive()) { //Search isActivePlayer
+                                if (this.serviceLocator.getTable().getSeats().get(i).getPlayer().isHasWishedCard()) { //Case: Player want to skip, but has wishedCard of mahjong
+                                    logger.info("Player cant skip -> Play the wished card!");
+                                } else {
+                                    logger.info("Player can skip");
+                                    this.serviceLocator.getTable().skip();
+                                }
+                            }
+                        }
                         break;
-
                 }
 
             break;
