@@ -57,6 +57,12 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
+    private void setTableViewOnAction(){
+        view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
+        view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
+        view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
+    }
+
     //@author Sandro
     private void processSkipButton() {
         logger.info("processSkipButton");
@@ -69,15 +75,6 @@ public class Clt_Controller { //Controller is a Singleton
         } else { //else give feedback to the user
             logger.info("Skipping not possible");
         }
-    }
-
-
-
-
-    private void setTableViewOnAction(){
-        view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
-        view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
-        view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
     }
 
     private void processTichuButton(){
