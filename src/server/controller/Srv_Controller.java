@@ -54,7 +54,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     case "skip": //@author Sandro
                         logger.info("Srv_processSkipButton");
                         for (Srv_Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
-                            if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID?
+                            if (p.isActive()) {// Find activePlayer
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
                                 } else {
