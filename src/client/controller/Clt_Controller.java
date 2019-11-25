@@ -2,7 +2,10 @@ package client.controller;
 
 import client.model.Clt_DataStore;
 import client.model.Clt_Model;
+import client.view.CardView;
 import client.view.Clt_View;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -28,6 +31,7 @@ public class Clt_Controller { //Controller is a Singleton
     private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private Logger logger = serviceLocator.getLogger();
     private final Translator translator = serviceLocator.getTranslator();
+    private final Clt_DataStore dataStore = Clt_DataStore.getDataStore();
 
 
     public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model){
@@ -58,6 +62,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
         view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
+        model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
     }
 
     //@author Sandro
@@ -73,6 +78,7 @@ public class Clt_Controller { //Controller is a Singleton
             logger.info("Skipping not possible");
         }
     }
+
     //@author Pascal
     private void processTichuButton(){
         logger.info("processTichuButton");
@@ -139,13 +145,31 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
+    public void handCardChanged(){
+        Platform.runLater(() -> {
+            view.getTableView().getPlayerView().clear();
+        });
+
+        for(Card c : model.getDataStore().getHandCards()){
+            Platform.runLater(() -> {
+                view.getTableView().getPlayerView().addCards(new CardView(c));
+            });
+        }
+
+    }
+
     //@author Fabio
     public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
         switch (msgIn.getType()) {
 
-            case "card":  //generating a Card from Message
-
+            case "card/dealCards":  //getting the playerHand from server
+                ArrayList<Card> handCards = new ArrayList<>();
+                for(Object o : msgIn.getObjects()){
+                    handCards.add((Card) o);
+                }
+                dataStore.getHandCards().clear();
+                dataStore.getHandCards().addAll(handCards);
                 break;
 
             case "player":

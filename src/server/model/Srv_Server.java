@@ -35,6 +35,7 @@ public class Srv_Server extends Thread {
     public Srv_Server(){
         super("Srv_ServerThread");
         logger.info("Srv_Server created.");
+        serviceLocator.setServer(this);
         this.setDaemon(true); //autmatically close Thread when program halt.
 
     }
@@ -122,5 +123,19 @@ public class Srv_Server extends Thread {
     private void startGame(){
         serviceLocator.getSrvModel().startGame();
         this.gameAlreadyStarted = true;
+    }
+
+    public int searchIndexOfClientThreadByID(int id){
+        int index = -1;
+        for(int i = 0; i < this.clientThreads.size(); i++){
+            if(clientThreads.get(i).getID() == id) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public ObservableList<Srv_ClientThread> getClientThreads() {
+        return clientThreads;
     }
 }

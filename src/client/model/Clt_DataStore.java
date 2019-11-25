@@ -65,4 +65,8 @@ public class Clt_DataStore {
         }
         return containsMessage;
     }
+
+    public ObservableList<Card> getHandCards() {
+        return handCards;
+    }
 }

@@ -10,7 +10,6 @@ import resources.Translator;
 
 public class PlayerView extends HBox {
 
-    private  final  Label cardView = new Label();
 
     public PlayerView(){
         super();
@@ -18,7 +17,17 @@ public class PlayerView extends HBox {
 
 
 
-        this.getChildren().add(cardView);
+
 
     }
+
+    public void addCards(CardView cardView){
+        this.getChildren().addAll(cardView);
+    }
+
+    public void clear(){
+        this.getChildren().clear();
+    }
+
+
 }

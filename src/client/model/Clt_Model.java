@@ -39,7 +39,7 @@ public class Clt_Model {
 
     }
 
-    public boolean sendMessage(Message msgOut){
+    public synchronized boolean sendMessage(Message msgOut){
         boolean successful = false;
         client.send(msgOut);
         dataStore.addMessageToQueue(msgOut);
@@ -55,5 +55,7 @@ public class Clt_Model {
 
     }
 
-
+    public Clt_DataStore getDataStore() {
+        return dataStore;
+    }
 }
