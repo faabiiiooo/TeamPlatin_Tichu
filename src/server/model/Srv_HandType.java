@@ -87,8 +87,10 @@ public enum Srv_HandType {
         Collections.sort(clonedCards); //sort our lists with the cards
         Collections.sort(cards);
         //case with no played specialcard
-        if(!includesSpecialCards(cards)){
+        if(!includesSpecialCards(cards) && cards.size() >= 4){
             for(int i = 0; i < clonedCards.size() && pairsFound; i++){ //separately put 2 cards in a new list to send them to the isOnePair Method
+                logger.info("clonedCards size: "+ clonedCards.size());
+                logger.info("i: "+ i);
                   pairCards.add(clonedCards.get(i)); pairCards.add(clonedCards.get(i+1));
                   if (isOnePair(pairCards)){ // if the sent 2 cards are one pair add 1 card to our uniqueList which we need later
                       uniqueList.add(pairCards.get(1));
@@ -113,7 +115,7 @@ public enum Srv_HandType {
         }else {
 
             //the case if a phoenix is included
-            if (includesSpecialCards(clonedCards)){
+            if (includesSpecialCards(clonedCards) && cards.size() >= 4){
                 callSpecialCard(clonedCards); //call the method for the special card
                 for(int i = cards.size()-1; i-1 >= 0; i--){
                     pairCards.add(cards.get(i)); pairCards.add(cards.get(i-1)); //add 2 cards to the paircards list to check them in the isOnePair method

@@ -35,7 +35,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
     private static String[][] XPairCardsPlayer = {
             //{ "8S", "9K", "9S", "8K", "PE", "7S"  }, //with phoenix
-            { "8S", "9K", "9S", "8K", "7K", "7S"  }, //no special card
+            { "8S","8P"  }, //no special card
     };
 
 

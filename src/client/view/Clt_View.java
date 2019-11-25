@@ -5,6 +5,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.net.MalformedURLException;
+
 //Basic Class to start build the GUI
 
 public class Clt_View {
@@ -17,7 +19,7 @@ public class Clt_View {
 
 
 
-    public Clt_View(Stage primaryStage, Clt_Model model){
+    public Clt_View(Stage primaryStage, Clt_Model model) throws MalformedURLException {
         this.primaryStage = primaryStage;
         this.model = model;
 

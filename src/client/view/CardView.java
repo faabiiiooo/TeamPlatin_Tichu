@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import resources.Card;
 
-public class CardView extends Label { //@author Sandro
+public class CardView extends Label { //@author Sandro -> Reference: Poker_Projekt by Bradley Richards
 
     private final Card card;
 

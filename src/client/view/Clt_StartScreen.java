@@ -6,12 +6,16 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import resources.ServiceLocator;
 import resources.Translator;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Stack;
 
 public class Clt_StartScreen extends StackPane {
@@ -25,10 +29,12 @@ public class Clt_StartScreen extends StackPane {
     private final Label lblLanguage, lblBeServer, lblIpAddress, lblTitle;
     private final Button btnNext;
     private final Stage startStage;
+    private Media media;
+    private MediaPlayer mp;
 
     private final GridPane gridPane = new GridPane();
 
-    public Clt_StartScreen(Stage startStage){
+    public Clt_StartScreen(Stage startStage) throws MalformedURLException {
         this.startStage = startStage;
 
         this.beServer = new CheckBox();
@@ -87,6 +93,16 @@ public class Clt_StartScreen extends StackPane {
         this.startStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.startStage.show();
 
+
+        //@author pascal
+       media = new Media(new File("..\\TeamPlatin_Tichu\\src\\resources\\Sound\\hero.mp3")
+                .toURI().toURL().toExternalForm());
+       mp=new MediaPlayer(media);
+       mp.play();
+
+
+
+
     }
 
     public CheckBox getBeServer() {
@@ -104,4 +120,9 @@ public class Clt_StartScreen extends StackPane {
     public void close(){
         this.startStage.close();
     }
+
+    public MediaPlayer getMp() {
+        return mp;
+    }
 }
+

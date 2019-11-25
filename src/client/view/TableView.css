@@ -19,6 +19,13 @@
     -fx-min-height: 120;
     -fx-pref-height: 202;
     -fx-max-height: 800;
+    -fx-text-fill: yellow;
+    -fx-font-size: 50px;
+
+
+
+
+
 }
 
 .avatar{
@@ -28,7 +35,6 @@
     -fx-min-height: 80;
     -fx-pref-height: 200;
     -fx-max-height: 300;
-
 
 
 

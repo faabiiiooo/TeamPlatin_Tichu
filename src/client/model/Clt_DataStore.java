@@ -1,5 +1,6 @@
 package client.model;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
@@ -17,6 +18,7 @@ public class Clt_DataStore {
     private final ArrayList<Message> waitingForResponse = new ArrayList<>();
 
     private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
+    private SimpleIntegerProperty amountOfCards = new SimpleIntegerProperty(handCards.size());
 
     public static Clt_DataStore getDataStore(){
         if(dataStore == null){
@@ -69,4 +71,8 @@ public class Clt_DataStore {
     public ObservableList<Card> getHandCards() {
         return handCards;
     }
+
+    public int getAmountOfCards() { return amountOfCards.get(); }
+
+    public SimpleIntegerProperty amountOfCardsProperty() { return amountOfCards; }
 }

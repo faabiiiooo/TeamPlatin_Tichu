@@ -1,6 +1,7 @@
 package server.controller;
 
 import resources.Card;
+import javafx.collections.ListChangeListener;
 import resources.Message;
 import resources.MessageResponse;
 import resources.ServiceLocator;
@@ -34,6 +35,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
     private Srv_Controller(){ //private constructor becaus Srv_Controller is a singleton
 
     }
+
 
     //@author Fabio
     public Message processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
