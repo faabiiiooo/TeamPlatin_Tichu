@@ -8,7 +8,6 @@ import server.model.Srv_Player;
 
 import java.util.logging.Logger;
 
-import javax.swing.event.ChangeListener;
 
 public class Srv_Controller { //Servercontroller is generated as a Singleton
 

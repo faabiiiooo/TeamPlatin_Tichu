@@ -63,7 +63,6 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
-        view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards()+"");
     }
 
     //@author Sandro
@@ -121,6 +120,15 @@ public class Clt_Controller { //Controller is a Singleton
         this.setTableViewOnAction();
 
     }
+    //@thomas
+    private void updateCardAmountView() {
+        Platform.runLater(()->{
+            view.getTableView().getRivalTop().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
+            view.getTableView().getRivalLeft().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
+            view.getTableView().getRivalRight().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
+
+                });
+    }
 
     //@author Fabio
     public void processPlayButton(){
@@ -155,6 +163,7 @@ public class Clt_Controller { //Controller is a Singleton
         for(Card c : model.getDataStore().getHandCards()){
             Platform.runLater(() -> {
                 view.getTableView().getPlayerView().addCards(new CardView(c));
+                updateCardAmountView();
             });
         }
 
