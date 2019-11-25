@@ -62,7 +62,7 @@ public class Srv_Table {
     }
     //@author thomas
     // method to play out the cards from the active player
-    protected boolean playCards(ArrayList<Card> playerCards){
+    public boolean playCards(ArrayList<Card> playerCards){
         boolean canPlay = false;
         //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
         if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)){

@@ -1,10 +1,13 @@
 package server.controller;
 
+import resources.Card;
 import resources.Message;
+import resources.MessageResponse;
 import resources.ServiceLocator;
 import server.model.Srv_Model;
 import server.model.Srv_Player;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Srv_Controller { //Servercontroller is generated as a Singleton
@@ -39,7 +42,17 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
         switch (msgIn.getType()) {
 
-            case "card":  //generating a Card from Message
+            case "card/playCard":  //generating a Card from Message when card should be played
+                ArrayList<Card> cardsToPlay = new ArrayList<>();
+                for(Object o : msgIn.getObjects()){
+                    cardsToPlay.add((Card) o);
+                }
+                if(model.getGame().getTable().playCards(cardsToPlay)){
+                    logger.info("Sending success Response");
+                    msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
+                } else {
+                    msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
+                }
 
                 break;
 

@@ -39,9 +39,10 @@ public class Clt_Model {
 
     }
 
-    public synchronized boolean sendMessage(Message msgOut){
+    //@author Fabio
+    public boolean sendMessage(Message msgOut){
         boolean successful = false;
-        client.send(msgOut);
+        client.send(msgOut); //sends the message to te server
         dataStore.addMessageToQueue(msgOut);
         msgOut.setMessageStatus(MessageStats.inEvaluation); //set status of message to inEvaluation
         while (msgOut.getMessageStatus() == MessageStats.inEvaluation){ //wait until Message isn't anymore in evaluation
