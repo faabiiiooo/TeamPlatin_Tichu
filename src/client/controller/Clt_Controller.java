@@ -6,9 +6,11 @@ import client.view.CardView;
 import client.view.Clt_View;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -64,6 +66,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
     }
+
 
     //@author Sandro
     private void processSkipButton() {
@@ -137,7 +140,7 @@ public class Clt_Controller { //Controller is a Singleton
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         if(cardsToSend.size() > 0){ // if he has cards selected
-           successful = model.sendMessage(model.createMessage("card",cardsToSend.toArray())); //send cards to server and get answer of server
+           successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
                Clt_DataStore.getDataStore().removeCardsFromHand(cardsToSend);
@@ -154,19 +157,40 @@ public class Clt_Controller { //Controller is a Singleton
     private void displayWrongCardsStatus(){
 
     }
-
-    public void handCardChanged(){
+    //@author Fabio
+    public void handCardChanged(){ //method gets called when client retrieves or playes card
         Platform.runLater(() -> {
             view.getTableView().getPlayerView().clear();
         });
 
         for(Card c : model.getDataStore().getHandCards()){
             Platform.runLater(() -> {
-                view.getTableView().getPlayerView().addCards(new CardView(c));
+                CardView cv = new CardView(c);
+                cv.setOnMouseClicked(e -> processCardClicked(e));
+                view.getTableView().getPlayerView().addCards(cv);
                 updateCardAmountView();
             });
         }
 
+    }
+
+    //@author Fabio
+    private void processCardClicked(MouseEvent e){ //sets a border around the card, adds it to send queue
+        logger.info("clicked on card");
+        CardView source = (CardView) e.getSource();
+        if(!source.isSelected()){
+            source.getStyleClass().add("card-selected");
+            Card c = source.getCard();
+            model.getDataStore().addCardsToSend(c);
+            source.setSelected(true);
+        } else {
+            if(source.isSelected()){
+                source.getStyleClass().remove("card-selected");
+                Card c = source.getCard();
+                model.getDataStore().getCardsToSend().remove(c);
+                source.setSelected(false);
+            }
+        }
     }
 
     //@author Fabio
@@ -175,6 +199,7 @@ public class Clt_Controller { //Controller is a Singleton
         switch (msgIn.getType()) {
 
             case "card/dealCards":  //getting the playerHand from server
+                logger.info("correct case selected");
                 ArrayList<Card> handCards = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     handCards.add((Card) o);
@@ -197,9 +222,12 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Recieved a responseString, going to evaluate it.");
                 MessageResponse responseIn = (MessageResponse) msgIn; //Cast it to a Response
                 String info = (String) responseIn.getObjects().get(0); //Responses always contain only 1 string
+                logger.info("String info from Response: " + info);
                 if(Clt_DataStore.getDataStore().queueContains(responseIn.getParentMessageID())) { //if Data Store contains parent message
+                    logger.info("Datastore contains parent message");
                     for (Message m : Clt_DataStore.getDataStore().getWaitingForResponse()) {
                         if (m.getMessageID().equals(responseIn.getParentMessageID())) { //searching the correct message
+                            logger.info("searching correct message");
                             if (info.equals("ok")) { //if string is ok, and set status of message
                                 m.setMessageStatus(MessageStats.accepted);
                             } else {

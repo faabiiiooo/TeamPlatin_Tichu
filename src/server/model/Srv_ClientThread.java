@@ -65,8 +65,9 @@ public class Srv_ClientThread extends Thread {
             }
 
         } catch (Exception e){
-            server.clientDisconnected(); //when thread gets closes, notify server thread to stop game.
-            //e.printStackTrace();
+            logger.severe("Failed to recieve Message");
+            server.clientDisconnected();
+            e.printStackTrace();
         }
 
 

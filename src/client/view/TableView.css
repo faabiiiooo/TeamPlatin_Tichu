@@ -111,3 +111,8 @@ cardBackTop{
     -fx-background-image: url(../../resources/images/backgrounds/wood.jpg);
     -fx-background-size: cover;
 }
+
+.card-selected{
+    -fx-border-color: green;
+    -fx-border-width: 5px;
+}
