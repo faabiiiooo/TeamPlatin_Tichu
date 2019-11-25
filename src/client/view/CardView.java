@@ -5,15 +5,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import resources.Card;
 
-public class CardView extends Label { //@author Sandro
+public class CardView extends Label { //@author Sandro -> Reference: Poker_Projekt by Bradley Richards
 
-    public CardView() {
+    public CardView(Card card) {
         super();
         this.getStyleClass().add("card");
+        setCard(card);
     }
 
     public void setCard(Card card) { //set the right image of the card
         String fileName = cardToFileName(card);
+        System.out.println(fileName);
         Image image = new Image(this.getClass().getClassLoader().getResourceAsStream("./resources/images/cards/" + fileName));
         ImageView imv = new ImageView(image);
         imv.fitWidthProperty().bind(this.widthProperty());
