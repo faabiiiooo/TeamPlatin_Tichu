@@ -19,6 +19,7 @@ public class Srv_Game { //@author Thomas
         this.teams = createTeams();
         this.rounds = new ArrayList<Srv_Round>();
         this.winner = null;
+        this.table = new Srv_Table(this);
 
     }
     //create two teams and add them to the a list

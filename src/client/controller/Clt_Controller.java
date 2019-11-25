@@ -63,6 +63,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
+        view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards()+"");
     }
 
     //@author Sandro

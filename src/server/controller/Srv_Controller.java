@@ -1,11 +1,14 @@
 package server.controller;
 
+import javafx.collections.ListChangeListener;
 import resources.Message;
 import resources.ServiceLocator;
 import server.model.Srv_Model;
 import server.model.Srv_Player;
 
 import java.util.logging.Logger;
+
+import javax.swing.event.ChangeListener;
 
 public class Srv_Controller { //Servercontroller is generated as a Singleton
 
@@ -31,6 +34,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
     private Srv_Controller(){ //private constructor becaus Srv_Controller is a singleton
 
     }
+
 
     //@author Fabio
     public Message processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message

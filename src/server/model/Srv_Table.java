@@ -47,7 +47,7 @@ public class Srv_Table {
                 playersAtTable.get(i).getHandCards().add(deck.cardToDeal());
             }
         } while (deck.getRemainingCards() != 24);
-
+        logger.info("Remaining Cards in deck: "+deck.getRemainingCards());
     }
 
     //when every player decided, or the countdown has ended, deal the rest od the cards.

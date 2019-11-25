@@ -5,9 +5,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 
 public class RivalPaneT extends HBox {
@@ -29,11 +31,11 @@ public class RivalPaneT extends HBox {
         avatarLabel.getStyleClass().add("avatar");
         imgViewAvatar.setPreserveRatio(true);
 
-        this.cardsLabel = new Label();
+        this.cardsLabel = new Label("TEST");
         ImageView imgViewCard = new ImageView(cardBack);
         imgViewCard.setRotate(90);
         this.cardsLabel.setGraphic(imgViewCard);
-       imgViewCard.fitWidthProperty().bind(cardsLabel.widthProperty());
+        imgViewCard.fitWidthProperty().bind(cardsLabel.widthProperty());
         imgViewCard.fitHeightProperty().bind(cardsLabel.heightProperty());
         cardsLabel.getStyleClass().add("cardBack");
         cardsLabel.setId("cardBackTop");
