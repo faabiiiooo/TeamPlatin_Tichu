@@ -142,4 +142,8 @@ public class Srv_Player {
     public void setHasWishedCard(boolean hasWishedCard) { this.hasWishedCard = hasWishedCard; }
 
     public void setClientID(int clientID){ this.clientID = clientID; }
+
+    public int getClientID() {
+        return clientID;
+    }
 }

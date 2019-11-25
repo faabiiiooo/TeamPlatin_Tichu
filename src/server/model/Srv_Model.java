@@ -1,7 +1,10 @@
 package server.model;
 
+import resources.Countdown;
+import resources.Message;
 import resources.ServiceLocator;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Srv_Model {
@@ -28,6 +31,7 @@ public class Srv_Model {
 
     }
 
+    //author Fabio
     public void startGame(){
 
         Srv_Round firstRound = new Srv_Round();
@@ -35,7 +39,35 @@ public class Srv_Model {
         logger.info("Created first Round");
 
         game.getTable().dealCards();
-        logger.info("dealed cards");
+        logger.info("dealed first 8 cards");
+        this.sendPlayerHandsToClient();
+        Countdown countdown = new Countdown();
+        countdown.startCountdown();
+        logger.info("waiting for players to announce big tichu");
+        while (countdown.isAlive()){
+        }
+        game.getTable().dealRestOfCards();
+        this.sendPlayerHandsToClient();
+        logger.info("dealed all cards");
+    }
+
+    public void sendPlayerHandsToClient(){
+
+        ArrayList<Srv_Player> players = game.getTable().getPlayersAtTable();
+        Srv_Server server = serviceLocator.getServer();
+
+        for(int i = 0; i < players.size(); i++){
+            Message msgOut = null;
+            int clientThreadID = server.searchIndexOfClientThreadByID(players.get(i).getClientID());
+            try {
+                msgOut = new Message("card/dealCards", players.get(i).getHandCards().toArray());
+                server.getClientThreads().get(clientThreadID).send(msgOut);
+                logger.info("Sent player Hands to Client!");
+            } catch (Exception e){
+                logger.severe("cant send cards to client!");
+            }
+
+        }
     }
 
     public Srv_Game getGame() {

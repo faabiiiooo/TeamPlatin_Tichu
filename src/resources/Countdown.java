@@ -13,14 +13,14 @@ public class Countdown extends Thread { //@author Sandro Countdown is a Thread
     private boolean pause = true;
 
     public Countdown() {
-        super("Srv_CountdownThread");
+        super("CountdownThread");
         this.setDaemon(true); //automatically close Thread if program close
     }
 
     public void run() {
         while (true) {
             try {
-                Thread.sleep(1000); //1 count = 1 second
+                Thread.sleep(1); //1 count = 1 second
             } catch (Exception e) {
                 logger.info("Exception: "+e);
             }

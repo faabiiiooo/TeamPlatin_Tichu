@@ -1,6 +1,8 @@
 package resources;
 
-public class Card implements Comparable<Card> { //@author Sandro ; Import Comparable to compare Cards
+import java.io.Serializable;
+
+public class Card implements Comparable<Card>, Serializable { //@author Sandro ; Import Comparable to compare Cards
     private Suit suit;
     private Rank rank;
     private int playerId;
