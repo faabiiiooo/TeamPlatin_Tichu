@@ -48,10 +48,16 @@ public class Srv_Model {
         while (countdown.isAlive()){
         }
         game.getTable().dealRestOfCards();
+        game.getRounds().get(0).checkBeginner();
         this.sendPlayerHandsToClient();
         logger.info("dealed all cards");
     }
 
+    private void addPlayerToTeams(){ //Player 1 and 2 are in a team,
+
+    }
+
+    //@author Fabio
     public void sendPlayerHandsToClient(){
 
         ArrayList<Srv_Player> players = game.getTable().getPlayersAtTable();
@@ -71,6 +77,7 @@ public class Srv_Model {
         }
     }
 
+    //@author Fabio
     public void sendTableCardsToClients(){
 
         ArrayList<Card> tableCards = serviceLocator.getTable().getLastPlayedCards();
@@ -78,6 +85,32 @@ public class Srv_Model {
 
         Message msgOut = new Message("card/tableCards",tableCards.toArray());
         server.broadcast(msgOut);
+
+    }
+
+    //@author Fabio
+    public void sendActivePlayerToClients(){
+
+        ArrayList<Srv_Player> players = game.getTable().getPlayersAtTable();
+        Srv_Server server = serviceLocator.getServer();
+
+        for(int i = 0; i < players.size(); i++){
+            Message msgOut = null;
+            int clientThreadID = server.searchIndexOfClientThreadByID(players.get(i).getClientID());
+            try {
+                msgOut = new Message("boolean/isActive", players.get(i).isActive());
+                server.getClientThreads().get(clientThreadID).send(msgOut);
+                logger.info("Sent activity status to client");
+            } catch (Exception e){
+                logger.severe("cant send activity status to client");
+            }
+
+        }
+
+    }
+
+    public void sendRemainingCardsToClients(){
+
 
     }
 

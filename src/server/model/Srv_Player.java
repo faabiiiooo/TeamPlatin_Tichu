@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class Srv_Player {
 
     private final int PLAYER_ID;
-    private static int idgenerator = -1;
+    private static int idgenerator = 1;
     private int clientID;
 
     private final ServiceLocator serviceLocator;

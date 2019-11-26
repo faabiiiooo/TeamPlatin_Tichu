@@ -69,6 +69,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
         model.getDataStore().getHandCards().addListener((ListChangeListener) c -> handCardChanged());
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
+        model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
         view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards()+"");
     }
 
@@ -186,6 +187,28 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
     //@author Fabio
+    private void activeStatusChanged(boolean oldValue, boolean newValue){
+
+        if(oldValue){
+            Platform.runLater(() -> disableButtons());
+        } else {
+            if(!oldValue){
+                Platform.runLater(() -> enableButtons());
+            }
+        }
+
+    }
+
+
+    private void disableButtons(){
+
+    }
+
+    private void enableButtons(){
+
+    }
+
+    //@author Fabio
     private void processCardClicked(MouseEvent e){ //sets a border around the card, adds it to send queue
         logger.info("clicked on card");
         CardView source = (CardView) e.getSource();
@@ -230,6 +253,11 @@ public class Clt_Controller { //Controller is a Singleton
                 dataStore.getTableCards().clear();
                 dataStore.getTableCards().addAll(tableCards);
                 logger.info("Added TableCards to table");
+                break;
+
+            case "boolean/isActive":
+                boolean isActive = (boolean) msgIn.getObjects().get(0);
+                dataStore.isActiveProperty().set(isActive);
                 break;
 
             case "player":

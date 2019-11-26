@@ -1,5 +1,6 @@
 package client.model;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,8 @@ public class Clt_DataStore {
 
     private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
     private SimpleIntegerProperty amountOfCards = new SimpleIntegerProperty(handCards.size());
+
+    private final SimpleBooleanProperty isActive = new SimpleBooleanProperty(false);
 
     public static Clt_DataStore getDataStore(){
         if(dataStore == null){
@@ -78,5 +81,17 @@ public class Clt_DataStore {
 
     public ObservableList<Card> getTableCards() {
         return tableCards;
+    }
+
+    public boolean isIsActive() {
+        return isActive.get();
+    }
+
+    public SimpleBooleanProperty isActiveProperty() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive.set(isActive);
     }
 }
