@@ -95,10 +95,12 @@ public class Clt_StartScreen extends StackPane {
 
 
         //@author pascal
-       media = new Media(new File("..\\TeamPlatin_Tichu\\src\\resources\\Sound\\hero.mp3")
+     media = new Media(new File("..\\TeamPlatin_Tichu\\src\\resources\\Sound\\Against The Storm.mp3")
                 .toURI().toURL().toExternalForm());
        mp=new MediaPlayer(media);
        mp.play();
+       mp.getOnRepeat();
+
 
 
 

@@ -5,20 +5,20 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 
 public class RivalPaneT extends HBox {
 
     private Label avatarLabel, cardsLabel, rice;
-    private Image team2 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team2_avatar.png"));
+    private Image team2 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team1_avatar.png"));
     private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
     private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
     private GridPane gridPane=new GridPane();
+    private StackPane stack = new StackPane();
+    private Text cardAmountText = new Text();
 
     public RivalPaneT(){
         this.getStyleClass().add("RivalPaneT");
@@ -31,7 +31,7 @@ public class RivalPaneT extends HBox {
         avatarLabel.getStyleClass().add("avatar");
         imgViewAvatar.setPreserveRatio(true);
 
-        this.cardsLabel = new Label("TEST");
+        this.cardsLabel = new Label();
         ImageView imgViewCard = new ImageView(cardBack);
         imgViewCard.setRotate(90);
         this.cardsLabel.setGraphic(imgViewCard);
@@ -40,6 +40,8 @@ public class RivalPaneT extends HBox {
         cardsLabel.getStyleClass().add("cardBack");
         cardsLabel.setId("cardBackTop");
         imgViewCard.setPreserveRatio(true);
+        stack.getChildren().addAll(cardsLabel,cardAmountText);
+        cardAmountText.setId("cardAmount");
 
 
         this.rice = new Label();
@@ -53,7 +55,7 @@ public class RivalPaneT extends HBox {
 
         gridPane.setPadding(new Insets(0,450,0,660));
         gridPane.add(avatarLabel,0,1);
-        gridPane.add(cardsLabel,0,2);
+        gridPane.add(stack,0,2);
         gridPane.add(rice,2,1);
         gridPane.setHgap(8);
         this.getChildren().add(gridPane);
@@ -64,4 +66,5 @@ public class RivalPaneT extends HBox {
         return cardsLabel;
     }
 
+    public Text getCardAmountText() { return cardAmountText; }
 }
