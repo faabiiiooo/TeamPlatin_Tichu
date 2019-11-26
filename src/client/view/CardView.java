@@ -5,10 +5,15 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import resources.Card;
+import resources.ServiceLocator;
+
+import java.util.logging.Logger;
 
 public class CardView extends Label { //@author Sandro -> Reference: Poker_Projekt by Bradley Richards
 
     private final Card card;
+    private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+    private final Logger logger = serviceLocator.getLogger();
 
 
     private final SimpleBooleanProperty selected = new SimpleBooleanProperty();

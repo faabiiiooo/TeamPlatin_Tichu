@@ -63,15 +63,16 @@ public class Srv_Table {
     //@author thomas
     // method to play out the cards from the active player
     public boolean playCards(ArrayList<Card> playerCards){
+        logger.info("Going to play a card");
         boolean canPlay = false;
         //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
         if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)){
+            logger.info("HandType successfuly evaluated");
             //add the last played cards to the allPlayedCards list and clear the lastPlayedCards list for the next cards
             allPlayedCards.addAll(lastPlayedCards); lastPlayedCards.clear();
             //add the new played cards to the list
             lastPlayedCards.addAll(playerCards);
             canPlay = true;
-
         }
 
         return canPlay;
@@ -362,5 +363,9 @@ public class Srv_Table {
 
     public ArrayList<Srv_Player> getPlayersAtTable() {
         return playersAtTable;
+    }
+
+    public ArrayList<Card> getLastPlayedCards() {
+        return lastPlayedCards;
     }
 }

@@ -20,6 +20,7 @@ import resources.*;
 
 import javax.tools.Tool;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.logging.Logger;
 
 //Controller for Client Part of the Game
@@ -36,12 +37,14 @@ public class Clt_Controller { //Controller is a Singleton
     private final Clt_DataStore dataStore = Clt_DataStore.getDataStore();
 
 
+
     public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model){
         this.primaryStage = primaryStage;
         this.view = view;
         this.model = model;
         serviceLocator.setCltController(this);
         this.setStartScreenOnAction();
+
 
     }
 
@@ -64,7 +67,8 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
         view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
-        model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
+        model.getDataStore().getHandCards().addListener((ListChangeListener) c -> handCardChanged());
+        model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
         view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards()+"");
     }
 
@@ -132,10 +136,11 @@ public class Clt_Controller { //Controller is a Singleton
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         if(cardsToSend.size() > 0){ // if he has cards selected
-           successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
+          successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
-               Clt_DataStore.getDataStore().removeCardsFromHand(cardsToSend);
+               dataStore.getHandCards().removeAll(cardsToSend);
+
            } else { //else give feedback to the user
                logger.info("Cards declined by server. player has to replay.");
                this.displayWrongCardsStatus();
@@ -154,6 +159,7 @@ public class Clt_Controller { //Controller is a Singleton
         Platform.runLater(() -> {
             view.getTableView().getPlayerView().clear();
         });
+        logger.info("Cleared HandCards");
 
         for(Card c : model.getDataStore().getHandCards()){
             Platform.runLater(() -> {
@@ -163,6 +169,20 @@ public class Clt_Controller { //Controller is a Singleton
             });
         }
 
+    }
+
+    private void tableCardChanged(){
+        Platform.runLater(() -> {
+            view.getTableView().getTableCards().clear();
+        });
+        logger.info("cleared TableCards");
+
+        for(Card c : model.getDataStore().getTableCards()){
+            Platform.runLater(() -> {
+                CardView cv = new CardView(c);
+                view.getTableView().getTableCards().addCards(cv);
+            });
+        }
     }
 
     //@author Fabio
@@ -190,13 +210,26 @@ public class Clt_Controller { //Controller is a Singleton
         switch (msgIn.getType()) {
 
             case "card/dealCards":  //getting the playerHand from server
-                logger.info("correct case selected");
                 ArrayList<Card> handCards = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     handCards.add((Card) o);
                 }
-                dataStore.getHandCards().clear();
-                dataStore.getHandCards().addAll(handCards);
+                Platform.runLater(() -> {
+                    dataStore.getHandCards().clear();
+                    dataStore.getHandCards().addAll(handCards);
+                });
+                logger.info("Added Cards to hand");
+                logger.info("HandCards: " + dataStore.getHandCards().toString());
+                break;
+
+            case "card/tableCards":
+                ArrayList<Card> tableCards = new ArrayList<>();
+                for(Object o : msgIn.getObjects()){
+                    tableCards.add((Card) o);
+                }
+                dataStore.getTableCards().clear();
+                dataStore.getTableCards().addAll(tableCards);
+                logger.info("Added TableCards to table");
                 break;
 
             case "player":
@@ -220,8 +253,10 @@ public class Clt_Controller { //Controller is a Singleton
                         if (m.getMessageID().equals(responseIn.getParentMessageID())) { //searching the correct message
                             logger.info("searching correct message");
                             if (info.equals("ok")) { //if string is ok, and set status of message
+                                logger.info("Answer is ok");
                                 m.setMessageStatus(MessageStats.accepted);
                             } else {
+                                logger.info("Answer is n-ok");
                                 m.setMessageStatus(MessageStats.declined);
                             }
                         }

@@ -1,5 +1,6 @@
 package server.model;
 
+import resources.Card;
 import resources.Countdown;
 import resources.Message;
 import resources.ServiceLocator;
@@ -68,6 +69,16 @@ public class Srv_Model {
             }
 
         }
+    }
+
+    public void sendTableCardsToClients(){
+
+        ArrayList<Card> tableCards = serviceLocator.getTable().getLastPlayedCards();
+        Srv_Server server = serviceLocator.getServer();
+
+        Message msgOut = new Message("card/tableCards",tableCards.toArray());
+        server.broadcast(msgOut);
+
     }
 
     public Srv_Game getGame() {

@@ -138,4 +138,8 @@ public class Clt_TableView extends BorderPane {
     public Label getTichuLabel() {
         return tichuLabel;
     }
+
+    public TableCards getTableCards() {
+        return tableCards;
+    }
 }

@@ -21,7 +21,7 @@ public enum Srv_HandType {
 
         boolean canPlay = false;
         // evaluate handtype from player and last played cards
-        if (isSingleCard(playerCards) && isSingleCard(tableCards) || tableCards.size() == 0 && isSingleCard(playerCards)){
+        if (isSingleCard(playerCards) && isSingleCard(tableCards) || tableCards.size() == 0 && isSingleCard(playerCards))
             handType = SingleCard;
         if (isOnePair(playerCards) && isOnePair(tableCards) || tableCards.size() == 0 && isOnePair(playerCards))
             handType = OnePair;
@@ -37,7 +37,7 @@ public enum Srv_HandType {
             handType = Bomb;
         // if same handtype evualte which is higher
         canPlay = isHigher(tableCards, playerCards, handType);
-    }
+
         //special case --> special card dog cannot be bombed
         if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.get(0).getRank() != Rank.Dog  ){
             canPlay = true;
@@ -668,6 +668,10 @@ public enum Srv_HandType {
 
         public static boolean isHigher (ArrayList<Card> tableCards, ArrayList<Card> playerCards, Srv_HandType handType) { //@author Sandro, Thomas
             boolean isHigher = false;
+
+            if(handType  == null){ //if no handtype got evaluated, only return false
+                return false;
+            }
 
 
             switch (handType) {

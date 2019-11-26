@@ -75,4 +75,8 @@ public class Clt_DataStore {
     public int getAmountOfCards() { return amountOfCards.get(); }
 
     public SimpleIntegerProperty amountOfCardsProperty() { return amountOfCards; }
+
+    public ObservableList<Card> getTableCards() {
+        return tableCards;
+    }
 }

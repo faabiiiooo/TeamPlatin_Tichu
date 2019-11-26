@@ -1,7 +1,6 @@
 package server.controller;
 
 import resources.Card;
-import javafx.collections.ListChangeListener;
 import resources.Message;
 import resources.MessageResponse;
 import resources.ServiceLocator;
@@ -49,9 +48,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 for(Object o : msgIn.getObjects()){
                     cardsToPlay.add((Card) o);
                 }
+                logger.info(cardsToPlay.toString());
                 if(model.getGame().getTable().playCards(cardsToPlay)){
                     logger.info("Sending success Response");
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
+                    model.sendTableCardsToClients();
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }

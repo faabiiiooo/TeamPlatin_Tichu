@@ -7,11 +7,18 @@ import javafx.scene.layout.HBox;
 
 public class TableCards extends HBox {
 
-    private final Label tableCardsLabel = new Label();
 
     public TableCards(){
-        this.getChildren().add(tableCardsLabel);
+
 
         this.getStyleClass().add("tableCards");
+    }
+
+    public void addCards(CardView cardView){
+        this.getChildren().addAll(cardView);
+    }
+
+    public void clear(){
+        this.getChildren().clear();
     }
 }
