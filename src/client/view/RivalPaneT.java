@@ -13,7 +13,7 @@ import javafx.scene.transform.Rotate;
 public class RivalPaneT extends HBox {
 
     private Label avatarLabel, cardsLabel, rice;
-    private Image team2 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team2_avatar.png"));
+    private Image team2 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team1_avatar.png"));
     private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
     private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
     private GridPane gridPane=new GridPane();
