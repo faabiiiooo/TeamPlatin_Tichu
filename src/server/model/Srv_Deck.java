@@ -57,7 +57,7 @@ public class Srv_Deck { //@author Sandro
         return this.cards;
     }
 
-    //@author copy from the poker project from the second semester
+    //@author thomas // copy from the poker project from the second semester
     //return 1 card so that it can be dealt to the player (as long as there are cards, there will be returned a card.
     //also set the IntegerProperty to the remaining cards.
     public Card cardToDeal() {
