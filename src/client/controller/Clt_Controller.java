@@ -255,7 +255,7 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Added TableCards to table");
                 break;
 
-            case "boolean/isActive":
+            case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
                 dataStore.isActiveProperty().set(isActive);
                 break;
