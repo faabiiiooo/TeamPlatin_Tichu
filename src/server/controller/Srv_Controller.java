@@ -111,9 +111,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         }
                         if (ok){
                             logger.info("Player who pressed bomb button is now active");
-                            msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
+                           model.sendActivePlayerToClients();
                         }else{
-                            msgOut = new MessageResponse("string","n-ok",msgIn.getMessageID());
+                            logger.info("failes to change active player with bomb on hand");
                         }
                         //send the active status to all clients
                         model.sendActivePlayerToClients();
