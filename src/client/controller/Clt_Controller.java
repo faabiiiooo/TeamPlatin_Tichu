@@ -5,6 +5,7 @@ import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import resources.*;
 
 import javax.tools.Tool;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.logging.Logger;
@@ -72,6 +74,16 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
         view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards()+"");
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
+        model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
+        view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
+    }
+    //@author Thomas Activate the bomb button if the player has a bomb on his hand
+    private void updateBombButton(Boolean newValue) {
+        if(newValue){
+            view.getTableView().getControls().getBombButton().setDisable(false);
+        }else{
+            view.getTableView().getControls().getBombButton().setDisable(false);
+        }
     }
 
 
@@ -107,6 +119,38 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
+    private void processBombButton(){
+        logger.info("Clt_processBombButton");
+        boolean successfulActiveStatusSent = false;
+        boolean successfulCardsSent = false;
+
+        successfulActiveStatusSent = model.sendMessage(model.createMessage("String","player/BombActiveChange" ));
+        if(successfulActiveStatusSent){
+            logger.info("Player who pressed bomb button is now active Player");
+        }else{
+            logger.info("Server can't set the player with the bomb to active player");
+        }
+
+
+        //send the chosen bomb cards to the server and check them
+        ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
+        if(cardsToSend.size() >= 4){ // if he has at least 4 cards selected
+            successfulCardsSent = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
+            if(successfulCardsSent){ //does Server accept the cards? if yes, remove the cards from hand
+                logger.info("Cards sent to Server.");
+                dataStore.getHandCards().removeAll(cardsToSend);
+
+            } else { //else give feedback to the user
+                logger.info("Cards declined by server. player has to replay.");
+                this.displayWrongCardsStatus();
+            }
+        } else {
+            logger.info("No cards selected");
+        }
+    }
+
+
+
     //@author Fabio
     private void startScreenBtnNext(){
 
@@ -130,7 +174,7 @@ public class Clt_Controller { //Controller is a Singleton
         this.setTableViewOnAction();
 
     }
-    //@thomas
+    //@author thomas
     private void updateCardAmountView() {
         Platform.runLater(()->{
             view.getTableView().getRivalTop().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");

@@ -64,6 +64,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
                 break;
 
+
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 switch (incoming) {
@@ -93,6 +94,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                 }
                             }
                         }
+                        break;
+
+                    case "player/BombActiveChange":
+
+
                         break;
                     }
                 }
