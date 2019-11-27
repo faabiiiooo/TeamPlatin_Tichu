@@ -1,11 +1,11 @@
 package client.model;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
 import resources.Card;
+import resources.Player;
 
 import java.util.ArrayList;
 
@@ -18,8 +18,14 @@ public class Clt_DataStore {
     private final ArrayList<Card> cardsToSend = new ArrayList<>();
     private final ArrayList<Message> waitingForResponse = new ArrayList<>();
 
+    private Player playerTop;
+    private Player playerRight;
+    private Player playerLeft;
+
+    private int nextPlayerID;
+
     private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
-    private SimpleIntegerProperty amountOfCards = new SimpleIntegerProperty(handCards.size());
+
 
     private final SimpleBooleanProperty isActive = new SimpleBooleanProperty(false);
 
@@ -77,10 +83,6 @@ public class Clt_DataStore {
         return handCards;
     }
 
-    public int getAmountOfCards() { return amountOfCards.get(); }
-
-    public SimpleIntegerProperty amountOfCardsProperty() { return amountOfCards; }
-
     public ObservableList<Card> getTableCards() {
         return tableCards;
     }
@@ -95,6 +97,38 @@ public class Clt_DataStore {
 
     public void setIsActive(boolean isActive) {
         this.isActive.set(isActive);
+    }
+
+    public Player getPlayerTop() {
+        return playerTop;
+    }
+
+    public void setPlayerTop(Player playerTop) {
+        this.playerTop = playerTop;
+    }
+
+    public Player getPlayerRight() {
+        return playerRight;
+    }
+
+    public void setPlayerRight(Player playerRight) {
+        this.playerRight = playerRight;
+    }
+
+    public Player getPlayerLeft() {
+        return playerLeft;
+    }
+
+    public void setPlayerLeft(Player playerLeft) {
+        this.playerLeft = playerLeft;
+    }
+
+    public int getNextPlayerID() {
+        return nextPlayerID;
+    }
+
+    public void setNextPlayerID(int nextPlayerID) {
+        this.nextPlayerID = nextPlayerID;
     }
 
     public boolean isHasBomb() { return hasBomb.get(); }

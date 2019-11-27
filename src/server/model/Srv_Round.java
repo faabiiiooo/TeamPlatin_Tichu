@@ -1,15 +1,16 @@
 package server.model;
 
+import resources.Player;
 import resources.Rank;
 
 import java.util.ArrayList;
 
 public class Srv_Round extends Srv_Game { //@author Thomas
 
-    private ArrayList<Srv_Player> finisher;
+    private ArrayList<Player> finisher;
 
     public Srv_Round(){
-        this.finisher = new ArrayList<Srv_Player>();
+        this.finisher = new ArrayList<Player>();
     }
 
 
@@ -28,7 +29,7 @@ public class Srv_Round extends Srv_Game { //@author Thomas
         }
     }
 
-    public ArrayList<Srv_Player> getFinisher(){
+    public ArrayList<Player> getFinisher(){
         return this.finisher;
     }
 

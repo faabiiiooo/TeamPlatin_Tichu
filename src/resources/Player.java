@@ -1,14 +1,10 @@
-package server.model;
-
-import resources.Card;
-import resources.ServiceLocator;
-import resources.Translator;
+package resources;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 // @author Fabio
-public class Srv_Player {
+public class Player {
 
     private final int PLAYER_ID;
     private static int idgenerator = 1;
@@ -31,7 +27,7 @@ public class Srv_Player {
     private boolean saidSmallTichu;
     private boolean hasWishedCard = false;
 
-    public Srv_Player(){
+    public Player(){
 
         serviceLocator = ServiceLocator.getServiceLocator();
         translator = serviceLocator.getTranslator();
@@ -64,7 +60,7 @@ public class Srv_Player {
     }
 
     //Two players are equal if they have the same id
-    public boolean equals(Srv_Player otherPlayer) {
+    public boolean equals(Player otherPlayer) {
 
         return this.PLAYER_ID == otherPlayer.getPLAYER_ID();
     }

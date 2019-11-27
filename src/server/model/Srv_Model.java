@@ -1,9 +1,6 @@
 package server.model;
 
-import resources.Card;
-import resources.Countdown;
-import resources.Message;
-import resources.ServiceLocator;
+import resources.*;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -60,7 +57,7 @@ public class Srv_Model {
     //@author Fabio
     public void sendPlayerHandsToClient(){
 
-        ArrayList<Srv_Player> players = game.getTable().getPlayersAtTable();
+        ArrayList<Player> players = game.getTable().getPlayersAtTable();
         Srv_Server server = serviceLocator.getServer();
 
         for(int i = 0; i < players.size(); i++){
@@ -88,10 +85,38 @@ public class Srv_Model {
 
     }
 
+    public void sendPlayersToClients(){
+        ArrayList<Player> allPlayers = (ArrayList<Player>) serviceLocator.getTable().getPlayersAtTable().clone();
+        ArrayList<Player> otherPlayers = new ArrayList<>();
+        Srv_Server server = serviceLocator.getServer();
+
+        for(int i = 0; i < allPlayers.size(); i++){
+            Message msgOut = null;
+            int clientThreadID = server.searchIndexOfClientThreadByID(allPlayers.get(i).getClientID());
+
+            if(allPlayers.get(i).getClientID() == server.getClientThreads().get(clientThreadID).getID()){
+                otherPlayers.clear();
+                for(Player p : allPlayers){
+                    if(p.getPLAYER_ID() != allPlayers.get(i).getPLAYER_ID()){
+                        otherPlayers.add(p);
+                    }
+                }
+            }
+            msgOut = new Message("player", otherPlayers.toArray());
+            try{
+                server.getClientThreads().get(clientThreadID).send(msgOut);
+            } catch (Exception e){
+                logger.info("Can't send players to client");
+            }
+
+        }
+
+    }
+
     //@author Fabio
     public void sendActivePlayerToClients(){
 
-        ArrayList<Srv_Player> players = game.getTable().getPlayersAtTable();
+        ArrayList<Player> players = game.getTable().getPlayersAtTable();
         Srv_Server server = serviceLocator.getServer();
 
         for(int i = 0; i < players.size(); i++){
@@ -107,6 +132,32 @@ public class Srv_Model {
 
         }
 
+    }
+
+    public void sendNextPlayerIdToClients(){
+
+
+
+    }
+
+    private void joinPlayersToTeam(){
+        ArrayList<Player> players = game.getTable().getPlayersAtTable();
+
+        for(Srv_Team team : game.getTeams()){
+            if(team.getEVEN_ODD().equals("even")){
+                for(Player p : game.getTable().getPlayersAtTable()){
+                    if(p.getPLAYER_ID() % 2 == 0){
+                        team.getMembers().add(p);
+                    }
+                }
+            } else {
+                if(team.getEVEN_ODD().equals("odd")){
+                    for(Player p : game.getTable().getPlayersAtTable()){
+
+                    }
+                }
+            }
+        }
     }
 
     public void sendRemainingCardsToClients(){
