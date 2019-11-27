@@ -20,6 +20,7 @@ import resources.*;
 
 import javax.tools.Tool;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.logging.Logger;
 
@@ -70,8 +71,8 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().getHandCards().addListener((ListChangeListener) c -> handCardChanged());
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
-        view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards()+"");
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
+
     }
 
 
@@ -238,6 +239,7 @@ public class Clt_Controller { //Controller is a Singleton
         }
     }
 
+
     //@author Fabio
     public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
@@ -251,6 +253,7 @@ public class Clt_Controller { //Controller is a Singleton
                 Platform.runLater(() -> {
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
+                    Collections.sort(dataStore.getHandCards());
                 });
                 logger.info("Added Cards to hand");
                 logger.info("HandCards: " + dataStore.getHandCards().toString());
@@ -272,9 +275,35 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "player":
+                ArrayList<Player> otherPlayers = new ArrayList<>();
+                for(Object o : msgIn.getObjects()){
+                    otherPlayers.add((Player) o);
+                }
+                int myTeamID = -1;
+                for(int i = 0; i < otherPlayers.size(); i++){
+                    if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){
+                        dataStore.setPlayerRight(otherPlayers.get(i));
+                    }
+                }
+                otherPlayers.remove(dataStore.getPlayerRight());
+                for(Player p : otherPlayers){
+                    if(p.getTeamID() == dataStore.getPlayerRight().getTeamID()){
+                        dataStore.setPlayerLeft(p);
+                    }
+                }
+                otherPlayers.remove(dataStore.getPlayerLeft());
+                if(otherPlayers.size() == 1){
+                    dataStore.setPlayerTop(otherPlayers.get(0));
+                }
 
-
+                logger.info("Added Players to datastore");
                 break;
+
+            case "string/nextPlayer":
+                int nextPlayerID = (int) msgIn.getObjects().get(0);
+                dataStore.setNextPlayerID(nextPlayerID);
+                break;
+
 
             case "string":
                 logger.info("Recieved a String, going to evaluate it.");

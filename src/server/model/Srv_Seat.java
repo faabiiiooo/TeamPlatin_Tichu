@@ -1,9 +1,11 @@
 package server.model;
 
+import resources.Player;
+
 public class Srv_Seat {
 
     private final  int SEAT_ID ;
-    private Srv_Player player;
+    private Player player;
 
     public Srv_Seat(int SEAT_ID) {
         this.SEAT_ID = SEAT_ID;
@@ -16,11 +18,11 @@ public class Srv_Seat {
     }
 
 
-    public Srv_Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
-    public void setPlayer(Srv_Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
 }
