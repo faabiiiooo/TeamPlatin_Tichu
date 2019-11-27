@@ -80,9 +80,13 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
         if(newValue){
-            view.getTableView().getControls().getBombButton().setDisable(false);
+            Platform.runLater(() -> {
+                view.getTableView().getControls().getBombButton().setDisable(true);
+            });
         }else{
-            view.getTableView().getControls().getBombButton().setDisable(false);
+            Platform.runLater(() -> {
+                view.getTableView().getControls().getBombButton().setDisable(false);
+            });
         }
     }
 
@@ -174,15 +178,7 @@ public class Clt_Controller { //Controller is a Singleton
         this.setTableViewOnAction();
 
     }
-    //@author thomas
-    private void updateCardAmountView() {
-        Platform.runLater(()->{
-            view.getTableView().getRivalTop().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-            view.getTableView().getRivalLeft().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-            view.getTableView().getRivalRight().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
 
-                });
-    }
 
     //@author Fabio
     public void processPlayButton(){
@@ -221,7 +217,6 @@ public class Clt_Controller { //Controller is a Singleton
                 CardView cv = new CardView(c);
                 cv.setOnMouseClicked(e -> processCardClicked(e));
                 view.getTableView().getPlayerView().addCards(cv);
-                updateCardAmountView();
             });
         }
 
