@@ -65,6 +65,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
                 break;
 
+
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 switch (incoming) {
@@ -97,6 +98,30 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             }
 
                         }
+                        break;
+
+                    case "player/BombActiveChange":
+                        boolean ok = false;
+                        //set the active player to not active
+                        for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                            if(p.isActive()){
+                                p.setActive(false);
+                                ok = true;
+                            }//set the player who pressed the bomb button to the active player
+                            if(p.getPLAYER_ID() == msgIn.getSenderID()){
+                                p.setActive(true);
+                                ok = true;
+                            }
+                        }
+                        if (ok){
+                            logger.info("Player who pressed bomb button is now active");
+                           model.sendActivePlayerToClients();
+                        }else{
+                            logger.info("failes to change active player with bomb on hand");
+                        }
+                        //send the active status to all clients
+                        model.sendActivePlayerToClients();
+
                         break;
                     }
                 }

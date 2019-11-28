@@ -35,6 +35,8 @@ public class Clt_DataStore {
 
     private final SimpleBooleanProperty isActive = new SimpleBooleanProperty(false);
 
+    private SimpleBooleanProperty hasBomb = new SimpleBooleanProperty();
+
     public static Clt_DataStore getDataStore(){
         if(dataStore == null){
             dataStore = new Clt_DataStore();
@@ -140,6 +142,12 @@ public class Clt_DataStore {
     public void setNextPlayerID(int nextPlayerID) {
         this.nextPlayerID = nextPlayerID;
     }
+
+    public boolean isHasBomb() { return hasBomb.get(); }
+
+    public SimpleBooleanProperty hasBombProperty() { return hasBomb; }
+
+    public void setHasBomb(boolean hasBomb) { this.hasBomb.set(hasBomb); }
 
     public int getCardsPlayerTop() {
         return cardsPlayerTop.get();

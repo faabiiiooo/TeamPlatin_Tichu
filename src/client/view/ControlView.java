@@ -33,6 +33,8 @@ public class ControlView extends HBox {
 
         this.setId("bottom");
         this.getChildren().addAll(countDownLabel,playButton,passButton,bombButton,callTichuButton);
+        //Bomb button is always disabled at the beginning, only able it when player got a bomb
+        this.bombButton.setDisable(true);
 
 
     }
