@@ -92,12 +92,15 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID
                                 if (p.getHandCards().size() == 14) {//Check if Handcards equals 14
                                     p.setSaidSmallTichu(true);//Player is abel to call a small Tichu
+                                    msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                 } else {
                                     if (p.getHandCards().size() <= 8) {//Check if Handcards <8
                                         p.setSaidBigTichu(true);//Player is abel to call a bigTichu
+                                        msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     }
                                 }
                             }
+
                         }
                         break;
 
