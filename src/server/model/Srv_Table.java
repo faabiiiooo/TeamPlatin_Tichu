@@ -60,9 +60,18 @@ public class Srv_Table {
             }
         }while (deck.getRemainingCards() != 0);
 
+        //check player hands on bombs
+        for(Player p : playersAtTable){
+            logger.info(p+ " "+ p.isActive()+ " beginnt");
+            if(Srv_HandType.isBombOnHand(p.getHandCards())){
+                logger.info(p.toString() + " has a bomb");
+                p.setHasBomb(true);
+            }
+        }
+
     }
     //@author thomas
-    // method to play out the cards from the active player
+    // method to play out the cards
     public boolean playCards(ArrayList<Card> playerCards){
         logger.info("Going to play a card");
         boolean canPlay = false;
@@ -197,6 +206,7 @@ public class Srv_Table {
         }
 
     }
+
 
     //@author thomas
     protected void mahJongPlayed(){

@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import resources.*;
 
 import javax.tools.Tool;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Observable;
@@ -78,6 +79,20 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getRivalRight().getCardAmountText().textProperty().bind(dataStore.cardsPlayerRightProperty().asString());
         view.getTableView().getRivalTop().getCardAmountText().textProperty().bind(dataStore.cardsPlayerTopProperty().asString());
 
+        model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
+        view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
+    }
+    //@author Thomas Activate the bomb button if the player has a bomb on his hand
+    private void updateBombButton(Boolean newValue) {
+        if(newValue){
+            Platform.runLater(() -> {
+                view.getTableView().getControls().getBombButton().setDisable(true);
+            });
+        }else{
+            Platform.runLater(() -> {
+                view.getTableView().getControls().getBombButton().setDisable(false);
+            });
+        }
     }
 
 
@@ -106,16 +121,48 @@ public class Clt_Controller { //Controller is a Singleton
         successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
         if (successful) {
             logger.info("Tichu-String sent to Server");
-            view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu"));//Show a message in the Gui that the player has announced a Tichu
-            //view.getTableView().getControls().getCallTichuButton().setDisable(true);
+            Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
+            Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
         } else {
             logger.info("saying tichu is not possible");
-        }// TODO: 24.11.2019 Button Disable fehlt noch
+        }
 
 
 
 
     }
+
+
+    private void processBombButton(){
+        logger.info("Clt_processBombButton");
+        boolean successfulActiveStatusSent = false;
+        boolean successfulCardsSent = false;
+
+        successfulActiveStatusSent = model.sendMessage(model.createMessage("String","player/BombActiveChange" ));
+        if(successfulActiveStatusSent){
+            logger.info("Player who pressed bomb button is now active Player");
+        }else{
+            logger.info("Server can't set the player with the bomb to active player");
+        }
+
+
+        //send the chosen bomb cards to the server and check them
+        ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
+        if(cardsToSend.size() >= 4){ // if he has at least 4 cards selected
+            successfulCardsSent = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
+            if(successfulCardsSent){ //does Server accept the cards? if yes, remove the cards from hand
+                logger.info("Cards sent to Server.");
+                dataStore.getHandCards().removeAll(cardsToSend);
+
+            } else { //else give feedback to the user
+                logger.info("Cards declined by server. player has to replay.");
+                this.displayWrongCardsStatus();
+            }
+        } else {
+            logger.info("No cards selected");
+        }
+    }
+
 
 
     //@author Fabio
@@ -140,12 +187,14 @@ public class Clt_Controller { //Controller is a Singleton
         view.startTableView();
         this.setTableViewOnAction();
 
-
     }
+
+
 
     //@author Fabio
     public void processPlayButton(){
         boolean successful = false;
+        Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         if(cardsToSend.size() > 0){ // if he has cards selected
@@ -155,7 +204,7 @@ public class Clt_Controller { //Controller is a Singleton
                dataStore.getHandCards().removeAll(cardsToSend);
                for(Card c : cardsToSend){
                    if(c.getRank() == Rank.Mahjong){
-                       view.startWishView();
+                      Platform.runLater(() ->view.startWishView());
                    }
                }
 

@@ -66,6 +66,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
                 break;
 
+
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 switch (incoming) {
@@ -88,13 +89,40 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID
                                 if (p.getHandCards().size() == 14) {//Check if Handcards equals 14
                                     p.setSaidSmallTichu(true);//Player is abel to call a small Tichu
+                                    msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                 } else {
                                     if (p.getHandCards().size() <= 8) {//Check if Handcards <8
                                         p.setSaidBigTichu(true);//Player is abel to call a bigTichu
+                                        msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     }
                                 }
                             }
+
                         }
+                        break;
+
+                    case "player/BombActiveChange":
+                        boolean ok = false;
+                        //set the active player to not active
+                        for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                            if(p.isActive()){
+                                p.setActive(false);
+                                ok = true;
+                            }//set the player who pressed the bomb button to the active player
+                            if(p.getPLAYER_ID() == msgIn.getSenderID()){
+                                p.setActive(true);
+                                ok = true;
+                            }
+                        }
+                        if (ok){
+                            logger.info("Player who pressed bomb button is now active");
+                           model.sendActivePlayerToClients();
+                        }else{
+                            logger.info("failes to change active player with bomb on hand");
+                        }
+                        //send the active status to all clients
+                        model.sendActivePlayerToClients();
+
                         break;
                     }
                 }

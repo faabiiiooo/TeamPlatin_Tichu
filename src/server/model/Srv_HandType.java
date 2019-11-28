@@ -525,8 +525,8 @@ public enum Srv_HandType {
         //method it is  written to check the whole deck from the players for bombs
         //create all the variables we need for the checks
         boolean found = false;
-        int counterA = 1;
-        int counterB = 1;
+        int counterA = 0;
+        int counterB = 0;
         int countCards= 0;
         List<Card> pagodaCards = new ArrayList<>();
         List<Card> jadeCards = new ArrayList<>();
@@ -544,8 +544,6 @@ public enum Srv_HandType {
 
             }
         }
-        // case if the player has 4 cards of the same Rank
-        if(clonedCards.size() >= 4){
             for(int i = 0; i < clonedCards.size();i++){
                 counterA = 1;
                 for(int j = clonedCards.size()-1 ; j >= 0; j--){// check if four cards ae of the same ordinal --> if not reset the counter and check the next
@@ -558,7 +556,6 @@ public enum Srv_HandType {
                 found = true;
             }else{
                 //Case if the player has a minimum of 5 in a straight with the same suit
-                if(clonedCards.size() >=5){
                     /*
                     put all the different suits in different list, to make them easier to check.
                     then put these lists in a 2D List to iterate trough every list in our loop
@@ -584,13 +581,13 @@ public enum Srv_HandType {
                             }
                         }
                     }
-                    if(counterB <= 5){
+                    if(counterB >= 5){
+                        logger.info("bomb on hands -> Straight flush " + counterB);
                         found = true;
                     }
-                }
             }
 
-        }
+
 
         return found;
     }
@@ -658,7 +655,7 @@ public enum Srv_HandType {
                     table.dogPlayed();
                     logger.info("DogPlayed");
                     break;
-                case Mahjong:
+               case Mahjong:
                     table.mahJongPlayed();
                     logger.info("MahjongPlayed");
                     break;
