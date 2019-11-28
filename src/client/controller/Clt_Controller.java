@@ -125,7 +125,7 @@ public class Clt_Controller { //Controller is a Singleton
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
         } else {
             logger.info("saying tichu is not possible");
-        }// TODO: 24.11.2019 Button Disable fehlt noch
+        }
 
 
 
