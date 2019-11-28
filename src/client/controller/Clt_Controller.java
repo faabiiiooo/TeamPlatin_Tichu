@@ -73,7 +73,6 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue, newValue));
-        view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards() + "");
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
         view.getTableView().getRivalLeft().getCardAmountText().textProperty().bind(dataStore.cardsPlayerLeftProperty().asString());
         view.getTableView().getRivalRight().getCardAmountText().textProperty().bind(dataStore.cardsPlayerRightProperty().asString());
@@ -107,8 +106,8 @@ public class Clt_Controller { //Controller is a Singleton
         successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
         if (successful) {
             logger.info("Tichu-String sent to Server");
-            view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu"));//Show a message in the Gui that the player has announced a Tichu
-            //view.getTableView().getControls().getCallTichuButton().setDisable(true);
+            Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
+            Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
         } else {
             logger.info("saying tichu is not possible");
         }// TODO: 24.11.2019 Button Disable fehlt noch
@@ -147,6 +146,7 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Fabio
     public void processPlayButton(){
         boolean successful = false;
+        Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         if(cardsToSend.size() > 0){ // if he has cards selected
@@ -156,7 +156,7 @@ public class Clt_Controller { //Controller is a Singleton
                dataStore.getHandCards().removeAll(cardsToSend);
                for(Card c : cardsToSend){
                    if(c.getRank() == Rank.Mahjong){
-                       view.startWishView();
+                      Platform.runLater(() ->view.startWishView());
                    }
                }
 

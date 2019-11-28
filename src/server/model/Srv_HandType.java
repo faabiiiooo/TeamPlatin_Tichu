@@ -658,7 +658,7 @@ public enum Srv_HandType {
                     table.dogPlayed();
                     logger.info("DogPlayed");
                     break;
-                case Mahjong:
+               case Mahjong:
                     table.mahJongPlayed();
                     logger.info("MahjongPlayed");
                     break;
