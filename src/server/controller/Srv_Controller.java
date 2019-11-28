@@ -4,6 +4,7 @@ import resources.*;
 import server.model.Srv_Model;
 import server.model.Srv_Player;
 import server.model.Srv_Table;
+import resources.Player;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -46,11 +47,12 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 for(Object o : msgIn.getObjects()){
                     cardsToPlay.add((Card) o);
                 }
-                logger.info(cardsToPlay.toString());
                 if(model.getGame().getTable().playCards(cardsToPlay)){
                     logger.info("Sending success Response");
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
+                    model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
                     model.sendTableCardsToClients();
+                    model.sendPlayersToClients();
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
@@ -70,7 +72,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 switch (incoming) {
                     case "skip": //@author Sandro
                         logger.info("Srv_processSkipButton");
-                        for (Srv_Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
+                        for (Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
                             if (p.isActive()) {// Find activePlayer
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
@@ -83,7 +85,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         break;
                     case "tichu"://@author Pascal
                         // TODO: 24.11.2019 ANtwort an den Client fehlt noch
-                        for (Srv_Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel
+                        for (Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel
                             if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID
                                 if (p.getHandCards().size() == 14) {//Check if Handcards equals 14
                                     p.setSaidSmallTichu(true);//Player is abel to call a small Tichu

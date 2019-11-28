@@ -5,6 +5,7 @@ import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import resources.*;
 
 import javax.tools.Tool;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.logging.Logger;
 
@@ -69,9 +71,14 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
         model.getDataStore().getHandCards().addListener((ListChangeListener) c -> handCardChanged());
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
+        model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue, newValue));
         view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards() + "");
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
+        view.getTableView().getRivalLeft().getCardAmountText().textProperty().bind(dataStore.cardsPlayerLeftProperty().asString());
+        view.getTableView().getRivalRight().getCardAmountText().textProperty().bind(dataStore.cardsPlayerRightProperty().asString());
+        view.getTableView().getRivalTop().getCardAmountText().textProperty().bind(dataStore.cardsPlayerTopProperty().asString());
+
     }
 
 
@@ -136,15 +143,6 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     }
-    //@thomas
-    private void updateCardAmountView() {
-        Platform.runLater(()->{
-            view.getTableView().getRivalTop().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-            view.getTableView().getRivalLeft().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-            view.getTableView().getRivalRight().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-
-                });
-    }
 
     //@author Fabio
     public void processPlayButton(){
@@ -187,7 +185,7 @@ public class Clt_Controller { //Controller is a Singleton
                 CardView cv = new CardView(c);
                 cv.setOnMouseClicked(e -> processCardClicked(e));
                 view.getTableView().getPlayerView().addCards(cv);
-                updateCardAmountView();
+                //updateCardAmountView();
             });
         }
 
@@ -248,6 +246,7 @@ public class Clt_Controller { //Controller is a Singleton
         }
     }
 
+
     //@author Fabio
     public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
@@ -261,6 +260,7 @@ public class Clt_Controller { //Controller is a Singleton
                 Platform.runLater(() -> {
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
+                    Collections.sort(dataStore.getHandCards());
                 });
                 logger.info("Added Cards to hand");
                 logger.info("HandCards: " + dataStore.getHandCards().toString());
@@ -282,9 +282,44 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "player":
+                ArrayList<Player> otherPlayers = new ArrayList<>();
+                for(Object o : msgIn.getObjects()){
+                    otherPlayers.add((Player) o);
+                }
+                for(Player p : otherPlayers){
+                    logger.info("oP"+p.getPLAYER_ID() +" c:"+p.getHandCards().size());
+
+                }
+                logger.info(otherPlayers.size()+"");
 
 
+                for(int i = 0; i < otherPlayers.size(); i++){
+                    logger.info("P"+otherPlayers.get(i).getPLAYER_ID()+" c:"+otherPlayers.get(i).getHandCards().size());
+                    if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){
+                        dataStore.setPlayerRight(otherPlayers.get(i));
+                    }
+                }
+                otherPlayers.remove(dataStore.getPlayerRight());
+                for(Player p : otherPlayers){
+                    if(p.getTeamID() == dataStore.getPlayerRight().getTeamID()){
+                        dataStore.setPlayerLeft(p);
+                    }
+                }
+                otherPlayers.remove(dataStore.getPlayerLeft());
+                if(otherPlayers.size() == 1){
+                    dataStore.setPlayerTop(otherPlayers.get(0));
+                }
+
+                dataStore.setCardAmountProperties();
+
+                logger.info("Added Players to datastore");
                 break;
+
+            case "string/nextPlayer":
+                int nextPlayerID = (int) msgIn.getObjects().get(0);
+                dataStore.setNextPlayerID(nextPlayerID);
+                break;
+
 
             case "string":
                 logger.info("Recieved a String, going to evaluate it.");

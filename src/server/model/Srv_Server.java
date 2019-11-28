@@ -3,16 +3,13 @@ package server.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
+import resources.Player;
 import resources.ServiceLocator;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Observable;
 import java.util.logging.Logger;
 
 //@author Fabio
@@ -47,7 +44,7 @@ public class Srv_Server extends Thread {
             while(true){ //Create new Thread for each Client.
                 Socket socket = listener.accept();
                 clientSockets.add(socket);  //Keep ClientThreads alive
-                Srv_Player newPlayer = new Srv_Player();
+                Player newPlayer = new Player();
                 Srv_ClientThread client = new Srv_ClientThread(this,socket.getInputStream(),socket.getOutputStream(), newPlayer.getPLAYER_ID());
                 newPlayer.setClientID(client.getID());
                 serviceLocator.getTable().addPlayerToTable(newPlayer); //ad the newly generated player to the table

@@ -1,6 +1,7 @@
 package server.model;
 
 import resources.Card;
+import resources.Player;
 import resources.Rank;
 import resources.ServiceLocator;
 
@@ -9,7 +10,7 @@ import java.util.logging.Logger;
 
 public class Srv_Table {
 
-    private final ArrayList<Srv_Player> playersAtTable = new ArrayList<>();
+    private final ArrayList<Player> playersAtTable = new ArrayList<>();
     private final ArrayList<Srv_Seat> seats = new ArrayList<>();
     private final ArrayList<Card> lastPlayedCards = new ArrayList<>();
     private final ArrayList<Card> allPlayedCards = new ArrayList<>();
@@ -148,9 +149,9 @@ public class Srv_Table {
     }
 
     //@author Fabio
-    public void transferCards(Srv_Player player){ //at game end, method has to be called twice, once with @param plaxer, once with @param null.
+    public void transferCards(Player player){ //at game end, method has to be called twice, once with @param plaxer, once with @param null.
 
-        ArrayList<Srv_Player> finisher = game.getRounds().get(game.getRounds().size()-1).getFinisher(); //getting finishers
+        ArrayList<Player> finisher = game.getRounds().get(game.getRounds().size()-1).getFinisher(); //getting finishers
 
         if(finisher.size() < 3 && player != null){ //if true, game is still playing only transfer table cards
             for (Card c : allPlayedCards){
@@ -158,9 +159,9 @@ public class Srv_Table {
                 allPlayedCards.clear();
             }
         } else { //else transfer cards from looser to winner and rival team
-            Srv_Player winner = finisher.get(0); //get winner of the round
-            Srv_Player looser = null;
-            for(Srv_Player p : playersAtTable){
+            Player winner = finisher.get(0); //get winner of the round
+            Player looser = null;
+            for(Player p : playersAtTable){
                 if(p.getHandCards().size() > 0){ //get looser, the only player with cards on his hand.
                     looser = p;
                 }
@@ -173,8 +174,8 @@ public class Srv_Table {
 
             if(looser.getTeamID() == winner.getTeamID()){ //if winner and looser are in same team
 
-                Srv_Player plrFromOtherTeam = null;
-                for(Srv_Player p : finisher){   //get a player from the other team
+                Player plrFromOtherTeam = null;
+                for(Player p : finisher){   //get a player from the other team
                     if(p.getTeamID() != looser.getTeamID()){
                         plrFromOtherTeam = p;
                         break;
@@ -198,8 +199,8 @@ public class Srv_Table {
     }
 
     //@author thomas
-    public void mahJongPlayed(){
-    ArrayList<Srv_Player> playersWithWishedCard = new ArrayList<>();
+    protected void mahJongPlayed(){
+    ArrayList<Player> playersWithWishedCard = new ArrayList<>();
 
     //add all the players who have the wished card from mahjong
     for(int i = 0; i < playersAtTable.size(); i++){
@@ -211,12 +212,12 @@ public class Srv_Table {
     }
     //if the last played handtype was a singlecard and the player has the wished card on the hand set hasWishedCard to true
     if(lastPlayedCards.size() == 1 ){
-        for(Srv_Player p: playersWithWishedCard){
+        for(Player p: playersWithWishedCard){
             p.setHasWishedCard(true);
         }
         // if the last played cards where a street with mahjong card in it, check if a player has the wished card on the hand and could play it
     }else if (Srv_HandType.isStreet(lastPlayedCards)){
-        for(Srv_Player p: playersWithWishedCard){
+        for(Player p: playersWithWishedCard){
             if(Srv_HandType.mahJongWishStreet(p.getHandCards(),lastPlayedCards,mahJongWishCard) ){
                 p.setHasWishedCard(true); //if the player has the card set the variable to true
             }
@@ -227,11 +228,11 @@ public class Srv_Table {
     }
     //@author thomas
     //method checks if the MJ wish card is already played or cant be played anymore
-    public void checkIfMJWishIsActive(){
+    protected void checkIfMJWishIsActive(){
         for(int i = 0; i < lastPlayedCards.size(); i++){
             // if the wished card is already played or it cant be played anymore set every player to false
             if(lastPlayedCards.get(i).getRank() == mahJongWishCard.getRank() || lastPlayedCards.get(lastPlayedCards.size()-1).getRank().ordinal() < mahJongWishCard.getRank().ordinal() ){
-                for(Srv_Player p: playersAtTable){
+                for(Player p: playersAtTable){
                     p.setHasWishedCard(false);
                 }
             }
@@ -308,10 +309,10 @@ public class Srv_Table {
     //@author Fabio
     protected void dragonPlayed(){
 
-        Srv_Player activePlayer = null;
-        Srv_Player rival = null;
+        Player activePlayer = null;
+        Player rival = null;
 
-        for(Srv_Player p : playersAtTable){ //check which player is active
+        for(Player p : playersAtTable){ //check which player is active
             if(p.isActive()){
                 activePlayer = p;
             }
@@ -345,7 +346,7 @@ public class Srv_Table {
     }
 
     //@author Fabio
-    public void addPlayerToTable(Srv_Player player){
+    public void addPlayerToTable(Player player){
         this.playersAtTable.add(player);
     }
 
@@ -361,7 +362,7 @@ public class Srv_Table {
 
     public void setMahJongWishCard(Card wishCard){ this.mahJongWishCard = wishCard; }
 
-    public ArrayList<Srv_Player> getPlayersAtTable() {
+    public ArrayList<Player> getPlayersAtTable() {
         return playersAtTable;
     }
 
