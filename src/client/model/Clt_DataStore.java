@@ -1,6 +1,8 @@
 package client.model;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
@@ -21,6 +23,10 @@ public class Clt_DataStore {
     private Player playerTop;
     private Player playerRight;
     private Player playerLeft;
+
+    private final SimpleIntegerProperty cardsPlayerTop = new SimpleIntegerProperty();
+    private final SimpleIntegerProperty cardsPlayerRight = new SimpleIntegerProperty();
+    private final SimpleIntegerProperty cardsPlayerLeft = new SimpleIntegerProperty();
 
     private int nextPlayerID;
 
@@ -65,6 +71,12 @@ public class Clt_DataStore {
                 waitingForResponse.remove(i);
             }
         }
+    }
+
+    public void setCardAmountProperties(){
+            cardsPlayerLeft.set(playerLeft.getHandCards().size());
+            cardsPlayerRight.set(playerRight.getHandCards().size());
+            cardsPlayerTop.set(playerTop.getHandCards().size());
     }
 
     public ArrayList<Message> getWaitingForResponse(){return waitingForResponse;}
@@ -136,4 +148,28 @@ public class Clt_DataStore {
     public SimpleBooleanProperty hasBombProperty() { return hasBomb; }
 
     public void setHasBomb(boolean hasBomb) { this.hasBomb.set(hasBomb); }
+
+    public int getCardsPlayerTop() {
+        return cardsPlayerTop.get();
+    }
+
+    public SimpleIntegerProperty cardsPlayerTopProperty() {
+        return cardsPlayerTop;
+    }
+
+    public int getCardsPlayerRight() {
+        return cardsPlayerRight.get();
+    }
+
+    public SimpleIntegerProperty cardsPlayerRightProperty() {
+        return cardsPlayerRight;
+    }
+
+    public int getCardsPlayerLeft() {
+        return cardsPlayerLeft.get();
+    }
+
+    public SimpleIntegerProperty cardsPlayerLeftProperty() {
+        return cardsPlayerLeft;
+    }
 }

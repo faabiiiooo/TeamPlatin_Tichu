@@ -1,18 +1,22 @@
 package resources;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 // @author Fabio
-public class Player {
+public class Player implements Serializable {
+
+    protected static final long serialVersionUID= 1;
 
     private final int PLAYER_ID;
     private static int idgenerator = 1;
     private int clientID;
 
-    private final ServiceLocator serviceLocator;
-    private Translator translator;
-    private Logger logger;
+    private transient final ServiceLocator serviceLocator; //do not serialize those items
+    private transient Translator translator;
+    private transient Logger logger;
 
     private final ArrayList<Card> handCards;
     private final ArrayList<Card> wonCards;
@@ -21,7 +25,7 @@ public class Player {
     private int teamID;
     private String name;
     private int score;
-    private int nextPlayerID;
+    private int nextPlayerID = -1;
     private boolean hasBomb;
     private boolean saidBigTichu;
     private boolean saidSmallTichu;
@@ -60,9 +64,22 @@ public class Player {
     }
 
     //Two players are equal if they have the same id
-    public boolean equals(Player otherPlayer) {
 
-        return this.PLAYER_ID == otherPlayer.getPLAYER_ID();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return getPLAYER_ID() == player.getPLAYER_ID();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPLAYER_ID());
+    }
+
+    public String toString(){
+        return "Player ID: "+PLAYER_ID + " Team ID: " + teamID;
     }
 
     public ArrayList<Card> getHandCards() {

@@ -1,10 +1,9 @@
 package server.controller;
 
-import resources.Card;
-import resources.Message;
-import resources.MessageResponse;
-import resources.ServiceLocator;
+import resources.*;
 import server.model.Srv_Model;
+import server.model.Srv_Player;
+import server.model.Srv_Table;
 import resources.Player;
 
 import java.util.ArrayList;
@@ -48,16 +47,20 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 for(Object o : msgIn.getObjects()){
                     cardsToPlay.add((Card) o);
                 }
-                logger.info(cardsToPlay.toString());
                 if(model.getGame().getTable().playCards(cardsToPlay)){
                     logger.info("Sending success Response");
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
+                    model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
                     model.sendTableCardsToClients();
+                    model.sendPlayersToClients();
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
 
                 break;
+
+
+
 
             case "player":
 

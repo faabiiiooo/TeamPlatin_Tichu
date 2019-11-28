@@ -379,4 +379,5 @@ public class Srv_Table {
     public ArrayList<Card> getLastPlayedCards() {
         return lastPlayedCards;
     }
+
 }

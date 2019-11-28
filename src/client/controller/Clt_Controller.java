@@ -5,7 +5,7 @@ import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -66,14 +66,18 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
-    private void setTableViewOnAction(){
+    private void setTableViewOnAction() {
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
-        view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
+        view.getTableView().getControls().getCallTichuButton().setOnAction(e -> processTichuButton());
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
         model.getDataStore().getHandCards().addListener((ListChangeListener) c -> handCardChanged());
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
+        view.getTableView().getRivalLeft().getCardAmountText().textProperty().bind(dataStore.cardsPlayerLeftProperty().asString());
+        view.getTableView().getRivalRight().getCardAmountText().textProperty().bind(dataStore.cardsPlayerRightProperty().asString());
+        view.getTableView().getRivalTop().getCardAmountText().textProperty().bind(dataStore.cardsPlayerTopProperty().asString());
+
         model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
     }
@@ -91,6 +95,8 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
 
+
+
     //@author Sandro
     private void processSkipButton() {
         logger.info("Clt_processSkipButton");
@@ -106,22 +112,25 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
     //@author Pascal
-    private void processTichuButton(){
+    private void processTichuButton() {
+
         logger.info("processTichuButton");
 
-        boolean successful=false;
-        successful=model.sendMessage(model.createMessage("string","tichu"));//Send a tichu String to Server
-        if(successful){
+        boolean successful = false;
+        successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
+        if (successful) {
             logger.info("Tichu-String sent to Server");
             view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu"));//Show a message in the Gui that the player has announced a Tichu
             //view.getTableView().getControls().getCallTichuButton().setDisable(true);
-        }else{
+        } else {
             logger.info("saying tichu is not possible");
         }// TODO: 24.11.2019 Button Disable fehlt noch
 
 
 
+
     }
+
 
     private void processBombButton(){
         logger.info("Clt_processBombButton");
@@ -180,9 +189,9 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
 
+
     //@author Fabio
     public void processPlayButton(){
-
         boolean successful = false;
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
@@ -191,6 +200,11 @@ public class Clt_Controller { //Controller is a Singleton
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
+               for(Card c : cardsToSend){
+                   if(c.getRank() == Rank.Mahjong){
+                       view.startWishView();
+                   }
+               }
 
            } else { //else give feedback to the user
                logger.info("Cards declined by server. player has to replay.");
@@ -217,6 +231,7 @@ public class Clt_Controller { //Controller is a Singleton
                 CardView cv = new CardView(c);
                 cv.setOnMouseClicked(e -> processCardClicked(e));
                 view.getTableView().getPlayerView().addCards(cv);
+                //updateCardAmountView();
             });
         }
 
@@ -317,8 +332,15 @@ public class Clt_Controller { //Controller is a Singleton
                 for(Object o : msgIn.getObjects()){
                     otherPlayers.add((Player) o);
                 }
-                int myTeamID = -1;
+                for(Player p : otherPlayers){
+                    logger.info("oP"+p.getPLAYER_ID() +" c:"+p.getHandCards().size());
+
+                }
+                logger.info(otherPlayers.size()+"");
+
+
                 for(int i = 0; i < otherPlayers.size(); i++){
+                    logger.info("P"+otherPlayers.get(i).getPLAYER_ID()+" c:"+otherPlayers.get(i).getHandCards().size());
                     if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){
                         dataStore.setPlayerRight(otherPlayers.get(i));
                     }
@@ -333,6 +355,8 @@ public class Clt_Controller { //Controller is a Singleton
                 if(otherPlayers.size() == 1){
                     dataStore.setPlayerTop(otherPlayers.get(0));
                 }
+
+                dataStore.setCardAmountProperties();
 
                 logger.info("Added Players to datastore");
                 break;
