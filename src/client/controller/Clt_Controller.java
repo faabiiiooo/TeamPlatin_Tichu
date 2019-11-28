@@ -80,6 +80,8 @@ public class Clt_Controller { //Controller is a Singleton
 
         model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
+
+        model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> System.out.println("ACTUIVE STATUS CHANGED" +newValue));
     }
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
@@ -192,11 +194,11 @@ public class Clt_Controller { //Controller is a Singleton
 
     //@author Fabio
     public void processPlayButton(){
-        boolean successful = false;
+        boolean successful= false;
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         if(cardsToSend.size() > 0){ // if he has cards selected
-          successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
+            successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
@@ -249,17 +251,22 @@ public class Clt_Controller { //Controller is a Singleton
                 view.getTableView().getTableCards().addCards(cv);
             });
         }
+        //processSkipButton();
     }
 
     //@author Fabio
     private void activeStatusChanged(boolean oldValue, boolean newValue){
 
         if(oldValue){
+            Platform.runLater(()-> {
             disableButtons();
+            });
             logger.info("disabling button from not active players");
         } else {
             if(!oldValue){
+                Platform.runLater(()-> {
                enableButtons();
+             });
             }
         }
 
@@ -267,10 +274,8 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     private void disableButtons(){
-        view.getTableView().getControls().getPlayButton().setDisable(true);
-        view.getTableView().getControls().getPassButton().setDisable(true);
-
-
+            view.getTableView().getControls().getPlayButton().setDisable(true);
+            view.getTableView().getControls().getPassButton().setDisable(true);
     }
 
     private void enableButtons(){
@@ -331,6 +336,7 @@ public class Clt_Controller { //Controller is a Singleton
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
                 dataStore.isActiveProperty().set(isActive);
+                logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
             case "boolean/hasBomb":

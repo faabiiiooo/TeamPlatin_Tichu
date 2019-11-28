@@ -52,6 +52,7 @@ public class Srv_Model {
         logger.info("dealed all cards");
         this.sendPlayersToClients();
         this.sendHasBombStatusToClients();
+        this.sendActivePlayerToClients();
 
     }
 

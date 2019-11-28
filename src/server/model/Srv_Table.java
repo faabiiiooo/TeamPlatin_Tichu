@@ -68,14 +68,16 @@ public class Srv_Table {
         logger.info("Going to play a card");
         boolean canPlay = false;
         //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
-        if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)){
+        if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)) {
             logger.info("HandType successfuly evaluated");
             //add the last played cards to the allPlayedCards list and clear the lastPlayedCards list for the next cards
-            allPlayedCards.addAll(lastPlayedCards); lastPlayedCards.clear();
+            allPlayedCards.addAll(lastPlayedCards);
+            lastPlayedCards.clear();
             //add the new played cards to the list
             lastPlayedCards.addAll(playerCards);
             canPlay = true;
         }
+
 
         return canPlay;
     }
