@@ -1,5 +1,6 @@
 package server.model;
 
+import javafx.application.Platform;
 import resources.*;
 
 import java.util.ArrayList;
@@ -29,13 +30,14 @@ public class Srv_Model {
 
     }
 
-    //author Fabio
+    //@author Fabio
     public void startGame(){
 
         Srv_Round firstRound = new Srv_Round();
         game.getRounds().add(firstRound);
         logger.info("Created first Round");
-
+        this.joinPlayersToTeam();
+        this.sendNextPlayerIdToClients();
         game.getTable().dealCards();
         logger.info("dealed first 8 cards");
         this.sendPlayerHandsToClient();
@@ -48,6 +50,8 @@ public class Srv_Model {
         game.getRounds().get(0).checkBeginner();
         this.sendPlayerHandsToClient();
         logger.info("dealed all cards");
+        this.sendPlayersToClients();
+
     }
 
     private void addPlayerToTeams(){ //Player 1 and 2 are in a team,
@@ -84,19 +88,44 @@ public class Srv_Model {
         server.broadcast(msgOut);
 
     }
-
+    //@auhtor Fabio
     public void sendPlayersToClients(){
-        ArrayList<Player> allPlayers = (ArrayList<Player>) serviceLocator.getTable().getPlayersAtTable().clone();
-        ArrayList<Player> otherPlayers = new ArrayList<>();
+        ArrayList<Player> allPlayers = game.getTable().getPlayersAtTable(); //getting all Players
+        ArrayList<Player> tempList = new ArrayList<>();
+        ArrayList<Player> otherPlayers = new ArrayList<>(); //empty list for the other players
         Srv_Server server = serviceLocator.getServer();
 
-        for(int i = 0; i < allPlayers.size(); i++){
+       for(int i = 0; i < allPlayers.size(); i++){ //getting all players
             Message msgOut = null;
-            int clientThreadID = server.searchIndexOfClientThreadByID(allPlayers.get(i).getClientID());
+            int clientThreadID = server.searchIndexOfClientThreadByID(allPlayers.get(i).getClientID()); //getClientThread of current player
+            Player currentPlayer = allPlayers.get(i); //current player
+            tempList = (ArrayList<Player>) allPlayers.clone();
+            otherPlayers.clear();
+            if(currentPlayer.getClientID() == server.getClientThreads().get(clientThreadID).getID()){
+                tempList.remove(currentPlayer); //remove currentPlayer from tempList
+                otherPlayers.addAll(tempList); //add his rivals to otherPlayers
+                msgOut = new Message("player", otherPlayers.toArray()); //sendThem
+                try{
+                    server.getClientThreads().get(clientThreadID).send(msgOut);
+                    ArrayList<Player> tempPlayers = new ArrayList<>();
+
+                    logger.info("Sent players to clients");
+                } catch (Exception e){
+                    logger.info("Can't send players to client");
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+            /*for(int i = 0; i < allPlayers.size(); i++){
+            Message msgOut = null;
+            int clientThreadID = server.searchIndexOfClientThreadByID(allPlayers.get(i).getClientID()); //getClientThread of current player
 
             if(allPlayers.get(i).getClientID() == server.getClientThreads().get(clientThreadID).getID()){
                 otherPlayers.clear();
-                for(Player p : allPlayers){
+
+                for(Player p : allPlayers){ //getting all the players
                     if(p.getPLAYER_ID() != allPlayers.get(i).getPLAYER_ID()){
                         otherPlayers.add(p);
                     }
@@ -105,11 +134,13 @@ public class Srv_Model {
             msgOut = new Message("player", otherPlayers.toArray());
             try{
                 server.getClientThreads().get(clientThreadID).send(msgOut);
+                logger.info("Sent players to clients");
             } catch (Exception e){
                 logger.info("Can't send players to client");
+                e.printStackTrace();
             }
 
-        }
+        }*/
 
     }
 
@@ -134,34 +165,73 @@ public class Srv_Model {
 
     }
 
-    public void sendNextPlayerIdToClients(){
+    private void sendNextPlayerIdToClients(){
+        ArrayList<Srv_Team> teams = game.getTeams();
+        Srv_Server server = serviceLocator.getServer();
 
 
+
+        for(int i = 0; i < teams.size() -1; i++){ //getting Team 1
+            for (int j = i+1; j < teams.size(); j++){  //getting Team 2
+                for(Player p : game.getTable().getPlayersAtTable()){
+                    if(p.getPLAYER_ID() != 4){
+                        p.setNextPlayerID(p.getPLAYER_ID()+1);
+                    } else {
+                        p.setNextPlayerID(1);
+                    }
+                }
+
+            }
+        }
+        ArrayList<Player> players = game.getTable().getPlayersAtTable();
+        for(int i = 0; i < players.size(); i++){
+            Message msgOut = null;
+            int clientThreadIndex = server.searchIndexOfClientThreadByID(players.get(i).getClientID());
+            try{
+                msgOut = new Message("string/nextPlayer", players.get(i).getNextPlayerID());
+                server.getClientThreads().get(clientThreadIndex).send(msgOut);
+                logger.info("Sent nextPlayerID to client");
+
+            } catch (Exception e){
+                logger.severe("Can't send nextPlayerID to clients");
+            }
+
+        }
 
     }
 
-    private void joinPlayersToTeam(){
+    //@author Fabio
+    private void joinPlayersToTeam(){ //gets only called on startup
         ArrayList<Player> players = game.getTable().getPlayersAtTable();
 
         for(Srv_Team team : game.getTeams()){
-            if(team.getEVEN_ODD().equals("even")){
+            if(team.getEVEN_ODD().equals("even")){ //if even team
                 for(Player p : game.getTable().getPlayersAtTable()){
-                    if(p.getPLAYER_ID() % 2 == 0){
+                    if(p.getPLAYER_ID() % 2 == 0){ // add players with even pID to this team
                         team.getMembers().add(p);
+                        p.setTeamID(team.getTEAM_ID());
                     }
                 }
             } else {
-                if(team.getEVEN_ODD().equals("odd")){
+                if(team.getEVEN_ODD().equals("odd")){ // if odd team
                     for(Player p : game.getTable().getPlayersAtTable()){
-
+                        if(p.getPLAYER_ID() % 2 != 0){ //add players with odd pID to this team
+                            team.getMembers().add(p);
+                            p.setTeamID(team.getTEAM_ID());
+                        }
                     }
                 }
             }
         }
     }
+    //@author Fabio
+    public void removePlayedCardsFromPlayerHand(int senderID, ArrayList<Card> playedCards){
 
-    public void sendRemainingCardsToClients(){
-
+        for(Player p : game.getTable().getPlayersAtTable()){
+            if(p.getClientID() == senderID){
+                p.getHandCards().removeAll(playedCards);
+            }
+        }
 
     }
 

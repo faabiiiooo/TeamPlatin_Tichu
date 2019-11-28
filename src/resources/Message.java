@@ -10,7 +10,7 @@ public class Message implements Serializable {
     protected static final long serialVersionUID= 1;
 
     protected final String messageID;
-    protected int senderID;
+    protected int senderID; //ID from sending Client
 
     protected final ArrayList<Object> objects = new ArrayList<>();
     protected String type;

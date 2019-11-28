@@ -77,6 +77,7 @@ public class Clt_Client extends Thread{
 
         try{
                 out.writeObject(msgOut);
+                out.reset(); //resetting Outputstream, to force that objects don't become send from cache
                 out.flush();
                 logger.info("Message sent");
 

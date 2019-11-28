@@ -5,6 +5,7 @@ import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -72,6 +73,9 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
+        view.getTableView().getRivalLeft().getCardAmountText().textProperty().bind(dataStore.cardsPlayerLeftProperty().asString());
+        view.getTableView().getRivalRight().getCardAmountText().textProperty().bind(dataStore.cardsPlayerRightProperty().asString());
+        view.getTableView().getRivalTop().getCardAmountText().textProperty().bind(dataStore.cardsPlayerTopProperty().asString());
 
     }
 
@@ -131,15 +135,6 @@ public class Clt_Controller { //Controller is a Singleton
         this.setTableViewOnAction();
 
     }
-    //@thomas
-    private void updateCardAmountView() {
-        Platform.runLater(()->{
-            view.getTableView().getRivalTop().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-            view.getTableView().getRivalLeft().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-            view.getTableView().getRivalRight().getCardAmountText().setText(model.getDataStore().getHandCards().size()+"");
-
-                });
-    }
 
     //@author Fabio
     public void processPlayButton(){
@@ -178,7 +173,7 @@ public class Clt_Controller { //Controller is a Singleton
                 CardView cv = new CardView(c);
                 cv.setOnMouseClicked(e -> processCardClicked(e));
                 view.getTableView().getPlayerView().addCards(cv);
-                updateCardAmountView();
+                //updateCardAmountView();
             });
         }
 
@@ -279,8 +274,15 @@ public class Clt_Controller { //Controller is a Singleton
                 for(Object o : msgIn.getObjects()){
                     otherPlayers.add((Player) o);
                 }
-                int myTeamID = -1;
+                for(Player p : otherPlayers){
+                    logger.info("oP"+p.getPLAYER_ID() +" c:"+p.getHandCards().size());
+
+                }
+                logger.info(otherPlayers.size()+"");
+
+
                 for(int i = 0; i < otherPlayers.size(); i++){
+                    logger.info("P"+otherPlayers.get(i).getPLAYER_ID()+" c:"+otherPlayers.get(i).getHandCards().size());
                     if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){
                         dataStore.setPlayerRight(otherPlayers.get(i));
                     }
@@ -295,6 +297,8 @@ public class Clt_Controller { //Controller is a Singleton
                 if(otherPlayers.size() == 1){
                     dataStore.setPlayerTop(otherPlayers.get(0));
                 }
+
+                dataStore.setCardAmountProperties();
 
                 logger.info("Added Players to datastore");
                 break;
