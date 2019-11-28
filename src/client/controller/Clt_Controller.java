@@ -63,16 +63,18 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
-    private void setTableViewOnAction(){
+    private void setTableViewOnAction() {
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
-        view.getTableView().getControls().getCallTichuButton().setOnAction(e->processTichuButton());
+        view.getTableView().getControls().getCallTichuButton().setOnAction(e -> processTichuButton());
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
         model.getDataStore().getHandCards().addListener((ListChangeListener) c -> handCardChanged());
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
-        model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
-        view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards()+"");
+        model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue, newValue));
+        view.getTableView().getRivalTop().getCardsLabel().setText(model.getDataStore().getAmountOfCards() + "");
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
     }
+
+
 
 
     //@author Sandro
@@ -90,22 +92,25 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
     //@author Pascal
-    private void processTichuButton(){
+    private void processTichuButton() {
+
         logger.info("processTichuButton");
 
-        boolean successful=false;
-        successful=model.sendMessage(model.createMessage("string","tichu"));//Send a tichu String to Server
-        if(successful){
+        boolean successful = false;
+        successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
+        if (successful) {
             logger.info("Tichu-String sent to Server");
             view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu"));//Show a message in the Gui that the player has announced a Tichu
             //view.getTableView().getControls().getCallTichuButton().setDisable(true);
-        }else{
+        } else {
             logger.info("saying tichu is not possible");
         }// TODO: 24.11.2019 Button Disable fehlt noch
 
 
 
+
     }
+
 
     //@author Fabio
     private void startScreenBtnNext(){
@@ -129,6 +134,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.startTableView();
         this.setTableViewOnAction();
 
+
     }
     //@thomas
     private void updateCardAmountView() {
@@ -142,7 +148,6 @@ public class Clt_Controller { //Controller is a Singleton
 
     //@author Fabio
     public void processPlayButton(){
-
         boolean successful = false;
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
@@ -151,6 +156,11 @@ public class Clt_Controller { //Controller is a Singleton
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
+               for(Card c : cardsToSend){
+                   if(c.getRank() == Rank.Mahjong){
+                       view.startWishView();
+                   }
+               }
 
            } else { //else give feedback to the user
                logger.info("Cards declined by server. player has to replay.");

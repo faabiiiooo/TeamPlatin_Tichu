@@ -1,0 +1,35 @@
+#hBox{
+-fx-background-color: gold;
+}
+
+.wishButtons {
+
+    -fx-font-size: 43px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+    -fx-font-family: Algerian;
+
+
+}
+.wishButtons:hover{
+    -fx-background-color: #a8700d;
+    -fx-text-fill: #000000;
+}
+
+
+.mahjong{
+    -fx-min-width: 55;
+    -fx-pref-width: 60;
+    -fx-min-height: 180;
+    -fx-pref-height: 180;
+
+
+
+
+
+}
+
+
+
+
+

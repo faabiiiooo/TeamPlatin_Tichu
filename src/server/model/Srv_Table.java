@@ -198,7 +198,7 @@ public class Srv_Table {
     }
 
     //@author thomas
-    protected void mahJongPlayed(){
+    public void mahJongPlayed(){
     ArrayList<Srv_Player> playersWithWishedCard = new ArrayList<>();
 
     //add all the players who have the wished card from mahjong
@@ -227,7 +227,7 @@ public class Srv_Table {
     }
     //@author thomas
     //method checks if the MJ wish card is already played or cant be played anymore
-    protected void checkIfMJWishIsActive(){
+    public void checkIfMJWishIsActive(){
         for(int i = 0; i < lastPlayedCards.size(); i++){
             // if the wished card is already played or it cant be played anymore set every player to false
             if(lastPlayedCards.get(i).getRank() == mahJongWishCard.getRank() || lastPlayedCards.get(lastPlayedCards.size()-1).getRank().ordinal() < mahJongWishCard.getRank().ordinal() ){
@@ -368,4 +368,5 @@ public class Srv_Table {
     public ArrayList<Card> getLastPlayedCards() {
         return lastPlayedCards;
     }
+
 }

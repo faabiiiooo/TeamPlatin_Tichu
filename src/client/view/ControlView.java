@@ -18,12 +18,18 @@ public class ControlView extends HBox {
 
 
 
+
     public ControlView(){
         this.playButton = new Button(translator.getString("button.playCards"));
         this.passButton = new Button(translator.getString("button.pass"));
         this.bombButton = new Button(translator.getString("button.bomb"));
         this.callTichuButton = new Button(translator.getString("button.callTichu"));
         this.countDownLabel = new Label("");
+
+        playButton.getStyleClass().add("controlButtons");
+        passButton.getStyleClass().add("controlButtons");
+        bombButton.getStyleClass().add("controlButtons");
+        callTichuButton.getStyleClass().add("controlButtons");
 
         this.setId("bottom");
         this.getChildren().addAll(countDownLabel,playButton,passButton,bombButton,callTichuButton);

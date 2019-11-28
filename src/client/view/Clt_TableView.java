@@ -1,6 +1,7 @@
 package client.view;
 
 import com.sun.prism.paint.Color;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
@@ -82,7 +83,7 @@ public class Clt_TableView extends BorderPane {
         tableScene.getStylesheets().add(getClass().getResource("TableView.css").toExternalForm());
         this.primaryStage.setResizable(true);
         //this.primaryStage.setMaximized(true);
-        this.primaryStage.setResizable(false);
+       // this.primaryStage.setResizable(false);
         this.setId("start-pane");
         this.primaryStage.setScene(tableScene);
         this.primaryStage.setTitle(translator.getString("program.name"));

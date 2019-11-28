@@ -79,12 +79,14 @@ cardBackTop{
 
 
 }
-.button {
+.controlButtons {
     -fx-background-radius: 1em;
     -fx-text-fill: white;
-    -fx-font-family: "Arial Narrow";
+    -fx-font-family:Algerian;
     -fx-font-weight: bold;
     -fx-padding: 10, 10, 10, 10;
+
+
 
     -fx-background-color: linear-gradient(rgba(0, 0, 0, 0.8), rgba(102, 115, 255, 0.53));
     -fx-font-size: 20px;

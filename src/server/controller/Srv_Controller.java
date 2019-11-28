@@ -1,11 +1,9 @@
 package server.controller;
 
-import resources.Card;
-import resources.Message;
-import resources.MessageResponse;
-import resources.ServiceLocator;
+import resources.*;
 import server.model.Srv_Model;
 import server.model.Srv_Player;
+import server.model.Srv_Table;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -58,6 +56,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 }
 
                 break;
+
+
+
 
             case "player":
 
