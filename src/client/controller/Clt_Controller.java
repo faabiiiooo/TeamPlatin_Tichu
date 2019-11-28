@@ -84,13 +84,13 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
         if(newValue){
-            Platform.runLater(() -> {
-                view.getTableView().getControls().getBombButton().setDisable(true);
-            });
-        }else{
-            Platform.runLater(() -> {
+                logger.info("Reable the bomb button because the player has a bomb");
                 view.getTableView().getControls().getBombButton().setDisable(false);
-            });
+        }else{
+            if(!newValue) {
+                    logger.info("Player has no Bomb - disable the button");
+                    view.getTableView().getControls().getBombButton().setDisable(true);
+            }
         }
     }
 
@@ -255,10 +255,11 @@ public class Clt_Controller { //Controller is a Singleton
     private void activeStatusChanged(boolean oldValue, boolean newValue){
 
         if(oldValue){
-            Platform.runLater(() -> disableButtons());
+            disableButtons();
+            logger.info("disabling button from not active players");
         } else {
             if(!oldValue){
-                Platform.runLater(() -> enableButtons());
+               enableButtons();
             }
         }
 
@@ -266,10 +267,15 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     private void disableButtons(){
+        view.getTableView().getControls().getPlayButton().setDisable(true);
+        view.getTableView().getControls().getPassButton().setDisable(true);
+
 
     }
 
     private void enableButtons(){
+        view.getTableView().getControls().getPlayButton().setDisable(false);
+        view.getTableView().getControls().getPassButton().setDisable(false);
 
     }
 
@@ -325,6 +331,12 @@ public class Clt_Controller { //Controller is a Singleton
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
                 dataStore.isActiveProperty().set(isActive);
+                break;
+
+            case "boolean/hasBomb":
+                boolean hasBomb = (boolean) msgIn.getObjects().get(0);
+                dataStore.hasBombProperty().set(hasBomb);
+                logger.info("HasBomb set to: "+hasBomb );
                 break;
 
             case "player":

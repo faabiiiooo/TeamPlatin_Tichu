@@ -35,7 +35,7 @@ public class Clt_DataStore {
 
     private final SimpleBooleanProperty isActive = new SimpleBooleanProperty(false);
 
-    private SimpleBooleanProperty hasBomb = new SimpleBooleanProperty();
+    private SimpleBooleanProperty hasBomb = new SimpleBooleanProperty(false);
 
     public static Clt_DataStore getDataStore(){
         if(dataStore == null){

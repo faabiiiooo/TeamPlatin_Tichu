@@ -2,7 +2,6 @@ package server.controller;
 
 import resources.*;
 import server.model.Srv_Model;
-import server.model.Srv_Player;
 import server.model.Srv_Table;
 import resources.Player;
 
@@ -53,6 +52,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
                     model.sendTableCardsToClients();
                     model.sendPlayersToClients();
+                    model.getGame().getTable().checkPlayerHandsOnBomb();
+                    model.sendHasBombStatusToClients();
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
@@ -119,7 +120,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             logger.info("failes to change active player with bomb on hand");
                         }
                         //send the active status to all clients
-                        model.sendActivePlayerToClients();
+                        //model.sendActivePlayerToClients();
 
                         break;
                     }

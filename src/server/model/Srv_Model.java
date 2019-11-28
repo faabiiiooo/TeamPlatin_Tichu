@@ -47,10 +47,30 @@ public class Srv_Model {
         while (countdown.isAlive()){
         }
         game.getTable().dealRestOfCards();
-        game.getRounds().get(0).checkBeginner();
+        game.getRounds().get(0).checkBeginner(game.getTeams());
         this.sendPlayerHandsToClient();
         logger.info("dealed all cards");
         this.sendPlayersToClients();
+        this.sendHasBombStatusToClients();
+
+    }
+
+    public void sendHasBombStatusToClients(){
+        ArrayList<Player> players = game.getTable().getPlayersAtTable();
+        Srv_Server server = serviceLocator.getServer();
+
+        for(int i = 0; i < players.size(); i++){
+            Message msgOut = null;
+            int clientThreadID = server.searchIndexOfClientThreadByID(players.get(i).getClientID());
+            try {
+                msgOut = new Message("boolean/hasBomb", players.get(i).isHasBomb());
+                server.getClientThreads().get(clientThreadID).send(msgOut);
+                logger.info("Sent bomb status to Client!");
+            } catch (Exception e){
+                logger.severe("cant send status to client!");
+            }
+
+        }
 
     }
 

@@ -12,14 +12,16 @@ public class Srv_Round extends Srv_Game { //@author Thomas
     private ArrayList<Player> finisher;
     private ServiceLocator sl = ServiceLocator.getServiceLocator();
     private Logger logger = sl.getLogger();
+    //protected ArrayList<Srv_Team> teams;
 
     public Srv_Round(){
+        super();
         this.finisher = new ArrayList<Player>();
     }
 
 
 
-    protected void checkBeginner(){
+    protected void checkBeginner(ArrayList<Srv_Team> teams){
         //go through all players and their cards
         for(int i = 0; i < this.getTeams().size(); i++ ){
             logger.info("Teams Schleife MJ "+this.getTeams().size());

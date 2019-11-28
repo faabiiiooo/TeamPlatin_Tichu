@@ -35,7 +35,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
     private static String[][] XPairCardsPlayer = {
             //{ "8S", "9K", "9S", "8K", "PE", "7S"  }, //with phoenix
-            { "8S","8P"  }, //no special card
+            { "8S","8P","9K", "9S",  }, //no special card
     };
 
 
@@ -109,9 +109,9 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     private static String[][] bombCardsPlayerFullHand = {
            // { "5S", "5K", "5P", "5J"},
             //{ "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
-            { "5K", "4K", "6K", "7K","8J", "9J", "5S", "8S", "6S", "8K", "PE"},
+           { "5K", "4K", "6K", "7K","8J", "9J", "5S", "8S", "6S", "8K", "PE"},
            // { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K","PE"}, //4er + straight + special card
-            { "ME", "QJ", "TJ", "TP","9S", "6P", "4K", "2S", "7K","KK", "TK", "9K", "7S","QP" },
+            //{ "ME", "AJ", "AP","AS", "6P", "4K", "2S", "7K","KK", "TK", "9K", "7S","QP" },
 
 
     };

@@ -60,15 +60,7 @@ public class Srv_Table {
             }
         }while (deck.getRemainingCards() != 0);
 
-        //check player hands on bombs
-        for(Player p : playersAtTable){
-            logger.info(p+ " "+ p.isActive()+ " beginnt");
-            if(Srv_HandType.isBombOnHand(p.getHandCards())){
-                logger.info(p.toString() + " has a bomb");
-                p.setHasBomb(true);
-            }
-        }
-
+        checkPlayerHandsOnBomb();
     }
     //@author thomas
     // method to play out the cards
@@ -86,6 +78,16 @@ public class Srv_Table {
         }
 
         return canPlay;
+    }
+    //@author thomas
+    //check player hands on bombs
+    public void checkPlayerHandsOnBomb(){
+        for(Player p : playersAtTable){
+            if(Srv_HandType.isBombOnHand(p.getHandCards())){
+                logger.info(p.toString() + " has a bomb");
+                p.setHasBomb(true);
+            }
+        }
     }
 
     public void skip(){ //@author Sandro

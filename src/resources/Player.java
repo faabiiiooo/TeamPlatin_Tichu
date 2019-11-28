@@ -1,5 +1,7 @@
 package resources;
 
+import javafx.beans.property.SimpleBooleanProperty;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -159,4 +161,6 @@ public class Player implements Serializable {
     public int getClientID() {
         return clientID;
     }
+
+
 }
