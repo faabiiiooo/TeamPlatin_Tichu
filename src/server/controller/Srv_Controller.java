@@ -2,7 +2,6 @@ package server.controller;
 
 import resources.*;
 import server.model.Srv_Model;
-import server.model.Srv_Player;
 import server.model.Srv_Table;
 import resources.Player;
 
