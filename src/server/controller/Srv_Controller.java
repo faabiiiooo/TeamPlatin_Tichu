@@ -72,11 +72,12 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
+                boolean foundNextPlayer = false;
                 switch (incoming) {
                     case "skip": //@author Sandro
                         logger.info("Srv_processSkipButton");
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
-                            if (p.isActive()) {// Find activePlayer
+                            if (p.isActive() && !foundNextPlayer) {// Find activePlayer
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
                                     //TODO: msgOut not ok?
@@ -84,6 +85,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                     logger.info("Player can skip");
                                     this.serviceLocator.getTable().skip();
                                     msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                                    foundNextPlayer = true;
                                 }
                             }
                         }

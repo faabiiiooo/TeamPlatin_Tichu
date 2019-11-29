@@ -95,7 +95,7 @@ public class Srv_Table {
     public void skip() { //@author Sandro
         logger.info("Table_Skip_Process started");
         boolean foundNextPlayer = false;
-        for (int i = 0; i < playersAtTable.size() && foundNextPlayer == false; i++) { //looking for IsActive player
+        for (int i = 0; i < playersAtTable.size() && !foundNextPlayer; i++) { //looking for IsActive player
             if (playersAtTable.get(i).isActive() == true) { //found isActive player
                 logger.info("Old active Player: "+playersAtTable.get(i));
 
