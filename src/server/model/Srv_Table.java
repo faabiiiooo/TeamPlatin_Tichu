@@ -93,8 +93,10 @@ public class Srv_Table {
     }
 
     public void skip() { //@author Sandro
+        logger.info("Table_Skip_Process started");
         for (int i = 0; i < playersAtTable.size(); i++) { //looking for IsActive player
             if (playersAtTable.get(i).isActive() == true) { //found isActive player
+                logger.info("Old active Player: "+playersAtTable.get(i));
                 boolean foundNextPlayer = false;
 
                 switch (playersAtTable.get(i).getPLAYER_ID()) {
@@ -147,6 +149,12 @@ public class Srv_Table {
                 }
             }
         }
+        for (Player p : playersAtTable) {
+            if (p.isActive()) {
+                logger.info("New active Player: "+p.getPLAYER_ID());
+            }
+        }
+        logger.info("Table_Skip_Process Ended");
     }
            /*
 
