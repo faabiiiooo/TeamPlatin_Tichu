@@ -1,5 +1,6 @@
 package server.controller;
 
+import javafx.application.Platform;
 import resources.*;
 import server.model.Srv_Model;
 import server.model.Srv_Table;
@@ -84,11 +85,13 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                     skipProcessEnded = true;
                                 } else {
                                     logger.info("Player can skip");
-                                    this.serviceLocator.getTable().skip();
                                     msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                                    this.serviceLocator.getTable().skip();
+                                    //msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     skipProcessEnded = true;
                                 }
                             }
+                            model.sendActivePlayerToClients();
                         }
                         break;
                     case "tichu"://@author Pascal
@@ -124,7 +127,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         }
                         if (ok){
                             logger.info("Player who pressed bomb button is now active");
-                           model.sendActivePlayerToClients();
+                           //model.sendActivePlayerToClients();
+                            Platform.runLater(() -> model.sendActivePlayerToClients());
                         }else{
                             logger.info("failes to change active player with bomb on hand");
                         }

@@ -85,11 +85,16 @@ public class Clt_Controller { //Controller is a Singleton
     private void updateBombButton(Boolean newValue) {
         if(newValue){
                 logger.info("Reenable the bomb button because the player has a bomb");
+            Platform.runLater(() -> {
                 view.getTableView().getControls().getBombButton().setDisable(false);
+            });
         }else{
             if(!newValue) {
-                    logger.info("Player has no Bomb - disable the button");
+                logger.info("Player has no Bomb - disable the button");
+                Platform.runLater(() -> {
                     view.getTableView().getControls().getBombButton().setDisable(true);
+                });
+
             }
         }
     }
@@ -100,7 +105,6 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Sandro
     private void processSkipButton() {
         logger.info("Clt_processSkipButton");
-        model.sendMessage(model.createMessage("string","skip"));
 
         boolean successful = false;
         successful = model.sendMessage(model.createMessage("string","skip")); //send skip-string to server and get answer of server
@@ -334,7 +338,7 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
-                dataStore.isActiveProperty().set(isActive);
+                Platform.runLater(() -> dataStore.isActiveProperty().set(isActive));
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
