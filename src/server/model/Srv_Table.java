@@ -94,13 +94,14 @@ public class Srv_Table {
 
     public void skip() { //@author Sandro
         logger.info("Table_Skip_Process started");
-        for (int i = 0; i < playersAtTable.size(); i++) { //looking for IsActive player
+        boolean foundNextPlayer = false;
+        for (int i = 0; i < playersAtTable.size() && foundNextPlayer == false; i++) { //looking for IsActive player
             if (playersAtTable.get(i).isActive() == true) { //found isActive player
                 logger.info("Old active Player: "+playersAtTable.get(i));
-                boolean foundNextPlayer = false;
 
                 switch (playersAtTable.get(i).getPLAYER_ID()) {
                     case 1: //Case ActivePlayer have Player_ID = 1
+                        logger.info("Case 1");
                         for (int j = 1; j < playersAtTable.size() && !foundNextPlayer; j++) { //Check Player with Player_ID 2,3 and 4
                             if (playersAtTable.get(j).getHandCards().size() > 0) { //Find next player which is still in the game
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
@@ -110,6 +111,7 @@ public class Srv_Table {
                         }
                         break;
                     case 2: //Case ActivePlayer have Player_ID = 2
+                        logger.info("Case 2");
                         for (int j = 2; j < playersAtTable.size() && !foundNextPlayer; j++) { //Check Player with Player_ID 3 and 4
                             if (playersAtTable.get(j).getHandCards().size() > 0) { //Find next player which is still in the game
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
@@ -123,6 +125,7 @@ public class Srv_Table {
                         }
                         break;
                     case 3: //Case ActivePlayer have Player_ID = 3
+                        logger.info("Case 3");
                         if (playersAtTable.get(3).getHandCards().size() > 0) { //Player with Player_ID 4 is still in the Game
                             playersAtTable.get(i).setActive(false); //Set old player on not active
                             playersAtTable.get(3).setActive(true); //Set new player on active
@@ -138,6 +141,7 @@ public class Srv_Table {
                         }
                         break;
                     case 4: //Case ActivePlayer have Player_ID = 4
+                        logger.info("Case 4");
                         for (int j = 0; j < playersAtTable.size()-1 && !foundNextPlayer; j++) { //Check Player with Player_ID 1,2 and 3
                             if (playersAtTable.get(j).getHandCards().size() > 0) { //Find next player which is still in the game
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
