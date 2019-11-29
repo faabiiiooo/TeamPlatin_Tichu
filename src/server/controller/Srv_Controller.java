@@ -114,28 +114,40 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         }
                         break;
 
-                    case "player/BombActiveChange":
-                        boolean ok = false;
+                    case "bombActiveChange":
                         //set the active player to not active
+                        int msgId = msgIn.getSenderID();
+                        logger.info(msgId+" msgId bomb active change");
+                        logger.info("Bomb: active status change");
                         for(Player p : model.getGame().getTable().getPlayersAtTable()){
-                            if(p.isActive()){
+                            if(p.isActive())
+                                logger.info("Player who was active ID: "+p.getPLAYER_ID());
                                 p.setActive(false);
-                                ok = true;
-                            }//set the player who pressed the bomb button to the active player
-                            if(p.getPLAYER_ID() == msgIn.getSenderID()){
+                        }
+                        //set the player who pressed the bomb button to the active player
+                        for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                            if(p.getPLAYER_ID() == msgId){
                                 p.setActive(true);
-                                ok = true;
+                                logger.info("Player ID: "+p.getPLAYER_ID() + "Sender ID: "+msgIn.getSenderID());
+                                logger.info("Player who pressed bomb button is now active");
+                                msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                                model.sendActivePlayerToClients();
                             }
                         }
-                        if (ok){
+                        model.sendActivePlayerToClients();
+                      /*  if (ok){
+                            for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                                logger.info("Active status players: "+ p.getPLAYER_ID()+" Status "+p.isActive());
+                            }
                             logger.info("Player who pressed bomb button is now active");
-                           //model.sendActivePlayerToClients();
-                            Platform.runLater(() -> model.sendActivePlayerToClients());
+                            msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                            model.sendActivePlayerToClients();
                         }else{
                             logger.info("failes to change active player with bomb on hand");
-                        }
+                            msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
+                        }*/
                         //send the active status to all clients
-                        //model.sendActivePlayerToClients();
+
 
                         break;
                     }
