@@ -55,7 +55,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.sendPlayersToClients();
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
+                    model.getGame().getTable().skip();
                     model.sendActivePlayerToClients();
+
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
