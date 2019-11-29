@@ -100,6 +100,7 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Sandro
     private void processSkipButton() {
         logger.info("Clt_processSkipButton");
+        model.sendMessage(model.createMessage("string","skip"));
 
         boolean successful = false;
         successful = model.sendMessage(model.createMessage("string","skip")); //send skip-string to server and get answer of server

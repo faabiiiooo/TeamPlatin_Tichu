@@ -79,9 +79,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             if (p.isActive()) {// Find activePlayer
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
+                                    //TODO: msgOut not ok?
                                 } else {
                                     logger.info("Player can skip");
                                     this.serviceLocator.getTable().skip();
+                                    msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                 }
                             }
                         }
