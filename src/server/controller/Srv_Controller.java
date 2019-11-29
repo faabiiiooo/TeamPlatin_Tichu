@@ -83,17 +83,16 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             if (p.isActive() && !skipProcessEnded) {// Find activePlayer
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
-                                    //TODO: msgOut not ok?
+                                    msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                                     skipProcessEnded = true;
                                 } else {
                                     logger.info("Player can skip");
-                                    msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     this.serviceLocator.getTable().skip();
-                                    //msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                                    msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     skipProcessEnded = true;
                                 }
                             }
-                            model.sendActivePlayerToClients();
+                            model.sendActivePlayerToClients(); //send new activePlayer to Client
                         }
                         break;
                     case "tichu"://@author Pascal

@@ -101,7 +101,6 @@ public class Srv_Table {
 
                 switch (playersAtTable.get(i).getPLAYER_ID()) {
                     case 1: //Case ActivePlayer have Player_ID = 1
-                        logger.info("Case 1");
                         for (int j = 1; j < playersAtTable.size() && !foundNextPlayer; j++) { //Check Player with Player_ID 2,3 and 4
                             if (playersAtTable.get(j).getHandCards().size() > 0) { //Find next player which is still in the game
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
@@ -111,7 +110,6 @@ public class Srv_Table {
                         }
                         break;
                     case 2: //Case ActivePlayer have Player_ID = 2
-                        logger.info("Case 2");
                         for (int j = 2; j < playersAtTable.size() && !foundNextPlayer; j++) { //Check Player with Player_ID 3 and 4
                             if (playersAtTable.get(j).getHandCards().size() > 0) { //Find next player which is still in the game
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
@@ -125,7 +123,6 @@ public class Srv_Table {
                         }
                         break;
                     case 3: //Case ActivePlayer have Player_ID = 3
-                        logger.info("Case 3");
                         if (playersAtTable.get(3).getHandCards().size() > 0) { //Player with Player_ID 4 is still in the Game
                             playersAtTable.get(i).setActive(false); //Set old player on not active
                             playersAtTable.get(3).setActive(true); //Set new player on active
@@ -141,7 +138,6 @@ public class Srv_Table {
                         }
                         break;
                     case 4: //Case ActivePlayer have Player_ID = 4
-                        logger.info("Case 4");
                         for (int j = 0; j < playersAtTable.size()-1 && !foundNextPlayer; j++) { //Check Player with Player_ID 1,2 and 3
                             if (playersAtTable.get(j).getHandCards().size() > 0) { //Find next player which is still in the game
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
@@ -153,133 +149,13 @@ public class Srv_Table {
                 }
             }
         }
-        for (Player p : playersAtTable) {
+        for (Player p : playersAtTable) { //Logger-Info for Testing
             if (p.isActive()) {
                 logger.info("New active Player: "+p.getPLAYER_ID());
             }
         }
         logger.info("Table_Skip_Process Ended");
     }
-           /*
-
-                switch (playersAtTable.get(i).getNextPlayerID()) { //Check seat of isActivePlayer
-                    case 1: //Case ActivePlayer have Seat_ID = 1
-                        for (int j = 1; j < seats.size() && !foundNextPlayer; j++) { //Check Player with Seat_ID 2,3 and 4
-                            if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            }
-                        }
-                        break;
-                    case 2: //Case ActivePlayer have Seat_ID = 2
-                        for (int j = 2; j < seats.size() && !foundNextPlayer; j++) { //Check Player with Seat_ID 3 and 4
-                            if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            } else { //Player with Seat_ID 3&4 already finished -> Player with Seat_ID 1 is next
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(0).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            }
-                        }
-                        break;
-                    case 3: //Case ActivePlayer have Seat_ID = 3
-                        if (seats.get(3).getPlayer().getHandCards().size() > 0) { //Player with Seat_ID 4 is still in the Game
-                            seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                            seats.get(3).getPlayer().setActive(true); //Set new player on active
-                            foundNextPlayer = true;
-                        } else {
-                            for (int j = 0; j < seats.size() - 2 && !foundNextPlayer; j++) { //Check Player with Seat_ID 1 and 2
-                                if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                    seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                    seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                    foundNextPlayer = true;
-                                }
-                            }
-                        }
-                        break;
-                    case 4: //Case ActivePlayer have Seat_ID = 4
-                        for (int j = 0; j < seats.size()-1 && !foundNextPlayer; j++) { //Check Player with Seat_ID 1,2 and 3
-                            if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-    } */
-
-
-      /*  for(Player p1 : playersAtTable) {
-            if (p1.isActive()) {
-                for(Player p2 : playersAtTable) {
-                    if (p2.getPLAYER_ID() == p1.getNextPlayerID()) {
-                        p1.setActive(false);
-                        p2.setActive(true);
-                    }
-                }
-            }
-        }
-    } */
-      /*  for(int i = 0; i < seats.size(); i++) { //looking for IsActive player
-            if (seats.get(i).getPlayer().isActive() == true) { //found isActive player
-                boolean foundNextPlayer = false;
-                switch (seats.get(i).getSEAT_ID()) { //Check seat of isActivePlayer
-                    case 1: //Case ActivePlayer have Seat_ID = 1
-                        for (int j = 1; j < seats.size() && !foundNextPlayer; j++) { //Check Player with Seat_ID 2,3 and 4
-                            if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            }
-                        }
-                        break;
-                    case 2: //Case ActivePlayer have Seat_ID = 2
-                        for (int j = 2; j < seats.size() && !foundNextPlayer; j++) { //Check Player with Seat_ID 3 and 4
-                            if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            } else { //Player with Seat_ID 3&4 already finished -> Player with Seat_ID 1 is next
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(0).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            }
-                        }
-                        break;
-                    case 3: //Case ActivePlayer have Seat_ID = 3
-                        if (seats.get(3).getPlayer().getHandCards().size() > 0) { //Player with Seat_ID 4 is still in the Game
-                            seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                            seats.get(3).getPlayer().setActive(true); //Set new player on active
-                            foundNextPlayer = true;
-                        } else {
-                            for (int j = 0; j < seats.size() - 2 && !foundNextPlayer; j++) { //Check Player with Seat_ID 1 and 2
-                                if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                    seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                    seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                    foundNextPlayer = true;
-                                }
-                            }
-                        }
-                        break;
-                    case 4: //Case ActivePlayer have Seat_ID = 4
-                        for (int j = 0; j < seats.size()-1 && !foundNextPlayer; j++) { //Check Player with Seat_ID 1,2 and 3
-                            if (seats.get(j).getPlayer().getHandCards().size() > 0) { //Find next player which is still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(j).getPlayer().setActive(true); //Set new player on active
-                                foundNextPlayer = true;
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-    } */
 
     //@author Pascal
     //Create new Seats with ID 1-4 and add it to the List
@@ -289,8 +165,6 @@ public class Srv_Table {
             this.seats.add(s);
 
         }
-
-
         return null;
     }
 
