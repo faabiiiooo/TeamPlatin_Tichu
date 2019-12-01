@@ -82,7 +82,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                     }
                 }
-
+                    xy.setWantBomb(false);
                 break;
 
 
