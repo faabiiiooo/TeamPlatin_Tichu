@@ -12,6 +12,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import resources.ServiceLocator;
+import resources.Translator;
 
 
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class Clt_CardWishView extends HBox {
     private Button jButton,qButton,kButton,aButton,nButton;
     private Label mLabel;
     private Image mahjong = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/cards/mahjong_of_specialCards.jpg"));
+    private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
+    private final Translator translator = serviceLocator.getTranslator();
     private final Stage wishStage;
 
 
@@ -65,9 +69,11 @@ public class Clt_CardWishView extends HBox {
             this.setSpacing(1);
             mLabel.setPadding(new Insets(10,10,10,10));
             this.setId("hBox");
-            //wishStage.setResizable(false);
+            wishStage.setResizable(false);
 
             scene.getStylesheets().add(getClass().getResource("CardWishView.css").toExternalForm());
+            this.wishStage.setTitle(translator.getString("program.name"));
+            this.wishStage.getIcons().add(new Image("./resources/images/logo.jpg"));
             this.wishStage.setScene(scene);
             this.wishStage.show();
 

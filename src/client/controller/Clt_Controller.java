@@ -185,6 +185,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getStartScreen().close();
         view.getStartScreen().getMp().stop();// Stops the sound
         view.startTableView();
+       // view.startDcView();
         this.setTableViewOnAction();
 
     }
