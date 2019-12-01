@@ -526,7 +526,7 @@ public enum Srv_HandType {
         //create all the variables we need for the checks
         boolean found = false;
         int counterA = 0;
-        int counterB = 0;
+        int counterB = 1;
         int countCards= 0;
         List<Card> pagodaCards = new ArrayList<>();
         List<Card> jadeCards = new ArrayList<>();
@@ -544,14 +544,21 @@ public enum Srv_HandType {
 
             }
         }
-            for(int i = 0; i < clonedCards.size();i++){
-                counterA = 1;
-                for(int j = clonedCards.size()-1 ; j >= 0; j--){// check if four cards ae of the same ordinal --> if not reset the counter and check the next
-                    if(clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() && counterA != 4 ){
+        logger.info(clonedCards+"");
+            for(int i = 0; i < clonedCards.size() && counterA != 4 ;i++){
+                logger.info("i: "+i );
+                counterA = 0;
+                for(int j = clonedCards.size()-1 ; j >= 0 && counterA != 4 ; j--){// check if four cards are of the same ordinal --> if not reset the counter and check the next
+                    logger.info(" j:"+j);
+                    if(clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() ){
+                        logger.info("4 of the same Rank to check ");
+                        logger.info("Cards: " +clonedCards.get(i)+ " "+ clonedCards.get(j)+" is it true? "+ (clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() && counterA != 4 ) );
                         counterA ++;
+                        logger.info("counterA: "+counterA);
                     }
                 }
             }
+            logger.info("counterA: "+counterA);
             if(counterA == 4){ // if the counter reaches 4 there set found to true
                 found = true;
             }else{
@@ -588,7 +595,7 @@ public enum Srv_HandType {
             }
 
 
-
+        logger.info("Checked hand on bomb, value: "+found +"Playerhands: "+cards );
         return found;
     }
 

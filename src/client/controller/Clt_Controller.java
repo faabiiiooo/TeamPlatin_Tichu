@@ -73,7 +73,6 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().getHandCards().addListener((ListChangeListener) c -> handCardChanged());
         model.getDataStore().getTableCards().addListener((ListChangeListener<? super Card>) c -> tableCardChanged());
         model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue,newValue));
-        model.getDataStore().isActiveProperty().addListener((observable, oldValue, newValue) -> activeStatusChanged(oldValue, newValue));
         model.getDataStore().getHandCards().addListener((ListChangeListener<? super Card>) c -> handCardChanged());
         view.getTableView().getRivalLeft().getCardAmountText().textProperty().bind(dataStore.cardsPlayerLeftProperty().asString());
         view.getTableView().getRivalRight().getCardAmountText().textProperty().bind(dataStore.cardsPlayerRightProperty().asString());
@@ -85,13 +84,18 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
         if(newValue){
-            Platform.runLater(() -> {
-                view.getTableView().getControls().getBombButton().setDisable(true);
-            });
-        }else{
+                logger.info("Reenable the bomb button because the player has a bomb");
             Platform.runLater(() -> {
                 view.getTableView().getControls().getBombButton().setDisable(false);
             });
+        }else{
+            if(!newValue) {
+                logger.info("Player has no Bomb - disable the button");
+                Platform.runLater(() -> {
+                    view.getTableView().getControls().getBombButton().setDisable(true);
+                });
+
+            }
         }
     }
 
@@ -132,35 +136,18 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
-
+//@author thomas
     private void processBombButton(){
         logger.info("Clt_processBombButton");
         boolean successfulActiveStatusSent = false;
-        boolean successfulCardsSent = false;
 
-        successfulActiveStatusSent = model.sendMessage(model.createMessage("String","player/BombActiveChange" ));
+        successfulActiveStatusSent = model.sendMessage(model.createMessage("string","bombActiveChange" ));
         if(successfulActiveStatusSent){
             logger.info("Player who pressed bomb button is now active Player");
         }else{
             logger.info("Server can't set the player with the bomb to active player");
         }
 
-
-        //send the chosen bomb cards to the server and check them
-        ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
-        if(cardsToSend.size() >= 4){ // if he has at least 4 cards selected
-            successfulCardsSent = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
-            if(successfulCardsSent){ //does Server accept the cards? if yes, remove the cards from hand
-                logger.info("Cards sent to Server.");
-                dataStore.getHandCards().removeAll(cardsToSend);
-
-            } else { //else give feedback to the user
-                logger.info("Cards declined by server. player has to replay.");
-                this.displayWrongCardsStatus();
-            }
-        } else {
-            logger.info("No cards selected");
-        }
     }
 
 
@@ -207,6 +194,7 @@ public class Clt_Controller { //Controller is a Singleton
                       Platform.runLater(() ->view.startWishView());
                    }
                }
+               cardsToSend.clear(); //remove the played cards out of the list
 
            } else { //else give feedback to the user
                logger.info("Cards declined by server. player has to replay.");
@@ -257,10 +245,15 @@ public class Clt_Controller { //Controller is a Singleton
     private void activeStatusChanged(boolean oldValue, boolean newValue){
 
         if(oldValue){
-            Platform.runLater(() -> disableButtons());
+            Platform.runLater(()-> {
+            disableButtons();
+            });
+            logger.info("disabling button from not active players");
         } else {
             if(!oldValue){
-                Platform.runLater(() -> enableButtons());
+                Platform.runLater(()-> {
+               enableButtons();
+             });
             }
         }
 
@@ -268,10 +261,13 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     private void disableButtons(){
-
+            view.getTableView().getControls().getPlayButton().setDisable(true);
+            view.getTableView().getControls().getPassButton().setDisable(true);
     }
 
     private void enableButtons(){
+        view.getTableView().getControls().getPlayButton().setDisable(false);
+        view.getTableView().getControls().getPassButton().setDisable(false);
 
     }
 
@@ -326,7 +322,14 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
-                dataStore.isActiveProperty().set(isActive);
+                Platform.runLater(() -> dataStore.isActiveProperty().set(isActive));
+                logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
+                break;
+
+            case "boolean/hasBomb":
+                boolean hasBomb = (boolean) msgIn.getObjects().get(0);
+                dataStore.hasBombProperty().set(hasBomb);
+                logger.info("HasBomb set to: "+hasBomb );
                 break;
 
             case "player":

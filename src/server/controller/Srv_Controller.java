@@ -1,7 +1,9 @@
 package server.controller;
 
+import javafx.application.Platform;
 import resources.*;
 import server.model.Srv_Model;
+import server.model.Srv_Table;
 import resources.Player;
 
 import java.util.ArrayList;
@@ -51,6 +53,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
                     model.sendTableCardsToClients();
                     model.sendPlayersToClients();
+                    model.getGame().getTable().checkPlayerHandsOnBomb();
+                    model.sendHasBombStatusToClients();
+                    model.getGame().getTable().skip();
+                    model.sendActivePlayerToClients();
+
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
@@ -68,18 +75,24 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
+                boolean skipProcessEnded = false;
                 switch (incoming) {
                     case "skip": //@author Sandro
                         logger.info("Srv_processSkipButton");
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
-                            if (p.isActive()) {// Find activePlayer
+                            if (p.isActive() && !skipProcessEnded) {// Find activePlayer
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
+                                    msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
+                                    skipProcessEnded = true;
                                 } else {
                                     logger.info("Player can skip");
                                     this.serviceLocator.getTable().skip();
+                                    msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                                    skipProcessEnded = true;
                                 }
                             }
+                            model.sendActivePlayerToClients(); //send new activePlayer to Client
                         }
                         break;
                     case "tichu"://@author Pascal
@@ -100,27 +113,40 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         }
                         break;
 
-                    case "player/BombActiveChange":
-                        boolean ok = false;
+                    case "bombActiveChange":
                         //set the active player to not active
+                        int msgId = msgIn.getSenderID();
+                        logger.info(msgId+" msgId bomb active change");
+                        logger.info("Bomb: active status change");
                         for(Player p : model.getGame().getTable().getPlayersAtTable()){
-                            if(p.isActive()){
+                            if(p.isActive())
+                                logger.info("Player who was active ID: "+p.getPLAYER_ID());
                                 p.setActive(false);
-                                ok = true;
-                            }//set the player who pressed the bomb button to the active player
-                            if(p.getPLAYER_ID() == msgIn.getSenderID()){
+                        }
+                        //set the player who pressed the bomb button to the active player
+                        for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                            if(p.getPLAYER_ID() == msgId){
                                 p.setActive(true);
-                                ok = true;
+                                logger.info("Player ID: "+p.getPLAYER_ID() + "Sender ID: "+msgIn.getSenderID());
+                                logger.info("Player who pressed bomb button is now active");
+                                msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                                model.sendActivePlayerToClients();
                             }
                         }
-                        if (ok){
+                        model.sendActivePlayerToClients();
+                      /*  if (ok){
+                            for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                                logger.info("Active status players: "+ p.getPLAYER_ID()+" Status "+p.isActive());
+                            }
                             logger.info("Player who pressed bomb button is now active");
-                           model.sendActivePlayerToClients();
+                            msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                            model.sendActivePlayerToClients();
                         }else{
                             logger.info("failes to change active player with bomb on hand");
-                        }
+                            msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
+                        }*/
                         //send the active status to all clients
-                        model.sendActivePlayerToClients();
+
 
                         break;
                     }

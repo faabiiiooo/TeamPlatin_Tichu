@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 public class Srv_ClientThread extends Thread {
 
-    private static int id_generator = 0;
+    private static int id_generator = 1;
     private final int ID;
     private ObjectInputStream in;
     private ObjectOutputStream out;
