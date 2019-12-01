@@ -238,7 +238,7 @@ public class Clt_Controller { //Controller is a Singleton
         }
 
     }
-
+    //@auhtor Fabio
     private void tableCardChanged(){
         Platform.runLater(() -> {
             view.getTableView().getTableCards().clear();
