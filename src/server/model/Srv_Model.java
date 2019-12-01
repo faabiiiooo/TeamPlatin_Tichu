@@ -1,6 +1,5 @@
 package server.model;
 
-import javafx.application.Platform;
 import resources.*;
 
 import java.util.ArrayList;
@@ -47,14 +46,31 @@ public class Srv_Model {
         while (countdown.isAlive()){
         }
         game.getTable().dealRestOfCards();
-        game.getRounds().get(0).checkBeginner();
+        game.getRounds().get(0).checkBeginner(game.getTeams());
         this.sendPlayerHandsToClient();
         logger.info("dealed all cards");
         this.sendPlayersToClients();
+        this.sendHasBombStatusToClients();
+        this.sendActivePlayerToClients();
 
     }
 
-    private void addPlayerToTeams(){ //Player 1 and 2 are in a team,
+    public void sendHasBombStatusToClients(){
+        ArrayList<Player> players = game.getTable().getPlayersAtTable();
+        Srv_Server server = serviceLocator.getServer();
+
+        for(int i = 0; i < players.size(); i++){
+            Message msgOut = null;
+            int clientThreadID = server.searchIndexOfClientThreadByID(players.get(i).getClientID());
+            try {
+                msgOut = new Message("boolean/hasBomb", players.get(i).isHasBomb());
+                server.getClientThreads().get(clientThreadID).send(msgOut);
+                logger.info("Sent bomb status to Client!");
+            } catch (Exception e){
+                logger.severe("cant send status to client!");
+            }
+
+        }
 
     }
 
@@ -117,31 +133,6 @@ public class Srv_Model {
             }
 
         }
-
-            /*for(int i = 0; i < allPlayers.size(); i++){
-            Message msgOut = null;
-            int clientThreadID = server.searchIndexOfClientThreadByID(allPlayers.get(i).getClientID()); //getClientThread of current player
-
-            if(allPlayers.get(i).getClientID() == server.getClientThreads().get(clientThreadID).getID()){
-                otherPlayers.clear();
-
-                for(Player p : allPlayers){ //getting all the players
-                    if(p.getPLAYER_ID() != allPlayers.get(i).getPLAYER_ID()){
-                        otherPlayers.add(p);
-                    }
-                }
-            }
-            msgOut = new Message("player", otherPlayers.toArray());
-            try{
-                server.getClientThreads().get(clientThreadID).send(msgOut);
-                logger.info("Sent players to clients");
-            } catch (Exception e){
-                logger.info("Can't send players to client");
-                e.printStackTrace();
-            }
-
-        }*/
-
     }
 
     //@author Fabio
@@ -164,7 +155,7 @@ public class Srv_Model {
         }
 
     }
-
+    //@author Fabio
     private void sendNextPlayerIdToClients(){
         ArrayList<Srv_Team> teams = game.getTeams();
         Srv_Server server = serviceLocator.getServer();
