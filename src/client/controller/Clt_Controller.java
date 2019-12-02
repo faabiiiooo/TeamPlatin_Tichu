@@ -249,14 +249,12 @@ public class Clt_Controller { //Controller is a Singleton
         if(oldValue){
             Platform.runLater(()-> {
             disableButtons();
-            changeRiceLabel();
             });
             logger.info("disabling button from not active players");
         } else {
             if(!oldValue){
                 Platform.runLater(()-> {
                enableButtons();
-               changeRiceLabel();
              });
             }
         }
@@ -291,6 +289,11 @@ public class Clt_Controller { //Controller is a Singleton
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(true);
+        }
+        if (dataStore.getPlayerTop().isActive() == false && dataStore.getPlayerLeft().isActive() == false && dataStore.getPlayerRight().isActive() == false) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
         }
     }
 
@@ -346,6 +349,7 @@ public class Clt_Controller { //Controller is a Singleton
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
                 Platform.runLater(() -> dataStore.isActiveProperty().set(isActive));
+                changeRiceLabel();
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
@@ -385,6 +389,7 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
+                changeRiceLabel();
 
                 logger.info("Added Players to datastore");
                 break;
