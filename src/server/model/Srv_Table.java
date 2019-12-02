@@ -85,7 +85,7 @@ public class Srv_Table {
     //check player hands on bombs
     public void checkPlayerHandsOnBomb(){
         for(Player p : playersAtTable){
-            if(true){
+            if(Srv_HandType.isBombOnHand(p.getHandCards())){
                 logger.info(p.toString() + " has a bomb");
                 p.setHasBomb(true);
             }

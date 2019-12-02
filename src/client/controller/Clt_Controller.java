@@ -140,10 +140,11 @@ public class Clt_Controller { //Controller is a Singleton
     private void processBombButton(){
         logger.info("Clt_processBombButton");
         boolean successfulActiveStatusSent = false;
-
+        //player who pressed bomb button needs to the the active player
         successfulActiveStatusSent = model.sendMessage(model.createMessage("string","bombActiveChange" ));
         if(successfulActiveStatusSent){
             logger.info("Player who pressed bomb button is now active Player");
+            view.getTableView().getControls().getPassButton().setDisable(true);
         }else{
             logger.info("Server can't set the player with the bomb to active player");
         }

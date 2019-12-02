@@ -2,6 +2,7 @@ package server.controller;
 
 import javafx.application.Platform;
 import resources.*;
+import server.model.Srv_HandType;
 import server.model.Srv_Model;
 import server.model.Srv_Table;
 import resources.Player;
@@ -44,10 +45,17 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
             case "card/playCard":  //generating a Card from Message when card should be played
                 ArrayList<Card> cardsToPlay = new ArrayList<>();
+                Player xy = null;
+                for(Player b: model.getGame().getTable().getPlayersAtTable() ){
+                    if(b.getPLAYER_ID() == msgIn.getSenderID()){
+                        xy = b;
+                    }
+                }
+
                 for(Object o : msgIn.getObjects()){
                     cardsToPlay.add((Card) o);
                 }
-                if(model.getGame().getTable().playCards(cardsToPlay)){
+                if(model.getGame().getTable().playCards(cardsToPlay) && !xy.isWantBomb()){
                     logger.info("Sending success Response");
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
                     model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
@@ -60,11 +68,28 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         model.getGame().getTable().skip();
                         model.sendActivePlayerToClients();
                     }
+                    model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
+                    model.sendHasBombStatusToClients();//send status to client
+                    model.getGame().getTable().skip();
+                    model.sendActivePlayerToClients();
 
-                } else {
-                    msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
+                } else {//if the player wants to bomb, check if the played cards is a bomb and higher than the last played cards
+                    if(xy.isWantBomb() && Srv_HandType.isBomb(cardsToPlay) && model.getGame().getTable().playCards(cardsToPlay)){
+                        logger.info("Case Bomb: Sending success Response");
+                        msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
+                        model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
+                        model.sendTableCardsToClients();
+                        model.sendPlayersToClients();
+                        model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
+                        model.sendHasBombStatusToClients();//send status to client
+                        model.getGame().getTable().skip();
+                        model.sendActivePlayerToClients();
+
+                    }else {
+                        msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
+                    }
                 }
-
+                    xy.setWantBomb(false);
                 break;
 
 
@@ -121,22 +146,27 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         int msgId = msgIn.getSenderID();
                         logger.info(msgId+" msgId bomb active change");
                         logger.info("Bomb: active status change");
-                        for(Player p : model.getGame().getTable().getPlayersAtTable()){
-                            if(p.isActive())
-                                logger.info("Player who was active ID: "+p.getPLAYER_ID());
+                        if(model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog ) {//can only bomb if there wasnt played a dog
+
+
+                            for (Player p : model.getGame().getTable().getPlayersAtTable()) {
+                                if (p.isActive())
+                                    logger.info("Player who was active ID: " + p.getPLAYER_ID());
                                 p.setActive(false);
-                        }
-                        //set the player who pressed the bomb button to the active player
-                        for(Player p : model.getGame().getTable().getPlayersAtTable()){
-                            if(p.getPLAYER_ID() == msgId){
-                                p.setActive(true);
-                                logger.info("Player ID: "+p.getPLAYER_ID() + "Sender ID: "+msgIn.getSenderID());
-                                logger.info("Player who pressed bomb button is now active");
-                                msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
-                                model.sendActivePlayerToClients();
                             }
+                            //set the player who pressed the bomb button to the active player
+                            for (Player p : model.getGame().getTable().getPlayersAtTable()) {
+                                if (p.getPLAYER_ID() == msgId) {
+                                    p.setActive(true);
+                                    p.setWantBomb(true); //set to true, that the played out cards can be checked if they are a bomb
+                                    logger.info("Player ID: " + p.getPLAYER_ID() + "Sender ID: " + msgIn.getSenderID());
+                                    logger.info("Player who pressed bomb button is now active");
+                                    msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                                    model.sendActivePlayerToClients();
+                                }
+                            }
+                            model.sendActivePlayerToClients();
                         }
-                        model.sendActivePlayerToClients();
                       /*  if (ok){
                             for(Player p : model.getGame().getTable().getPlayersAtTable()){
                                 logger.info("Active status players: "+ p.getPLAYER_ID()+" Status "+p.isActive());
