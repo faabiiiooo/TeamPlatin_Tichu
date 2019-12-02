@@ -248,12 +248,14 @@ public class Clt_Controller { //Controller is a Singleton
         if(oldValue){
             Platform.runLater(()-> {
             disableButtons();
+            changeRiceLabel();
             });
             logger.info("disabling button from not active players");
         } else {
             if(!oldValue){
                 Platform.runLater(()-> {
                enableButtons();
+               changeRiceLabel();
              });
             }
         }
@@ -270,6 +272,25 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getPlayButton().setDisable(false);
         view.getTableView().getControls().getPassButton().setDisable(false);
 
+    }
+
+    //@author Sandro
+    private void changeRiceLabel() {
+        if (dataStore.getPlayerTop().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(true);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+        if (dataStore.getPlayerLeft().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(true);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+        if (dataStore.getPlayerRight().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(true);
+        }
     }
 
     //@author Fabio
