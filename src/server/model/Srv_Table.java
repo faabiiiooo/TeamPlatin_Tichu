@@ -226,6 +226,7 @@ public class Srv_Table {
     //add all the players who have the wished card from mahjong
     for(int i = 0; i < playersAtTable.size(); i++){
         for (int j = 0; j < playersAtTable.get(i).getHandCards().size();j++){
+            logger.info(mahJongWishCard+ "The wished card");
             if(playersAtTable.get(i).getHandCards().get(j).getRank() == mahJongWishCard.getRank()){
                 playersWithWishedCard.add(playersAtTable.get(i));
             }

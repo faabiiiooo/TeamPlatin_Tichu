@@ -2,9 +2,12 @@ package client.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -21,23 +24,24 @@ import java.util.ArrayList;
 //@author Pascal
 public class Clt_CardWishView extends HBox {
 
-    private ArrayList<Button>cardButtons;
-    private Button jButton,qButton,kButton,aButton,nButton;
+    private ArrayList<ToggleButton>cardButtons;
+    private ToggleButton jButton,qButton,kButton,aButton,nButton;
     private Label mLabel;
     private Image mahjong = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/cards/mahjong_of_specialCards.jpg"));
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Translator translator = serviceLocator.getTranslator();
     private final Stage wishStage;
+    private final ToggleGroup wishButtonGroup = new ToggleGroup();
 
 
     public Clt_CardWishView(Stage wishStage){
         this.wishStage=wishStage;
-        cardButtons=new ArrayList<Button>();
-        this.jButton=new Button("J");
-        qButton=new Button("Q");
-        kButton=new Button("K");
-        aButton=new Button("A");
-        nButton=new Button("N");
+        cardButtons=new ArrayList<ToggleButton>();
+        this.jButton=new ToggleButton("J");
+        qButton=new ToggleButton("Q");
+        kButton=new ToggleButton("K");
+        aButton=new ToggleButton("A");
+        nButton=new ToggleButton("N");
 
         mLabel=new Label();
         ImageView imgViewMahjong = new ImageView(mahjong);
@@ -49,17 +53,18 @@ public class Clt_CardWishView extends HBox {
 
 
         for(int i=2;i<11;i++) {
-            Button b = new Button(Integer.toString(i));
+            ToggleButton b = new ToggleButton(Integer.toString(i));
             cardButtons.add(b);
             this.getChildren().add(b);
-
+            b.setToggleGroup(wishButtonGroup);
 
             b.getStyleClass().add("wishButtons");
-            jButton.getStyleClass().add("wishButtons");
-            qButton.getStyleClass().add("wishButtons");
-            kButton.getStyleClass().add("wishButtons");
-            aButton.getStyleClass().add("wishButtons");
-            nButton.getStyleClass().add("wishButtons");
+            jButton.getStyleClass().add("wishButtons"); jButton.setToggleGroup(wishButtonGroup);
+            qButton.getStyleClass().add("wishButtons"); qButton.setToggleGroup(wishButtonGroup);
+            kButton.getStyleClass().add("wishButtons"); kButton.setToggleGroup(wishButtonGroup);
+            aButton.getStyleClass().add("wishButtons"); aButton.setToggleGroup(wishButtonGroup);
+            nButton.getStyleClass().add("wishButtons"); nButton.setToggleGroup(wishButtonGroup);
+            cardButtons.add(jButton); cardButtons.add(qButton); cardButtons.add(kButton); cardButtons.add(aButton); cardButtons.add(nButton);
         }
             this.getChildren().addAll(jButton, qButton, kButton, aButton, nButton,mLabel);
 
@@ -80,27 +85,27 @@ public class Clt_CardWishView extends HBox {
 
 }
 
-    public ArrayList<Button> getCardButtons() {
+    public ArrayList<ToggleButton> getCardButtons() {
         return cardButtons;
     }
 
-    public Button getjButton() {
+    public ToggleButton getjButton() {
         return jButton;
     }
 
-    public Button getqButton() {
+    public ToggleButton getqButton() {
         return qButton;
     }
 
-    public Button getkButton() {
+    public ToggleButton getkButton() {
         return kButton;
     }
 
-    public Button getaButton() {
+    public ToggleButton getaButton() {
         return aButton;
     }
 
-    public Button getnButton() {
+    public ToggleButton getnButton() {
         return nButton;
     }
 
@@ -116,4 +121,5 @@ public class Clt_CardWishView extends HBox {
         return wishStage;
     }
 
+    public ToggleGroup getWishButtonGroup() { return wishButtonGroup; }
 }

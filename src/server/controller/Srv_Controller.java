@@ -100,7 +100,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
                 break;
 
-
+            case "card/wishCard": //setting the wished card from the player
+                model.getGame().getTable().setMahJongWishCard((Card)msgIn.getObjects().get(0));
+                msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                logger.info("Wished card has been set on Table : " + model.getGame().getTable().getMahJongWishCard());
+                break;
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 boolean skipProcessEnded = false;

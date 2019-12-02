@@ -1,6 +1,5 @@
 package client.model;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -31,6 +30,7 @@ public class Clt_DataStore {
     private int nextPlayerID;
 
     private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
+    private SimpleBooleanProperty wishedCardIsSet = new SimpleBooleanProperty(false);
 
 
     private final SimpleBooleanProperty isActive = new SimpleBooleanProperty(false);
@@ -172,4 +172,10 @@ public class Clt_DataStore {
     public SimpleIntegerProperty cardsPlayerLeftProperty() {
         return cardsPlayerLeft;
     }
+
+    public SimpleBooleanProperty isWishedCardIsSet() { return wishedCardIsSet; }
+
+    public void setWishedCardIsSet(boolean wishedCardIsSet) { this.wishedCardIsSet.set(wishedCardIsSet); }
+
+    public SimpleBooleanProperty wishedCardIsSetProperty() { return wishedCardIsSet; }
 }
