@@ -69,6 +69,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     cardsToPlay.add((Card) o);
                 }
                 if(model.getGame().getTable().playCards(cardsToPlay) && !xy.isWantBomb() && !xy.isHasWishedCard()){
+                    logger.info("Play Cards normal process");
                     logger.info("Sending success Response");
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
                     model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
@@ -107,7 +108,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     xy.setWantBomb(false);
                 }
                 if(xy.isHasWishedCard() && cardsToPlay.contains(model.getGame().getTable().getMahJongWishCard().getRank())){// we need to check if the player played the wished card
-                    logger.info("Case Bomb: Sending success Response");
+                    logger.info("Case Wished Cards: Sending success Response");
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
                     standardProcessPlayCards(msgIn.getSenderID(),cardsToPlay);
 
@@ -140,6 +141,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         logger.info("Srv_processSkipButton");
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
                             if (p.isActive() && !skipProcessEnded) {// Find activePlayer
+
+                                for(Player z : model.getGame().getTable().getPlayersAtTable()){
+                                    logger.info("Has Player wished card? "+z +"  "+ p.isHasWishedCard());
+                                }
+
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
                                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());

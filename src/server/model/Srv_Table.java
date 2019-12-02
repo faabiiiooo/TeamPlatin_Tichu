@@ -68,6 +68,7 @@ public class Srv_Table {
         logger.info("Going to play a card");
         boolean canPlay = false;
         //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
+        logger.info("card to play -->: "+ playerCards);
 
         for(Player p: playersAtTable){
            logger.info(p + " " + p.isHasWishedCard()+" Can the player play the wished card?");
@@ -260,7 +261,8 @@ public class Srv_Table {
             for (Player mj : playersAtTable) {
                 logger.info("going to check if the mj wish is still active");
                 // if the wished card is already played or it cant be played anymore set every player to false
-                if (lastPlayedCards.get(lastPlayedCards.size() - 1).getRank().ordinal() <= mahJongWishCard.getRank().ordinal() ||
+                if (lastPlayedCards.get(lastPlayedCards.size() - 1).getRank().ordinal() >= mahJongWishCard.getRank().ordinal() && lastPlayedCards.get(lastPlayedCards.size() - 1).getRank()
+                        != Rank.Mahjong||
                         lastPlayedCards.size() >= 5 && !Srv_HandType.mahJongWishStreet(mj.getHandCards(), lastPlayedCards, mahJongWishCard) ) {
                     for (Player p : playersAtTable) {
                         p.setHasWishedCard(false);
