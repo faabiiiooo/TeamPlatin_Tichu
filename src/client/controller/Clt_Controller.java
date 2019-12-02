@@ -400,6 +400,24 @@ public class Clt_Controller { //Controller is a Singleton
 
                 break;
 
+            case "string/stingNotification":
+                String notification = (String) msgIn.getObjects().get(0);
+                String[] temp = notification.split(";");
+                int playerID = Integer.parseInt(temp[0]);
+                String message = temp[1];
+
+                if(playerID != dataStore.getPlayerRight().getPLAYER_ID() &&
+                playerID != dataStore.getPlayerLeft().getPLAYER_ID() &&
+                playerID != dataStore.getPlayerTop().getPLAYER_ID()){
+                    Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("model.player")+" "+
+                            playerID + " " + translator.getString("player.sting.notification")));
+                } else {
+                    Platform.runLater(() -> view.getTableView().getTichuLabel().setText(translator.getString("model.player")+ " "+  playerID + " " +
+                            translator.getString("player.sting.notification")));
+                }
+                break;
+
+
             case "connection-lost": //stop game. A client got disconnected.
                 logger.warning("Client is going to stop because of connection loss");
 

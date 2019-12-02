@@ -191,6 +191,31 @@ public class Srv_Model {
 
     }
 
+    public void sendStingNotification(){
+        Srv_Server server = serviceLocator.getServer();
+        Player playerThatStung = null;
+        for(Player p : game.getTable().getPlayersAtTable()){
+            if(p.isActive()){
+                playerThatStung = p;
+            }
+        }
+        for(int i = 0; i < game.getTable().getPlayersAtTable().size(); i++){
+            Message msgOut = null;
+            int clientThreadIndex = server.searchIndexOfClientThreadByID(game.getTable().getPlayersAtTable().get(i).getClientID());
+
+
+            try {
+                msgOut = new Message("string/stingNotification", playerThatStung.getPLAYER_ID() + ";" + "player.sting.notification");
+                server.getClientThreads().get(clientThreadIndex).send(msgOut);
+                logger.info("Sent sting notifiaction to clients");
+            } catch (Exception e){
+                logger.severe("Can't send Stingnotifiaction to clients");
+            }
+
+        }
+
+    }
+
     //@author Fabio
     private void joinPlayersToTeam(){ //gets only called on startup
         ArrayList<Player> players = game.getTable().getPlayersAtTable();

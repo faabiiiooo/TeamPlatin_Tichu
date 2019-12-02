@@ -57,6 +57,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.sendHasBombStatusToClients();
                     model.getGame().getTable().skip();
                     model.sendActivePlayerToClients();
+                    for(Player p : serviceLocator.getTable().getPlayersAtTable()){ //if he skipped previosly and now can play
+                        if(p.getClientID() == msgIn.getSenderID()){
+                            serviceLocator.getTable().getPlayersThatSkipped().remove(p);
+                        }
+                    }
 
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
@@ -79,7 +84,18 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 switch (incoming) {
                     case "skip": //@author Sandro
                         logger.info("Srv_processSkipButton");
+                        int clientID = msgIn.getSenderID();
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
+                            if(p.getClientID() == msgIn.getSenderID()){ //add player that skipped to a list
+                                if(p.equals(serviceLocator.getTable().getBeginner()) && serviceLocator.getTable().getPlayersThatSkipped().contains(p)){
+                                    serviceLocator.getTable().getPlayersThatSkipped().clear();
+
+                                }
+                            }
+                            if(!serviceLocator.getTable().getPlayersThatSkipped().contains(p)){
+                                serviceLocator.getTable().getPlayersThatSkipped().add(p);
+                            }
+
                             if (p.isActive() && !skipProcessEnded) {// Find activePlayer
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
@@ -130,7 +146,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                 logger.info("Player ID: "+p.getPLAYER_ID() + "Sender ID: "+msgIn.getSenderID());
                                 logger.info("Player who pressed bomb button is now active");
                                 msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
-                                model.sendActivePlayerToClients();
+                                //model.sendActivePlayerToClients();
                             }
                         }
                         model.sendActivePlayerToClients();

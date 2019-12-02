@@ -14,8 +14,10 @@ public class Srv_Table {
     private final ArrayList<Srv_Seat> seats = new ArrayList<>();
     private final ArrayList<Card> lastPlayedCards = new ArrayList<>();
     private final ArrayList<Card> allPlayedCards = new ArrayList<>();
+    private final ArrayList<Player> playersThatSkipped = new ArrayList<>();
     private Srv_Deck deck;
     private Srv_Game game;
+    private Player beginner;
 
     private Card mahJongWishCard;
 
@@ -60,6 +62,12 @@ public class Srv_Table {
             }
         }while (deck.getRemainingCards() != 0);
 
+        for(int i = 0; i < playersAtTable.size(); i++){ //setting the playerID of each card which a player has on his hand
+            for(int j = 0; j < playersAtTable.get(i).getHandCards().size();j++){
+                playersAtTable.get(i).getHandCards().get(j).setPlayerId(playersAtTable.get(i).getPLAYER_ID());
+            }
+        }
+
         checkPlayerHandsOnBomb();
     }
     //@author thomas
@@ -95,9 +103,20 @@ public class Srv_Table {
     public void skip() { //@author Sandro
         logger.info("Table_Skip_Process started");
         boolean foundNextPlayer = false;
+
+        if(playersThatSkipped.size() >= 3){
+            int playerIDOfLastPlayedCards = lastPlayedCards.get(0).getPlayerId();
+            for(Player p : playersAtTable){
+                if(p.getPLAYER_ID() == playerIDOfLastPlayedCards){
+                    this.sting(p);
+                }
+            }
+        }
+
         for (int i = 0; i < playersAtTable.size() && !foundNextPlayer; i++) { //looking for IsActive player
             if (playersAtTable.get(i).isActive() == true) { //found isActive player
                 logger.info("Old active Player: "+playersAtTable.get(i));
+                
 
                 switch (playersAtTable.get(i).getPLAYER_ID()) {
                     case 1: //Case ActivePlayer have Player_ID = 1
@@ -157,6 +176,21 @@ public class Srv_Table {
         logger.info("Table_Skip_Process Ended");
     }
 
+    private void sting(Player winner){
+        this.transferCards(winner);
+        for(Player p : playersAtTable){
+            if(p.isActive()){
+                p.setActive(false);
+            }
+        }
+        int indexOfWinner = playersAtTable.indexOf(winner);
+        playersAtTable.get(indexOfWinner).setActive(true);
+        serviceLocator.getSrvModel().sendActivePlayerToClients();
+        serviceLocator.getSrvModel().sendTableCardsToClients();
+        serviceLocator.getSrvModel().sendStingNotification();
+
+    }
+
     //@author Pascal
     //Create new Seats with ID 1-4 and add it to the List
     private Srv_Seat createSeats(){
@@ -174,10 +208,9 @@ public class Srv_Table {
         ArrayList<Player> finisher = game.getRounds().get(game.getRounds().size()-1).getFinisher(); //getting finishers
 
         if(finisher.size() < 3 && player != null){ //if true, game is still playing only transfer table cards
-            for (Card c : allPlayedCards){
-                player.getWonCards().add(c);
-                allPlayedCards.clear();
-            }
+            player.getWonCards().addAll(allPlayedCards);
+            allPlayedCards.clear();
+            
         } else { //else transfer cards from looser to winner and rival team
             Player winner = finisher.get(0); //get winner of the round
             Player looser = null;
@@ -391,4 +424,15 @@ public class Srv_Table {
         return lastPlayedCards;
     }
 
+    public ArrayList<Player> getPlayersThatSkipped() {
+        return playersThatSkipped;
+    }
+
+    public Player getBeginner() {
+        return beginner;
+    }
+
+    public void setBeginner(Player beginner) {
+        this.beginner = beginner;
+    }
 }
