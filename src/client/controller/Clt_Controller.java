@@ -84,6 +84,8 @@ public class Clt_Controller { //Controller is a Singleton
 
         model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
+        model.getDataStore().isWantsCardWish().addListener( (observable, oldValue, newValue) -> wishedCardfromMahjong(newValue));
+
     }
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
@@ -192,60 +194,38 @@ public class Clt_Controller { //Controller is a Singleton
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         Collections.sort(cardsToSend);
         if(cardsToSend.size() > 0 ){ // if he has cards selected
-            if(cardsToSend.get(0).getRank() == Rank.Mahjong) {
-                wishedCardfromMahjong();
-                do{
-
-                }while (!dataStore.isWishedCardIsSet().get());
-            }
-
-
           successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
+               logger.info(this.toString()+"I Send info to show wish View");
                dataStore.getHandCards().removeAll(cardsToSend);
                cardsToSend.clear(); //remove the played cards out of the list
 
            } else { //else give feedback to the user
-               logger.info("Cards declined by server. player has to replay.");
+               logger.info(this.toString()+"Cards declined by server. player has to replay.");
                this.displayWrongCardsStatus();
            }
         }
-       /* if(cardsToSend.size() > 0 && cardsToSend.get(0).getRank() == Rank.Mahjong){
-                logger.info("Mahjong played out");
-                Platform.runLater(() ->view.startWishView());
-            Platform.runLater(() ->view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
-                    if(view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
-                       for(ToggleButton tb: view.getCardWishView().getCardButtons()) {
-                           if(tb == new_toggle){
-                               createWishedCard(tb.getText());
-                           }
-
-                       }
-                dataStore.setWishedCardIsSet(true);
-                Platform.runLater(() -> view.getCardWishView().getWishStage().close());
-
-                }));
-
-        }*/
 
 
     }
 
-    private void wishedCardfromMahjong(){
-        Platform.runLater(() ->view.startWishView());
-        Platform.runLater(() ->view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
-            if(view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
-                for(ToggleButton tb: view.getCardWishView().getCardButtons()) {
-                    if(tb == new_toggle){
-                        createWishedCard(tb.getText());
+    private void wishedCardfromMahjong(boolean newValue){
+        logger.info(this.toString()+ "I get Info to show Wish view");
+        if(newValue) {
+            Platform.runLater(() -> view.startWishView());
+            Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
+                if (view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
+                    for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
+                        if (tb == new_toggle) {
+                            createWishedCard(tb.getText());
+                        }
+
                     }
+                Platform.runLater(() -> view.getCardWishView().getWishStage().close());
 
-                }
-            dataStore.setWishedCardIsSet(true);
-            Platform.runLater(() -> view.getCardWishView().getWishStage().close());
-
-        }));
+            }));
+        }
 
     }
 
@@ -387,8 +367,13 @@ public class Clt_Controller { //Controller is a Singleton
         }
 
         Card wishedCard = new Card(suit, wishRank, value);
-        logger.info(wishedCard+" wished card created");
+
         successful = model.sendMessage(model.createMessage("card/wishCard",wishedCard)); //send cards to server and get answer of server
+        if(successful){
+            logger.info(wishedCard+" wished card created");
+        }else{
+            logger.info("Cant send the wished card");
+        }
     }
 
 
@@ -471,6 +456,9 @@ public class Clt_Controller { //Controller is a Singleton
                 int nextPlayerID = (int) msgIn.getObjects().get(0);
                 dataStore.setNextPlayerID(nextPlayerID);
                 break;
+            case "string/wishView":
+                model.getDataStore().isWantsCardWish().set(true);
+                //wishedCardfromMahjong();
 
 
             case "string":

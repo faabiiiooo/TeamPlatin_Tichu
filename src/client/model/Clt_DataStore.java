@@ -30,7 +30,7 @@ public class Clt_DataStore {
     private int nextPlayerID;
 
     private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
-    private SimpleBooleanProperty wishedCardIsSet = new SimpleBooleanProperty(false);
+    private SimpleBooleanProperty wantsCardWish = new SimpleBooleanProperty(false);
 
 
     private final SimpleBooleanProperty isActive = new SimpleBooleanProperty(false);
@@ -173,9 +173,8 @@ public class Clt_DataStore {
         return cardsPlayerLeft;
     }
 
-    public SimpleBooleanProperty isWishedCardIsSet() { return wishedCardIsSet; }
+    public SimpleBooleanProperty isWantsCardWish() { return wantsCardWish; }
 
-    public void setWishedCardIsSet(boolean wishedCardIsSet) { this.wishedCardIsSet.set(wishedCardIsSet); }
+    public void setWantsCardWish(boolean wishedCardIsSet) { this.wantsCardWish.set(wishedCardIsSet); }
 
-    public SimpleBooleanProperty wishedCardIsSetProperty() { return wishedCardIsSet; }
 }

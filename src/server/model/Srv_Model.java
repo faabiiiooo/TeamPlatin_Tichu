@@ -74,6 +74,20 @@ public class Srv_Model {
 
     }
 
+    //@author thomas
+    public void openClientWishView(int clientThreadID){
+        Message msgOutMJWish = null;
+        Srv_Server server = serviceLocator.getServer();
+        try {
+            msgOutMJWish = new Message("string/wishView", "open"); //send info to open clients wish view because of played MJ
+            server.getClientThreads().get(server.searchIndexOfClientThreadByID(clientThreadID)).send(msgOutMJWish);
+            logger.info("Sent info to open Wish View to Client: " +clientThreadID);
+        } catch (Exception e){
+            logger.severe("cant send message to client");
+        }
+
+    }
+
     //@author Fabio
     public void sendPlayerHandsToClient(){
 
@@ -155,6 +169,7 @@ public class Srv_Model {
         }
 
     }
+
     //@author Fabio
     private void sendNextPlayerIdToClients(){
         ArrayList<Srv_Team> teams = game.getTeams();
