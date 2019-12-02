@@ -61,6 +61,13 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
                     model.sendTableCardsToClients();
                     model.sendPlayersToClients();
+                    model.getGame().getTable().checkPlayerHandsOnBomb();
+                    model.sendHasBombStatusToClients();
+
+                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //Dont skip twice if dogPlayed
+                        model.getGame().getTable().skip();
+                        model.sendActivePlayerToClients();
+                    }
                     model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
                     model.sendHasBombStatusToClients();//send status to client
                     model.getGame().getTable().skip();
@@ -117,7 +124,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         }
                         break;
                     case "tichu"://@author Pascal
-                        // TODO: 24.11.2019 ANtwort an den Client fehlt noch
+
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel
                             if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID
                                 if (p.getHandCards().size() == 14) {//Check if Handcards equals 14

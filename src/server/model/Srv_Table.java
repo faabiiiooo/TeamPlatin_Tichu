@@ -151,7 +151,7 @@ public class Srv_Table {
         }
         for (Player p : playersAtTable) { //Logger-Info for Testing
             if (p.isActive()) {
-                logger.info("New active Player: "+p.getPLAYER_ID());
+                logger.info("New active Player: "+p);
             }
         }
         logger.info("Table_Skip_Process Ended");
@@ -263,68 +263,62 @@ public class Srv_Table {
 
 
     protected void dogPlayed(){ //SkiptoTeamMember @author Sandro
-        for(int i = 0; i < seats.size(); i++) { //looking for IsActive player
-            if (seats.get(i).getPlayer().isActive() == true) { //found isActive player
-                switch (seats.get(i).getSEAT_ID()) { //Check seat of isActivePlayer
-                    case 1: //Case ActivePlayer have Seat_ID = 1
-                        if (seats.get(i + 2).getPlayer().getHandCards().size() > 0) { //teamMember with Seat_ID=3 is still in the game
-                            seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                            seats.get(i + 2).getPlayer().setActive(true); //Set new player with Seat_ID=3 on active
-                        } else { //teamMember with Seat_ID=3 not anymore in the game (already finish)
-                            if (seats.get(i + 3).getPlayer().getHandCards().size() > 0) { //right player of the teammate with Seat_ID=4 still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i + 3).getPlayer().setActive(true); //Set new player with Seat_ID=4 on active
-                            } else { //right player of the teammate with Seat_ID=4 not anymore in the game (already finish)
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i + 1).getPlayer().setActive(true); //Set new player with Seat_ID=2 on active
-                            }
-                        }
+        logger.info("Table_DogPlayed_Process started");
+        boolean foundNextPlayer = false;
+        for(int i = 0; i < playersAtTable.size() && !foundNextPlayer; i++) { //looking for IsActive player
+            if (playersAtTable.get(i).isActive() == true) { //found isActive player
+                logger.info("Old active Player: "+playersAtTable.get(i));
+
+                switch (playersAtTable.get(i).getPLAYER_ID()) { //Check Player_ID of isActivePlayer
+                    case 1: //Case ActivePlayer have Player_ID = 1
+                        if (playersAtTable.get(i + 2).getHandCards().size() > 0) { //teamMember with Player_ID=3 is still in the game
+                            playersAtTable.get(i).setActive(false); //Set old player on not active
+                            playersAtTable.get(i + 2).setActive(true); //Set new player with Player_ID=3 on active
+                            foundNextPlayer = true;
+                        } else { //teamMember with Player_ID=3 not anymore in the game (already finish)
+                            if (playersAtTable.get(i + 3).getHandCards().size() > 0) { //right player of the teammate with Player_ID=4 still in the game
+                                playersAtTable.get(i).setActive(false); //Set old player on not active
+                                playersAtTable.get(i + 3).setActive(true); //Set new player with Seat_ID=4 on active
+                                foundNextPlayer = true;
+                            }  //Player with Player_ID=4 not anymore in the game (already finish)? -> Same Player who played the dog is still active
+                        } //If Player who played dog already finish? Round is over (3 players are finish)
                         break;
-                    case 2: //Case ActivePlayer have Seat_ID = 2
-                        if (seats.get(i + 2).getPlayer().getHandCards().size() > 0) { //teamMember with Seat_ID=4 is still in the game
-                            seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                            seats.get(i + 2).getPlayer().setActive(true); //Set new player with Seat_ID=4 on active
-                        } else { //teamMember with Seat_ID=4 not anymore in the game (already finish)
-                            if (seats.get(i - 1).getPlayer().getHandCards().size() > 0) { //right player of the teammate with Seat_ID=1 still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i - 1).getPlayer().setActive(true); //Set new player with Seat_ID=1 on active
-                            } else { //right player of the teammate with Seat_ID=1 not anymore in the game (already finish)
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i + 1).getPlayer().setActive(true); //Set new player with Seat_ID=3 on active
-                            }
-                        }
+                    case 2: //Case ActivePlayer have Player_ID = 2
+                        if (playersAtTable.get(i + 2).getHandCards().size() > 0) { //teamMember with Player_ID=4 is still in the game
+                            playersAtTable.get(i).setActive(false); //Set old player on not active
+                            playersAtTable.get(i + 2).setActive(true); //Set new player with Player_ID=4 on active
+                            foundNextPlayer = true;
+                        } else { //teamMember with Player_ID=4 not anymore in the game (already finish)
+                            if (playersAtTable.get(i - 1).getHandCards().size() > 0) { //right player of the teammate with Player_ID=1 still in the game
+                                playersAtTable.get(i).setActive(false); //Set old player on not active
+                                playersAtTable.get(i - 1).setActive(true); //Set new player with Player_ID=1 on active
+                                foundNextPlayer = true;
+                            }  //right player of the teammate with Player_ID=1 not anymore in the game (already finish) -> Same Player who played the dog is still active
+                        } //If Player who played dog already finish? Round is over (3 players are finish)
                         break;
-                    case 3: //Case ActivePlayer have Seat_ID = 3
-                        if (seats.get(i - 2).getPlayer().getHandCards().size() > 0) { //teamMember with Seat_ID=1 is still in the game
-                            seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                            seats.get(i - 2).getPlayer().setActive(true); //Set new player with Seat_ID=1 on active
-                        } else { //teamMember with Seat_ID=1 not anymore in the game (already finish)
-                            if (seats.get(i - 1).getPlayer().getHandCards().size() > 0) { //right player of the teammate with Seat_ID=2 still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i - 1).getPlayer().setActive(true); //Set new player with Seat_ID=2 on active
-                            } else { //right player of the teammate with Seat_ID=2 not anymore in the game (already finish)
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i + 1).getPlayer().setActive(true); //Set new player with Seat_ID=4 on active
-                            }
-                        }
-                        break;
-                    case 4: //Case ActivePlayer have Seat_ID = 4
-                        if (seats.get(i - 2).getPlayer().getHandCards().size() > 0) { //teamMember with Seat_ID=2 is still in the game
-                            seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                            seats.get(i - 2).getPlayer().setActive(true); //Set new player with Seat_ID=2 on active
-                        } else { //teamMember with Seat_ID=2 not anymore in the game (already finish)
-                            if (seats.get(i - 1).getPlayer().getHandCards().size() > 0) { //right player of the teammate with Seat_ID=3 still in the game
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i - 1).getPlayer().setActive(true); //Set new player with Seat_ID=3 on active
-                            } else { //right player of the teammate with Seat_ID=3 not anymore in the game (already finish)
-                                seats.get(i).getPlayer().setActive(false); //Set old player on not active
-                                seats.get(i - 3).getPlayer().setActive(true); //Set new player with Seat_ID=1 on active
-                            }
-                        }
+                    case 3: case 4: //Case ActivePlayer have Player_ID = 3/4
+                        if (playersAtTable.get(i - 2).getHandCards().size() > 0) { //teamMember with Player_ID=1/2 is still in the game
+                            playersAtTable.get(i).setActive(false); //Set old player on not active
+                            playersAtTable.get(i - 2).setActive(true); //Set new player with Player_ID=1/2 on active
+                            foundNextPlayer = true;
+                        } else { //teamMember with Player_ID=1/2 not anymore in the game (already finish)
+                            if (playersAtTable.get(i - 1).getHandCards().size() > 0) { //right player of the teammate with Player_ID=2/3 still in the game
+                                playersAtTable.get(i).setActive(false); //Set old player on not active
+                                playersAtTable.get(i - 1).setActive(true); //Set new player with Seat_ID=2/3 on active
+                                foundNextPlayer = true;
+                            } //right player of the teammate with Player_ID=2/3 not anymore in the game (already finish) -> Same Player who played the dog is still active
+                        } //If Player who played dog already finish? Round is over (3 players are finish)
                         break;
                 }
+                foundNextPlayer = true; //for case old isActive Player == new isActivePlayer
             }
         }
+        for (Player p : playersAtTable) { //Logger-Info for Testing
+            if (p.isActive()) {
+                logger.info("New active Player: "+p);
+            }
+        }
+        logger.info("Table_DogPlayed_Process ended");
     }
 
     //@author Fabio
