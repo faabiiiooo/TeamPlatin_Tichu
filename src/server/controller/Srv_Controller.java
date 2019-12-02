@@ -66,8 +66,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.getGame().getTable().skip();
                     model.sendActivePlayerToClients();
 
-                } else {
-                    if(xy.isWantBomb() && Srv_HandType.isBomb(cardsToPlay)){
+                } else {//if the player wants to bomb, check if the played cards is a bomb and higher than the last played cards
+                    if(xy.isWantBomb() && Srv_HandType.isBomb(cardsToPlay) && model.getGame().getTable().playCards(cardsToPlay)){
                         logger.info("Case Bomb: Sending success Response");
                         msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
                         model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
