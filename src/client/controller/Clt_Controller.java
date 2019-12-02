@@ -140,10 +140,11 @@ public class Clt_Controller { //Controller is a Singleton
     private void processBombButton(){
         logger.info("Clt_processBombButton");
         boolean successfulActiveStatusSent = false;
-
+        //player who pressed bomb button needs to the the active player
         successfulActiveStatusSent = model.sendMessage(model.createMessage("string","bombActiveChange" ));
         if(successfulActiveStatusSent){
             logger.info("Player who pressed bomb button is now active Player");
+            view.getTableView().getControls().getPassButton().setDisable(true);
         }else{
             logger.info("Server can't set the player with the bomb to active player");
         }
@@ -172,6 +173,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getStartScreen().close();
         view.getStartScreen().getMp().stop();// Stops the sound
         view.startTableView();
+       // view.startDcView();
         this.setTableViewOnAction();
 
     }
@@ -271,6 +273,30 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
+    //@author Sandro
+    private void changeRiceLabel() {
+        if (dataStore.getPlayerTop().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(true);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+        if (dataStore.getPlayerLeft().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(true);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+        if (dataStore.getPlayerRight().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(true);
+        }
+        if (dataStore.getPlayerTop().isActive() == false && dataStore.getPlayerLeft().isActive() == false && dataStore.getPlayerRight().isActive() == false) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+    }
+
     //@author Fabio
     private void processCardClicked(MouseEvent e){ //sets a border around the card, adds it to send queue
         logger.info("clicked on card");
@@ -323,6 +349,7 @@ public class Clt_Controller { //Controller is a Singleton
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
                 Platform.runLater(() -> dataStore.isActiveProperty().set(isActive));
+                changeRiceLabel();
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
@@ -362,6 +389,7 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
+                changeRiceLabel();
 
                 logger.info("Added Players to datastore");
                 break;

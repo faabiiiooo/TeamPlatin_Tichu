@@ -32,6 +32,7 @@ public class Player implements Serializable {
     private boolean saidBigTichu;
     private boolean saidSmallTichu;
     private boolean hasWishedCard = false;
+    private boolean wantBomb = false;
 
     public Player(){
 
@@ -162,5 +163,7 @@ public class Player implements Serializable {
         return clientID;
     }
 
+    public void setWantBomb(boolean wantBomb) { this.wantBomb = wantBomb; }
 
+    public boolean isWantBomb() { return wantBomb; }
 }
