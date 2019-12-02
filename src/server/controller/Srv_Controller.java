@@ -55,8 +55,11 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.sendPlayersToClients();
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
-                    model.getGame().getTable().skip();
-                    model.sendActivePlayerToClients();
+
+                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //Dont skip twice if dogPlayed
+                        model.getGame().getTable().skip();
+                        model.sendActivePlayerToClients();
+                    }
 
                 } else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
