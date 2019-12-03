@@ -64,7 +64,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
 
-                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //special case id dog played (skip process include in dogPlayed)
+                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //special case if dog played (skip process is include in dogPlayed)
                         model.getGame().getTable().skip(); //normal skip if no dog played
                     }
 
