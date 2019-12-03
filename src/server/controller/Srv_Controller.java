@@ -64,13 +64,12 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
 
-                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //Dont skip twice if dogPlayed
-                        model.getGame().getTable().skip();
-                        model.sendActivePlayerToClients();
+                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //special case id dog played (skip process include in dogPlayed)
+                        model.getGame().getTable().skip(); //normal skip if no dog played
                     }
+
                     model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
                     model.sendHasBombStatusToClients();//send status to client
-                    model.getGame().getTable().skip();
                     model.sendActivePlayerToClients();
 
                 } else {//if the player wants to bomb, check if the played cards is a bomb and higher than the last played cards

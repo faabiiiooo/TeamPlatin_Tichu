@@ -348,8 +348,10 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
-                Platform.runLater(() -> dataStore.isActiveProperty().set(isActive));
-                changeRiceLabel();
+                Platform.runLater(() -> {
+                    dataStore.isActiveProperty().set(isActive);
+                    changeRiceLabel();
+                });
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
@@ -389,7 +391,6 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
-                changeRiceLabel();
 
                 logger.info("Added Players to datastore");
                 break;
