@@ -86,6 +86,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
         model.getDataStore().isWantsCardWish().addListener( (observable, oldValue, newValue) -> wishedCardfromMahjong(newValue));
 
+
     }
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {

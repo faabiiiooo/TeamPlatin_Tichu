@@ -74,30 +74,32 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
 
 
-                logger.info("Infos abou the player "+xy.isHasWishedCard() +" "+ cardsToPlay.get(0).getRank() +"wish card?: "+ model.getGame().getTable().getMahJongWishCard());
-
                 if(!xy.isHasWishedCard() &&!xy.isWantBomb() ){
-                    if(model.getGame().getTable().playCards(cardsToPlay))
-                    msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
-                    logger.info("Sending success Response");
-                    model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
-                    model.sendTableCardsToClients();
-                    model.sendPlayersToClients();
-                    model.getGame().getTable().checkPlayerHandsOnBomb();
-                    model.sendHasBombStatusToClients();
+                    logger.info("Player wants to play: "+cardsToPlay );
+                    if(model.getGame().getTable().playCards(cardsToPlay)) {
+                        msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                        logger.info("Sending success Response");
+                        model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(), cardsToPlay);
+                        model.sendTableCardsToClients();
+                        model.sendPlayersToClients();
+                        model.getGame().getTable().checkPlayerHandsOnBomb();
+                        model.sendHasBombStatusToClients();
 
-                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog
-                    && model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Mahjong) { //special case if dog played (skip process is include in dogPlayed)
-                        model.getGame().getTable().skip(); //normal skip if no dog played
-                    } else {
-                        if(cardsToPlay.get(0).getRank() == Rank.Mahjong) {
-                            logger.info("Client: "+msgIn.getSenderID()+" want top open wishview --> model ");
-                            if(cardsToPlay.get(0).getRank() == Rank.Mahjong) {
-                                int senderID = msgIn.getSenderID();
-                                model.openClientWishView(senderID);
+                        if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog
+                                && model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Mahjong) { //special case if dog played (skip process is include in dogPlayed)
+                            model.getGame().getTable().skip(); //normal skip if no dog played
+                        } else {
+                            if (cardsToPlay.get(0).getRank() == Rank.Mahjong) {
+                                logger.info("Client: " + msgIn.getSenderID() + " want top open wishview --> model ");
+                                if (cardsToPlay.get(0).getRank() == Rank.Mahjong) {
+                                    int senderID = msgIn.getSenderID();
+                                    model.openClientWishView(senderID);
+                                }
                             }
-                        }
 
+                        }
+                    }else{
+                        msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                     }
 
                     //only skip if the player didnt play the mah jong - if he played mah jong he first needs to wish a card before skipping
