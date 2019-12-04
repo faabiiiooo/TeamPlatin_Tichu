@@ -77,7 +77,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
                 logger.info("Infos abou the player "+xy.isHasWishedCard() +" "+ cardsToPlay.get(0).getRank() +"wish card?: "+ model.getGame().getTable().getMahJongWishCard());
 
-                if(model.getGame().getTable().playCards(cardsToPlay) &&!xy.isHasWishedCard() &&!xy.isWantBomb() ){
+                if(!xy.isHasWishedCard() &&!xy.isWantBomb() ){
+                    if(model.getGame().getTable().playCards(cardsToPlay))
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
                     logger.info("Sending success Response");
                     model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
@@ -85,12 +86,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.sendPlayersToClients();
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
-
-                   /* if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //Dont skip twice if dogPlayed
-                        model.getGame().getTable().skip();
-                        model.sendActivePlayerToClients();
-                    }*/
-                   // model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
 
                     //only skip if the player didnt play the mah jong - if he played mah jong he first needs to wish a card before skipping
                     if(cardsToPlay.get(0).getRank() != Rank.Mahjong) {
@@ -114,17 +109,19 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         xy.setWantBomb(false);
 
                 }else if(xy.isHasWishedCard()){// we need to check if the player played the wished card
-                    if(model.checkIfWishedCardIsInPlayedCards(cardsToPlay) ){
-                        if(model.getGame().getTable().playCards(cardsToPlay)) {
+                    ArrayList<Card> clonedCards = (ArrayList<Card>) cardsToPlay.clone();
+                    if(model.checkIfWishedCardIsInPlayedCards(clonedCards) ){
+                        logger.info("Case Wished Cards");
+                        if(model.getGame().getTable().playCards(cardsToPlay)) { //is the card higher than the one played before?
                             logger.info("Case Wished Cards: Sending success Response");
                             msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                             standardProcessPlayCards(msgIn.getSenderID(), cardsToPlay);
                         }
+                    }else {
+                        msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                     }
 
                 }else {
-                    logger.info("THOMAS N-OK 2");
-                    logger.info("ELSE: PlayerHasWIshedCard: "+xy.isHasWishedCard());
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
 

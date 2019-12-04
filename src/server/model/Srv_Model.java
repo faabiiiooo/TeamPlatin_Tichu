@@ -242,6 +242,7 @@ public class Srv_Model {
 
     }
 
+    //@author thomas
     public boolean checkIfWishedCardIsInPlayedCards(ArrayList<Card> playedCards){
         ArrayList<Card> clonedCards = (ArrayList<Card>) playedCards.clone();
         boolean playsWishedCard = false;
