@@ -6,10 +6,14 @@ import client.view.CardView;
 import client.view.Clt_View;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -80,6 +84,8 @@ public class Clt_Controller { //Controller is a Singleton
 
         model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
+        model.getDataStore().isWantsCardWish().addListener( (observable, oldValue, newValue) -> wishedCardfromMahjong(newValue));
+
     }
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
@@ -181,31 +187,47 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     //@author Fabio
-    public void processPlayButton(){
+    synchronized public void processPlayButton(){
         boolean successful = false;
         Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
-        if(cardsToSend.size() > 0){ // if he has cards selected
+        Collections.sort(cardsToSend);
+        if(cardsToSend.size() > 0 ){ // if he has cards selected
           successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
-               for(Card c : cardsToSend){
-                   if(c.getRank() == Rank.Mahjong){
-                      Platform.runLater(() ->view.startWishView());
-                   }
-               }
                cardsToSend.clear(); //remove the played cards out of the list
 
            } else { //else give feedback to the user
-               logger.info("Cards declined by server. player has to replay.");
+               logger.info(this.toString()+"Cards declined by server. player has to replay.");
                this.displayWrongCardsStatus();
            }
-        } else {
-            logger.info("No cards selected");
         }
+
+
     }
+
+    private void wishedCardfromMahjong(boolean newValue){
+        logger.info(this.toString()+ "I get Info to show Wish view");
+        if(newValue) {
+            Platform.runLater(() -> view.startWishView());
+            Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
+                if (view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
+                    for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
+                        if (tb == new_toggle) {
+                            createWishedCard(tb.getText());
+                        }
+
+                    }
+                Platform.runLater(() -> view.getCardWishView().getWishStage().close());
+
+            }));
+        }
+
+    }
+
 
     //@author Fabio
     private void displayWrongCardsStatus(){
@@ -318,6 +340,67 @@ public class Clt_Controller { //Controller is a Singleton
         }
     }
 
+    private void createWishedCard(String rank){
+        boolean successful = false;
+        logger.info("going to create new card: "+rank);
+        int value = 0;
+        Suit suit = Suit.Swords;
+        Rank wishRank = null;
+        switch (rank) {
+            case "2":
+                wishRank = Rank.Two;
+                break;
+            case "3":
+                wishRank = Rank.Three;
+                break;
+            case "4":
+                wishRank = Rank.Four;
+                break;
+            case "5":
+                wishRank = Rank.Five;
+                break;
+            case "6":
+                wishRank = Rank.Six;
+                break;
+            case "7":
+                wishRank = Rank.Seven;
+                break;
+            case "8":
+                wishRank = Rank.Eight;
+                break;
+            case "9":
+                wishRank = Rank.Nine;
+                break;
+            case "10":
+                wishRank = Rank.Ten;
+                break;
+            case "J":
+                wishRank = Rank.Jack;
+                break;
+            case "Q":
+                wishRank = Rank.Queen;
+                break;
+            case "K":
+                wishRank = Rank.King;
+                break;
+            case "A":
+                wishRank = Rank.Ace;
+                break;
+            case "N":
+                wishRank = null;
+                break;
+        }
+
+        Card wishedCard = new Card(suit, wishRank, value);
+
+        successful = model.sendMessage(model.createMessage("card/wishCard",wishedCard)); //send cards to server and get answer of server
+        if(successful){
+            logger.info(wishedCard+" wished card created");
+        }else{
+            logger.info("Cant send the wished card");
+        }
+    }
+
 
     //@author Fabio
     public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
@@ -350,8 +433,10 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
-                Platform.runLater(() -> dataStore.isActiveProperty().set(isActive));
-                changeRiceLabel();
+                Platform.runLater(() -> {
+                    dataStore.isActiveProperty().set(isActive);
+                    changeRiceLabel();
+                });
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
@@ -391,7 +476,6 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
-                changeRiceLabel();
 
                 logger.info("Added Players to datastore");
                 break;
@@ -400,6 +484,9 @@ public class Clt_Controller { //Controller is a Singleton
                 int nextPlayerID = (int) msgIn.getObjects().get(0);
                 dataStore.setNextPlayerID(nextPlayerID);
                 break;
+            case "string/wishView":
+                model.getDataStore().isWantsCardWish().set(true);
+                //wishedCardfromMahjong();
 
 
             case "string":

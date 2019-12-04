@@ -22,7 +22,7 @@ public class Srv_Table {
     private Card mahJongWishCard;
 
 
-    private int timeTillNextPlayer;
+    private boolean wishCardPlayedOut = false;
 
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
@@ -34,6 +34,7 @@ public class Srv_Table {
 
 
     }
+
 
 
     //@author thomas
@@ -76,6 +77,8 @@ public class Srv_Table {
         logger.info("Going to play a card");
         boolean canPlay = false;
         //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
+        logger.info("card to play -->: "+ playerCards);
+        logger.info("Last played card in playCards() "+lastPlayedCards);
         if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)) {
             logger.info("HandType successfuly evaluated");
             //add the last played cards to the allPlayedCards list and clear the lastPlayedCards list for the next cards
@@ -84,6 +87,7 @@ public class Srv_Table {
             //add the new played cards to the list
             lastPlayedCards.addAll(playerCards);
             canPlay = true;
+            logger.info("canPlay? "+canPlay);
         }
 
 
@@ -253,12 +257,13 @@ public class Srv_Table {
 
 
     //@author thomas
-    protected void mahJongPlayed(){
+    public void mahJongPlayed(){
     ArrayList<Player> playersWithWishedCard = new ArrayList<>();
 
     //add all the players who have the wished card from mahjong
     for(int i = 0; i < playersAtTable.size(); i++){
         for (int j = 0; j < playersAtTable.get(i).getHandCards().size();j++){
+            logger.info(mahJongWishCard+ "The wished card");
             if(playersAtTable.get(i).getHandCards().get(j).getRank() == mahJongWishCard.getRank()){
                 playersWithWishedCard.add(playersAtTable.get(i));
             }
@@ -267,12 +272,14 @@ public class Srv_Table {
     //if the last played handtype was a singlecard and the player has the wished card on the hand set hasWishedCard to true
     if(lastPlayedCards.size() == 1 ){
         for(Player p: playersWithWishedCard){
+            logger.info("Players with wished card: "+playersWithWishedCard);
             p.setHasWishedCard(true);
         }
-        // if the last played cards where a street with mahjong card in it, check if a player has the wished card on the hand and could play it
-    }else if (Srv_HandType.isStreet(lastPlayedCards)){
+        // if the last played cards were a street with mahjong card in it, check if a player has the wished card on the hand and could play it
+    }else if (Srv_HandType.isStreet(lastPlayedCards) && lastPlayedCards.size() >=5){
         for(Player p: playersWithWishedCard){
             if(Srv_HandType.mahJongWishStreet(p.getHandCards(),lastPlayedCards,mahJongWishCard) ){
+                logger.info("Players with wished card: "+playersWithWishedCard);
                 p.setHasWishedCard(true); //if the player has the card set the variable to true
             }
         }
@@ -282,16 +289,29 @@ public class Srv_Table {
     }
     //@author thomas
     //method checks if the MJ wish card is already played or cant be played anymore
-    protected void checkIfMJWishIsActive(){
-        for(int i = 0; i < lastPlayedCards.size(); i++){
-            // if the wished card is already played or it cant be played anymore set every player to false
-            if(lastPlayedCards.get(i).getRank() == mahJongWishCard.getRank() || lastPlayedCards.get(lastPlayedCards.size()-1).getRank().ordinal() < mahJongWishCard.getRank().ordinal() ){
-                for(Player p: playersAtTable){
-                    p.setHasWishedCard(false);
+    public void checkIfMJWishIsActive(){
+        if(!wishCardPlayedOut && mahJongWishCard != null) { // only if the wished card has not been played out and is not null
+            for (Player mj : playersAtTable) {
+                logger.info("going to check if the mj wish is still active");
+                // if the wished card is already played or it cant be played anymore set every player to false
+                if (lastPlayedCards.get(lastPlayedCards.size() - 1).getRank().ordinal() >= mahJongWishCard.getRank().ordinal() && lastPlayedCards.get(lastPlayedCards.size() - 1).getRank()
+                        != Rank.Mahjong||
+                        lastPlayedCards.size() >= 5 && !Srv_HandType.mahJongWishStreet(mj.getHandCards(), lastPlayedCards, mahJongWishCard) ) {
+                    for (Player p : playersAtTable) {
+                        p.setHasWishedCard(false);
+                        logger.info("player :"+p+" can no more play the wished card. HasWIshedCardStatus: "+p.isHasWishedCard());
+                    }
+                } else {
+                    if (lastPlayedCards.contains(mahJongWishCard.getRank()) && !wishCardPlayedOut) {
+                        wishCardPlayedOut=true;
+                        for (Player p : playersAtTable) {
+                            p.setHasWishedCard(false);
+                        }
+
+                    }
                 }
             }
         }
-
     }
 
 

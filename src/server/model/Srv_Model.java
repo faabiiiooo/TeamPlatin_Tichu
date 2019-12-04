@@ -3,6 +3,7 @@ package server.model;
 import resources.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 public class Srv_Model {
@@ -70,6 +71,20 @@ public class Srv_Model {
                 logger.severe("cant send status to client!");
             }
 
+        }
+
+    }
+
+    //@author thomas
+    public void openClientWishView(int clientThreadID){
+        Message msgOutMJWish = null;
+        Srv_Server server = serviceLocator.getServer();
+        try {
+            msgOutMJWish = new Message("string/wishView", "open"); //send info to open clients wish view because of played MJ
+            server.getClientThreads().get(server.searchIndexOfClientThreadByID(clientThreadID)).send(msgOutMJWish);
+            logger.info("Sent info to open Wish View to Client: " +clientThreadID);
+        } catch (Exception e){
+            logger.severe("cant send message to client");
         }
 
     }
@@ -155,6 +170,7 @@ public class Srv_Model {
         }
 
     }
+
     //@author Fabio
     private void sendNextPlayerIdToClients(){
         ArrayList<Srv_Team> teams = game.getTeams();
@@ -242,13 +258,25 @@ public class Srv_Model {
     }
     //@author Fabio
     public void removePlayedCardsFromPlayerHand(int senderID, ArrayList<Card> playedCards){
-
+        logger.info("removePlayedCardsFromPlayerHand: ID "+senderID);
         for(Player p : game.getTable().getPlayersAtTable()){
             if(p.getClientID() == senderID){
                 p.getHandCards().removeAll(playedCards);
             }
         }
 
+    }
+
+    //@author thomas
+    public boolean checkIfWishedCardIsInPlayedCards(ArrayList<Card> playedCards){
+        ArrayList<Card> clonedCards = (ArrayList<Card>) playedCards.clone();
+        boolean playsWishedCard = false;
+        for(Card wish: clonedCards){
+            if(wish.getRank() == this.getGame().getTable().getMahJongWishCard().getRank()){
+                playsWishedCard = true;
+            }
+        }
+        return playsWishedCard;
     }
 
     public Srv_Game getGame() {

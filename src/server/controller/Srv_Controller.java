@@ -35,6 +35,20 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
     }
 
+    private void standardProcessPlayCards(int senderID, ArrayList<Card> cardsToPlay){
+        logger.info("standardProcessPlayCards");
+        model.removePlayedCardsFromPlayerHand(senderID,cardsToPlay);
+        model.sendTableCardsToClients();
+        model.sendPlayersToClients();
+        model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
+        model.sendHasBombStatusToClients();//send status to client
+        model.getGame().getTable().skip();
+        model.sendActivePlayerToClients();
+        model.getGame().getTable().checkIfMJWishIsActive(); //check if the mj wish is active
+
+
+    }
+
 
     //@author Fabio
     public Message processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
@@ -44,57 +58,86 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
         switch (msgIn.getType()) {
 
             case "card/playCard":  //generating a Card from Message when card should be played
+                boolean playsWishedCard = false;
                 ArrayList<Card> cardsToPlay = new ArrayList<>();
                 Player xy = null;
-                for(Player b: model.getGame().getTable().getPlayersAtTable() ){
-                    if(b.getPLAYER_ID() == msgIn.getSenderID()){
-                        xy = b;
-                    }
-                }
-
                 for(Object o : msgIn.getObjects()){
                     cardsToPlay.add((Card) o);
                 }
-                if(model.getGame().getTable().playCards(cardsToPlay) && !xy.isWantBomb()){
-                    logger.info("Sending success Response");
+                //get the player who want to play the cards
+                for(Player b: model.getGame().getTable().getPlayersAtTable() ){
+                    if(b.getPLAYER_ID() == msgIn.getSenderID()){
+                        xy = b;
+
+                    }
+                }
+
+
+
+                logger.info("Infos abou the player "+xy.isHasWishedCard() +" "+ cardsToPlay.get(0).getRank() +"wish card?: "+ model.getGame().getTable().getMahJongWishCard());
+
+                if(!xy.isHasWishedCard() &&!xy.isWantBomb() ){
+                    if(model.getGame().getTable().playCards(cardsToPlay))
                     msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
+                    logger.info("Sending success Response");
                     model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
                     model.sendTableCardsToClients();
                     model.sendPlayersToClients();
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
 
-                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //Dont skip twice if dogPlayed
-                        model.getGame().getTable().skip();
-                        model.sendActivePlayerToClients();
+                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog
+                    && model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Mahjong) { //special case if dog played (skip process is include in dogPlayed)
+                        model.getGame().getTable().skip(); //normal skip if no dog played
+                    } else {
+                        if(cardsToPlay.get(0).getRank() == Rank.Mahjong) {
+                            logger.info("Client: "+msgIn.getSenderID()+" want top open wishview --> model ");
+                            if(cardsToPlay.get(0).getRank() == Rank.Mahjong) {
+                                int senderID = msgIn.getSenderID();
+                                model.openClientWishView(senderID);
+                            }
+                        }
+
                     }
+
+                    //only skip if the player didnt play the mah jong - if he played mah jong he first needs to wish a card before skipping
+
                     model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
                     model.sendHasBombStatusToClients();//send status to client
-                    model.getGame().getTable().skip();
                     model.sendActivePlayerToClients();
+                    model.getGame().getTable().checkIfMJWishIsActive();
                     for(Player p : serviceLocator.getTable().getPlayersAtTable()){ //if he skipped previosly and now can play
                         if(p.getClientID() == msgIn.getSenderID()){
                             serviceLocator.getTable().getPlayersThatSkipped().remove(p);
                         }
                     }
 
-                } else {//if the player wants to bomb, check if the played cards is a bomb and higher than the last played cards
-                    if(xy.isWantBomb() && Srv_HandType.isBomb(cardsToPlay) && model.getGame().getTable().playCards(cardsToPlay)){
+                } else if(xy.isWantBomb() && Srv_HandType.isBomb(cardsToPlay) ) { //if the player wants to bomb, check if the played cards is a bomb and higher than the last played cards
+                    if(model.getGame().getTable().playCards(cardsToPlay))
                         logger.info("Case Bomb: Sending success Response");
                         msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
-                        model.removePlayedCardsFromPlayerHand(msgIn.getSenderID(),cardsToPlay);
-                        model.sendTableCardsToClients();
-                        model.sendPlayersToClients();
-                        model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
-                        model.sendHasBombStatusToClients();//send status to client
-                        model.getGame().getTable().skip();
-                        model.sendActivePlayerToClients();
+                        standardProcessPlayCards(msgIn.getSenderID(), cardsToPlay);
+                        xy.setWantBomb(false);
 
+                }else if(xy.isHasWishedCard()){// we need to check if the player played the wished card
+                    ArrayList<Card> clonedCards = (ArrayList<Card>) cardsToPlay.clone();
+                    if(model.checkIfWishedCardIsInPlayedCards(clonedCards) ){
+                        logger.info("Case Wished Cards");
+                        if(model.getGame().getTable().playCards(cardsToPlay)) { //is the card higher than the one played before?
+                            logger.info("Case Wished Cards: Sending success Response");
+                            msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                            standardProcessPlayCards(msgIn.getSenderID(), cardsToPlay);
+                        }
                     }else {
                         msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                     }
+
+                }else {
+                    msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
-                    xy.setWantBomb(false);
+
+
+
                 break;
 
 
@@ -104,8 +147,16 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
 
                 break;
-
-
+            //@author thomas
+            case "card/wishCard": //setting the wished card from the player
+                model.getGame().getTable().setMahJongWishCard((Card)msgIn.getObjects().get(0));
+                logger.info("RECEIVED WISHED CARD FROM CLIENT: "+ ((Card)msgIn.getObjects().get(0)));
+                msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                logger.info("Wished card has been set on Table : " + model.getGame().getTable().getMahJongWishCard().getRank());
+                model.getGame().getTable().mahJongPlayed();
+                model.getGame().getTable().skip();
+                model.sendActivePlayerToClients();
+                break;
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 boolean skipProcessEnded = false;
@@ -156,7 +207,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
                         }
                         break;
-
+                    //@author thomas
                     case "bombActiveChange":
                         //set the active player to not active
                         int msgId = msgIn.getSenderID();
