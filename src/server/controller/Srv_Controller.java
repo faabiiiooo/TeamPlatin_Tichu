@@ -88,6 +88,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog
                                 && model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Mahjong) { //special case if dog played (skip process is include in dogPlayed)
                             model.getGame().getTable().skip(); //normal skip if no dog played
+                            model.sendPlayersToClients(); //because
                         } else {
                             if (cardsToPlay.get(0).getRank() == Rank.Mahjong) {
                                 logger.info("Client: " + msgIn.getSenderID() + " want top open wishview --> model ");
@@ -182,11 +183,13 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                     logger.info("Skip not allowed - Player must play wished card!");
                                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                                     skipProcessEnded = true;
+                                    model.sendPlayersToClients();
                                 } else {
                                     logger.info("Player can skip");
                                     this.serviceLocator.getTable().skip();
                                     msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     skipProcessEnded = true;
+                                    model.sendPlayersToClients();
                                 }
                             }
                             model.sendActivePlayerToClients(); //send new activePlayer to Client

@@ -85,8 +85,8 @@ public class Srv_ClientThread extends Thread {
     public void send(Message msgOut) throws Exception { //sending outgoing Messages
 
         out.writeObject(msgOut);
-        out.reset(); //resetting Outputstream, to force that objects don't become send from cache
         out.flush();
+        out.reset(); //resetting Outputstream, to force that objects don't become send from cache
 
     }
 

@@ -108,17 +108,17 @@ public class Srv_Table {
         logger.info("Table_Skip_Process started");
         boolean foundNextPlayer = false;
 
-        if(playersThatSkipped.size() >= 3){
+       /* if(playersThatSkipped.size() >= 3){
             int playerIDOfLastPlayedCards = lastPlayedCards.get(0).getPlayerId();
             for(Player p : playersAtTable){
                 if(p.getPLAYER_ID() == playerIDOfLastPlayedCards){
                     this.sting(p);
                 }
             }
-        }
+        }*/
 
         for (int i = 0; i < playersAtTable.size() && !foundNextPlayer; i++) { //looking for IsActive player
-            if (playersAtTable.get(i).isActive() == true) { //found isActive player
+            if (playersAtTable.get(i).isActive()) { //found isActive player
                 logger.info("Old active Player: "+playersAtTable.get(i));
                 
 
@@ -174,7 +174,7 @@ public class Srv_Table {
         }
         for (Player p : playersAtTable) { //Logger-Info for Testing
             if (p.isActive()) {
-                logger.info("New active Player: "+p);
+                logger.info("Active Player: " + p.getPLAYER_ID());
             }
         }
         logger.info("Table_Skip_Process Ended");

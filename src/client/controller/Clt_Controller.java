@@ -188,7 +188,7 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     //@author Fabio
-    synchronized public void processPlayButton(){
+    public void processPlayButton(){
         boolean successful = false;
         Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
 
@@ -246,7 +246,6 @@ public class Clt_Controller { //Controller is a Singleton
                 CardView cv = new CardView(c);
                 cv.setOnMouseClicked(e -> processCardClicked(e));
                 view.getTableView().getPlayerView().addCards(cv);
-                //updateCardAmountView();
             });
         }
 
@@ -300,21 +299,25 @@ public class Clt_Controller { //Controller is a Singleton
     private void changeRiceLabel() {
         logger.info("Changing RiceLabel");
         if (dataStore.getPlayerTop().isActive()) {
+            logger.info("Player Top is active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(true);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
         }
         if (dataStore.getPlayerLeft().isActive()) {
+            logger.info("Player Left is active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(true);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
         }
         if (dataStore.getPlayerRight().isActive()) {
+            logger.info("Player right is active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(true);
         }
         if (!dataStore.getPlayerTop().isActive() && !dataStore.getPlayerLeft().isActive() && !dataStore.getPlayerRight().isActive()) {
+            logger.info("You are active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
@@ -453,7 +456,7 @@ public class Clt_Controller { //Controller is a Singleton
                     otherPlayers.add((Player) o);
                 }
                 for(Player p : otherPlayers){
-                    logger.info("oP"+p.getPLAYER_ID() +" c:"+p.getHandCards().size());
+                    logger.info("oP"+p.getPLAYER_ID() +" a:"+p.isActive());
 
                 }
                 logger.info(otherPlayers.size()+"");
@@ -463,20 +466,24 @@ public class Clt_Controller { //Controller is a Singleton
                     logger.info("P"+otherPlayers.get(i).getPLAYER_ID()+" c:"+otherPlayers.get(i).getHandCards().size());
                     if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){
                         dataStore.setPlayerRight(otherPlayers.get(i));
+                        logger.info(otherPlayers.get(i).isActive() + " Player right active t/f");
                     }
                 }
                 otherPlayers.remove(dataStore.getPlayerRight());
                 for(Player p : otherPlayers){
                     if(p.getTeamID() == dataStore.getPlayerRight().getTeamID()){
                         dataStore.setPlayerLeft(p);
+                        logger.info(p.isActive() + " Player left active t/f");
                     }
                 }
                 otherPlayers.remove(dataStore.getPlayerLeft());
                 if(otherPlayers.size() == 1){
                     dataStore.setPlayerTop(otherPlayers.get(0));
+                    logger.info(otherPlayers.get(0).isActive() + "player top active t/f");
                 }
 
                 dataStore.setCardAmountProperties();
+                this.changeRiceLabel();
 
                 logger.info("Added Players to datastore");
                 break;
