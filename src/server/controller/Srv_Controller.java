@@ -43,6 +43,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
         model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
         model.sendHasBombStatusToClients();//send status to client
         model.getGame().getTable().skip();
+        model.sendPlayersToClients();
         model.sendActivePlayerToClients();
         model.getGame().getTable().checkIfMJWishIsActive(); //check if the mj wish is active
 
