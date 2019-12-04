@@ -86,19 +86,18 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
 
-                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //special case if dog played (skip process is include in dogPlayed)
+                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog
+                    && model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Mahjong) { //special case if dog played (skip process is include in dogPlayed)
                         model.getGame().getTable().skip(); //normal skip if no dog played
                     } else {
-                        if(cardsToPlay.get(0).getRank() != Rank.Mahjong) {
-                            model.getGame().getTable().skip();
-                        }else{
+                        if(cardsToPlay.get(0).getRank() == Rank.Mahjong) {
                             logger.info("Client: "+msgIn.getSenderID()+" want top open wishview --> model ");
                             if(cardsToPlay.get(0).getRank() == Rank.Mahjong) {
                                 int senderID = msgIn.getSenderID();
                                 model.openClientWishView(senderID);
                             }
-
                         }
+
                     }
 
                     //only skip if the player didnt play the mah jong - if he played mah jong he first needs to wish a card before skipping
