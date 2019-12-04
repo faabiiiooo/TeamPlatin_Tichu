@@ -45,8 +45,6 @@ public class Clt_TableView extends BorderPane {
     public Clt_TableView(Stage primaryStage){
 
         this.primaryStage = primaryStage;
-        //this.primaryStage.setMaximized(true);
-       // this.primaryStage.setResizable(false);
 
         this.root = new StackPane();
         this.rivalLeft = new RivalPaneL();
@@ -82,8 +80,6 @@ public class Clt_TableView extends BorderPane {
         Scene tableScene = new Scene(root,1480,900);
         tableScene.getStylesheets().add(getClass().getResource("TableView.css").toExternalForm());
         this.primaryStage.setResizable(true);
-        //this.primaryStage.setMaximized(true);
-       // this.primaryStage.setResizable(false);
         this.setId("start-pane");
         this.primaryStage.setScene(tableScene);
         this.primaryStage.setTitle(translator.getString("program.name"));

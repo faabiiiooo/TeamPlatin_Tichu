@@ -275,6 +275,7 @@ public class Clt_Controller { //Controller is a Singleton
 
     //@author Sandro
     private void changeRiceLabel() {
+        logger.info("Changing RiceLabel");
         if (dataStore.getPlayerTop().isActive()) {
             view.getTableView().getRivalTop().getRiceLabel().setVisible(true);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
@@ -290,10 +291,11 @@ public class Clt_Controller { //Controller is a Singleton
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(true);
         }
-        if (dataStore.getPlayerTop().isActive() == false && dataStore.getPlayerLeft().isActive() == false && dataStore.getPlayerRight().isActive() == false) {
+        if (!dataStore.getPlayerTop().isActive() && !dataStore.getPlayerLeft().isActive() && !dataStore.getPlayerRight().isActive()) {
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+            view.getTableView().getPlayerView().getRice().setVisible(true);
         }
     }
 
