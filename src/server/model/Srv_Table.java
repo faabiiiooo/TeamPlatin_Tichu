@@ -108,14 +108,15 @@ public class Srv_Table {
         logger.info("Table_Skip_Process started");
         boolean foundNextPlayer = false;
 
-       /* if(playersThatSkipped.size() >= 3){
+       if(playersThatSkipped.size() >= 4){
             int playerIDOfLastPlayedCards = lastPlayedCards.get(0).getPlayerId();
             for(Player p : playersAtTable){
                 if(p.getPLAYER_ID() == playerIDOfLastPlayedCards){
                     this.sting(p);
+                    return;
                 }
             }
-        }*/
+        }
 
         for (int i = 0; i < playersAtTable.size() && !foundNextPlayer; i++) { //looking for IsActive player
             if (playersAtTable.get(i).isActive()) { //found isActive player
@@ -189,8 +190,10 @@ public class Srv_Table {
         }
         int indexOfWinner = playersAtTable.indexOf(winner);
         playersAtTable.get(indexOfWinner).setActive(true);
+        logger.info("Winner: " + playersAtTable.get(indexOfWinner).toString());
         serviceLocator.getSrvModel().sendActivePlayerToClients();
         serviceLocator.getSrvModel().sendTableCardsToClients();
+        serviceLocator.getSrvModel().sendPlayersToClients();
         serviceLocator.getSrvModel().sendStingNotification();
 
     }
@@ -212,6 +215,9 @@ public class Srv_Table {
         ArrayList<Player> finisher = game.getRounds().get(game.getRounds().size()-1).getFinisher(); //getting finishers
 
         if(finisher.size() < 3 && player != null){ //if true, game is still playing only transfer table cards
+            allPlayedCards.addAll(lastPlayedCards);
+            lastPlayedCards.clear();
+            logger.info("allPlayedCards: " + allPlayedCards.toString());
             player.getWonCards().addAll(allPlayedCards);
             allPlayedCards.clear();
             

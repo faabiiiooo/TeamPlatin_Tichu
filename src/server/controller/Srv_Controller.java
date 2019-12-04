@@ -60,21 +60,25 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
             case "card/playCard":  //generating a Card from Message when card should be played
                 boolean playsWishedCard = false;
                 ArrayList<Card> cardsToPlay = new ArrayList<>();
-                Player xy = null;
+                Player playingPlayer = null;
                 for(Object o : msgIn.getObjects()){
                     cardsToPlay.add((Card) o);
                 }
                 //get the player who want to play the cards
-                for(Player b: model.getGame().getTable().getPlayersAtTable() ){
-                    if(b.getPLAYER_ID() == msgIn.getSenderID()){
-                        xy = b;
+                for(Player p: model.getGame().getTable().getPlayersAtTable() ){
+                    if(p.getPLAYER_ID() == msgIn.getSenderID()){
+                        playingPlayer = p;
 
                     }
                 }
 
+                if(!serviceLocator.getTable().getPlayersThatSkipped().isEmpty()){
+                    serviceLocator.getTable().getPlayersThatSkipped().clear();
+                }
 
 
-                if(!xy.isHasWishedCard() &&!xy.isWantBomb() ){
+
+                if(!playingPlayer.isHasWishedCard() &&!playingPlayer.isWantBomb() ){
                     logger.info("Player wants to play: "+cardsToPlay );
                     if(model.getGame().getTable().playCards(cardsToPlay)) {
                         msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
@@ -115,14 +119,14 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         }
                     }
 
-                } else if(xy.isWantBomb() && Srv_HandType.isBomb(cardsToPlay) ) { //if the player wants to bomb, check if the played cards is a bomb and higher than the last played cards
+                } else if(playingPlayer.isWantBomb() && Srv_HandType.isBomb(cardsToPlay) ) { //if the player wants to bomb, check if the played cards is a bomb and higher than the last played cards
                     if(model.getGame().getTable().playCards(cardsToPlay))
                         logger.info("Case Bomb: Sending success Response");
                         msgOut = new MessageResponse("string","ok",msgIn.getMessageID());
                         standardProcessPlayCards(msgIn.getSenderID(), cardsToPlay);
-                        xy.setWantBomb(false);
+                        playingPlayer.setWantBomb(false);
 
-                }else if(xy.isHasWishedCard()){// we need to check if the player played the wished card
+                }else if(playingPlayer.isHasWishedCard()){// we need to check if the player played the wished card
                     ArrayList<Card> clonedCards = (ArrayList<Card>) cardsToPlay.clone();
                     if(model.checkIfWishedCardIsInPlayedCards(clonedCards) ){
                         logger.info("Case Wished Cards");
@@ -160,6 +164,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 model.getGame().getTable().skip();
                 model.sendActivePlayerToClients();
                 break;
+
             case "string":
                 String incoming = (String) msgIn.getObjects().get(0);
                 boolean skipProcessEnded = false;
@@ -171,11 +176,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             if(p.getClientID() == msgIn.getSenderID()){ //add player that skipped to a list
                                 if(p.equals(serviceLocator.getTable().getBeginner()) && serviceLocator.getTable().getPlayersThatSkipped().contains(p)){
                                     serviceLocator.getTable().getPlayersThatSkipped().clear();
-
+                                } else {
+                                    serviceLocator.getTable().getPlayersThatSkipped().add(p);
                                 }
-                            }
-                            if(!serviceLocator.getTable().getPlayersThatSkipped().contains(p)){
-                                serviceLocator.getTable().getPlayersThatSkipped().add(p);
                             }
 
                             if (p.isActive() && !skipProcessEnded) {// Find activePlayer
@@ -183,18 +186,19 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                     logger.info("Skip not allowed - Player must play wished card!");
                                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                                     skipProcessEnded = true;
-                                    model.sendPlayersToClients();
                                 } else {
                                     logger.info("Player can skip");
                                     this.serviceLocator.getTable().skip();
                                     msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     skipProcessEnded = true;
-                                    model.sendPlayersToClients();
                                 }
                             }
-                            model.sendActivePlayerToClients(); //send new activePlayer to Client
+
                         }
+                        model.sendPlayersToClients();
+                        model.sendActivePlayerToClients(); //send new activePlayer to Client
                         break;
+
                     case "tichu"://@author Pascal
 
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel

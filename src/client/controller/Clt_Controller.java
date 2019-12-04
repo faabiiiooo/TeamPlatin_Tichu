@@ -425,7 +425,10 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("HandCards: " + dataStore.getHandCards().toString());
                 break;
 
-            case "card/tableCards":
+            case "card/tableCards": //@author Fabio
+                Platform.runLater(() -> {
+                    view.getTableView().getTichuLabel().setText("");
+                });
                 ArrayList<Card> tableCards = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     tableCards.add((Card) o);
@@ -450,36 +453,26 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("HasBomb set to: "+hasBomb );
                 break;
 
-            case "player":
+            case "player": //recieveing all other players from server -> it is necessary that nextPlayerID is already set
                 ArrayList<Player> otherPlayers = new ArrayList<>();
-                for(Object o : msgIn.getObjects()){
+                for(Object o : msgIn.getObjects()){ //generate player objects
                     otherPlayers.add((Player) o);
                 }
-                for(Player p : otherPlayers){
-                    logger.info("oP"+p.getPLAYER_ID() +" a:"+p.isActive());
-
-                }
-                logger.info(otherPlayers.size()+"");
-
 
                 for(int i = 0; i < otherPlayers.size(); i++){
-                    logger.info("P"+otherPlayers.get(i).getPLAYER_ID()+" c:"+otherPlayers.get(i).getHandCards().size());
-                    if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){
+                    if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){ //set the nextPlayer as playerRight
                         dataStore.setPlayerRight(otherPlayers.get(i));
-                        logger.info(otherPlayers.get(i).isActive() + " Player right active t/f");
                     }
                 }
-                otherPlayers.remove(dataStore.getPlayerRight());
+                otherPlayers.remove(dataStore.getPlayerRight()); //remove already set player from list
                 for(Player p : otherPlayers){
-                    if(p.getTeamID() == dataStore.getPlayerRight().getTeamID()){
+                    if(p.getTeamID() == dataStore.getPlayerRight().getTeamID()){ //if player is in same team like playerRight, this is player left
                         dataStore.setPlayerLeft(p);
-                        logger.info(p.isActive() + " Player left active t/f");
                     }
                 }
-                otherPlayers.remove(dataStore.getPlayerLeft());
-                if(otherPlayers.size() == 1){
+                otherPlayers.remove(dataStore.getPlayerLeft()); //remove already set player from list
+                if(otherPlayers.size() == 1){ //remaining player is playerTop
                     dataStore.setPlayerTop(otherPlayers.get(0));
-                    logger.info(otherPlayers.get(0).isActive() + "player top active t/f");
                 }
 
                 dataStore.setCardAmountProperties();
@@ -488,14 +481,14 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Added Players to datastore");
                 break;
 
-            case "string/nextPlayer":
-                int nextPlayerID = (int) msgIn.getObjects().get(0);
+            case "string/nextPlayer": //@author Fabio
+                int nextPlayerID = (int) msgIn.getObjects().get(0); //getting nextPlayer from Server
                 dataStore.setNextPlayerID(nextPlayerID);
                 break;
+
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
-                //wishedCardfromMahjong();
-
+            break;
 
             case "string":
                 logger.info("Recieved a String, going to evaluate it.");
@@ -525,7 +518,7 @@ public class Clt_Controller { //Controller is a Singleton
 
                 break;
 
-            case "string/stingNotification":
+            case "string/stingNotification": //@author Fabio -> Show which player stung
                 String notification = (String) msgIn.getObjects().get(0);
                 String[] temp = notification.split(";");
                 int playerID = Integer.parseInt(temp[0]);
@@ -540,6 +533,7 @@ public class Clt_Controller { //Controller is a Singleton
                     Platform.runLater(() -> view.getTableView().getTichuLabel().setText(translator.getString("model.player")+ " "+  playerID + " " +
                             translator.getString("player.sting.notification")));
                 }
+                this.changeRiceLabel();
                 break;
 
 

@@ -163,6 +163,7 @@ public class Srv_Model {
                 msgOut = new Message("boolean/isActive", players.get(i).isActive());
                 server.getClientThreads().get(clientThreadID).send(msgOut);
                 logger.info("Sent activity status to client");
+                logger.info("Active Player: "+ players.get(i));
             } catch (Exception e){
                 logger.severe("cant send activity status to client");
             }
@@ -217,15 +218,15 @@ public class Srv_Model {
         }
         for(int i = 0; i < game.getTable().getPlayersAtTable().size(); i++){
             Message msgOut = null;
-            int clientThreadIndex = server.searchIndexOfClientThreadByID(game.getTable().getPlayersAtTable().get(i).getClientID());
+            int clientThreadIndex = server.searchIndexOfClientThreadByID(game.getTable().getPlayersAtTable().get(i).getPLAYER_ID());
 
 
             try {
                 msgOut = new Message("string/stingNotification", playerThatStung.getPLAYER_ID() + ";" + "player.sting.notification");
                 server.getClientThreads().get(clientThreadIndex).send(msgOut);
-                logger.info("Sent sting notifiaction to clients");
+                logger.info("Sent sting notification to clients");
             } catch (Exception e){
-                logger.severe("Can't send Stingnotifiaction to clients");
+                logger.severe("Can't send Stingnotification to clients");
             }
 
         }
