@@ -43,6 +43,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
         model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
         model.sendHasBombStatusToClients();//send status to client
         model.getGame().getTable().skip();
+        model.sendPlayersToClients();
         model.sendActivePlayerToClients();
         model.getGame().getTable().checkIfMJWishIsActive(); //check if the mj wish is active
 
@@ -92,7 +93,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog
                                 && model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Mahjong) { //special case if dog played (skip process is include in dogPlayed)
                             model.getGame().getTable().skip(); //normal skip if no dog played
-                            model.sendPlayersToClients(); //because
+                            model.sendPlayersToClients();
                         } else {
                             if (cardsToPlay.get(0).getRank() == Rank.Mahjong) {
                                 logger.info("Client: " + msgIn.getSenderID() + " want top open wishview --> model ");
@@ -112,6 +113,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
                     model.sendHasBombStatusToClients();//send status to client
                     model.sendActivePlayerToClients();
+                    model.sendPlayersToClients();
                     model.getGame().getTable().checkIfMJWishIsActive();
                     for(Player p : serviceLocator.getTable().getPlayersAtTable()){ //if he skipped previosly and now can play
                         if(p.getClientID() == msgIn.getSenderID()){
@@ -142,9 +144,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 }else {
                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                 }
-
-
-
                 break;
 
 
@@ -163,6 +162,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 model.getGame().getTable().mahJongPlayed();
                 model.getGame().getTable().skip();
                 model.sendActivePlayerToClients();
+                model.sendPlayersToClients();
                 break;
 
             case "string":
@@ -242,6 +242,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                 }
                             }
                             model.sendActivePlayerToClients();
+                            model.sendPlayersToClients();
                         }
                       /*  if (ok){
                             for(Player p : model.getGame().getTable().getPlayersAtTable()){

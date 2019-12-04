@@ -691,21 +691,21 @@ public enum Srv_HandType {
                         }
                         logger.info("Player SingleCard isHigher");
                     } else {
-                        if (tableCards.size() == 1 && playerCards.get(0).getRank() != Rank.Dog) { //One Card is on the table / Dog not allowed to play in a running game
-                            if (tableCards.get(0).getRank() == Rank.Phoenix) { //on the Table a Phoenix?
+                        if (tableCards.size() == 1 && playerCards.get(0).getRank() != Rank.Dog) { //One Card is on the table -> Dog not allowed to play in a running game
+                            if (tableCards.get(0).getRank() == Rank.Phoenix) { //on the table a phoenix?
                                 if (tableCards.get(0).getPhoenixRank() < playerCards.get(0).getRank().ordinal()+2) { //compare with phoenixRank
                                     isHigher = true;
                                 }
-                            } else {
-                                if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal() &&
-                                        playerCards.get(0).getRank() != Rank.Mahjong && playerCards.get(0).getRank() != Rank.Dog) { //compare with normal rank if not Mahjong and Dog
-                                    isHigher = true;
-                                    logger.info("Player SingleCard isHigher");
-                                }else{
-                                    if(tableCards.get(0).getRank()== Rank.Mahjong){//if mahjong is single card, all other cards are higher
-                                        isHigher = true;
-                                    }
-                                }
+                            }
+                            if(tableCards.get(0).getRank()== Rank.Mahjong){//on the table a mahjong? if mahjong is single card, all other cards are higher
+                                isHigher = true;
+                            }
+                            if(tableCards.get(0).getRank()== Rank.Dog){//on the table a dog? if dog is played, all other cards are higher
+                                isHigher = true;
+                            }
+                            if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal() &&
+                                    playerCards.get(0).getRank() != Rank.Mahjong && playerCards.get(0).getRank() != Rank.Dog) { //compare with normal rank if is not Phoenix, Mahjong or Dog
+                                isHigher = true;
                             }
                         }
                     }
