@@ -295,6 +295,30 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
+    //@author Sandro
+    private void changeRiceLabel() {
+        if (dataStore.getPlayerTop().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(true);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+        if (dataStore.getPlayerLeft().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(true);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+        if (dataStore.getPlayerRight().isActive()) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(true);
+        }
+        if (dataStore.getPlayerTop().isActive() == false && dataStore.getPlayerLeft().isActive() == false && dataStore.getPlayerRight().isActive() == false) {
+            view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
+            view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+        }
+    }
+
     //@author Fabio
     private void processCardClicked(MouseEvent e){ //sets a border around the card, adds it to send queue
         logger.info("clicked on card");
@@ -407,7 +431,10 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
-                Platform.runLater(() -> dataStore.isActiveProperty().set(isActive));
+                Platform.runLater(() -> {
+                    dataStore.isActiveProperty().set(isActive);
+                    changeRiceLabel();
+                });
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 

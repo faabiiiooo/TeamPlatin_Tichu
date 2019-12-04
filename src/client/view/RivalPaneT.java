@@ -67,4 +67,8 @@ public class RivalPaneT extends HBox {
     }
 
     public Text getCardAmountText() { return cardAmountText; }
+
+    public Label getRiceLabel() {
+        return this.rice;
+    }
 }

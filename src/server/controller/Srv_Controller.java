@@ -54,7 +54,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
     public Message processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
         Message msgOut = null;
-        logger.info("msgID: "+ msgIn.getSenderID());
 
         switch (msgIn.getType()) {
 
@@ -87,6 +86,10 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.getGame().getTable().checkPlayerHandsOnBomb();
                     model.sendHasBombStatusToClients();
 
+                    if (model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog) { //special case if dog played (skip process is include in dogPlayed)
+                        model.getGame().getTable().skip(); //normal skip if no dog played
+                    }
+
                     //only skip if the player didnt play the mah jong - if he played mah jong he first needs to wish a card before skipping
                     if(cardsToPlay.get(0).getRank() != Rank.Mahjong) {
                         model.getGame().getTable().skip();
@@ -98,6 +101,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         }
 
                     }
+                    model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
+                    model.sendHasBombStatusToClients();//send status to client
                     model.sendActivePlayerToClients();
                     model.getGame().getTable().checkIfMJWishIsActive();
 
@@ -154,11 +159,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         logger.info("Srv_processSkipButton");
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
                             if (p.isActive() && !skipProcessEnded) {// Find activePlayer
-
-                                for(Player z : model.getGame().getTable().getPlayersAtTable()){
-                                    logger.info("Has Player wished card? "+z +"  "+ p.isHasWishedCard());
-                                }
-
                                 if (p.isHasWishedCard()) { //Check: Must player play wishedCard of mahjong?
                                     logger.info("Skip not allowed - Player must play wished card!");
                                     msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
@@ -217,6 +217,18 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             }
                             model.sendActivePlayerToClients();
                         }
+                      /*  if (ok){
+                            for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                                logger.info("Active status players: "+ p.getPLAYER_ID()+" Status "+p.isActive());
+                            }
+                            logger.info("Player who pressed bomb button is now active");
+                            msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+                            model.sendActivePlayerToClients();
+                        }else{
+                            logger.info("failes to change active player with bomb on hand");
+                            msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
+                        }*/
+                        //send the active status to all clients
 
 
                         break;

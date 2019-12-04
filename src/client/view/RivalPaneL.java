@@ -68,4 +68,8 @@ public class RivalPaneL extends VBox {
         return cardsLabel;
     }
     public Text getCardAmountText() { return cardAmountText; }
+
+    public Label getRiceLabel() {
+        return this.rice;
+    }
 }
