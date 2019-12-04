@@ -36,6 +36,7 @@ public enum Srv_HandType {
         if (isBomb(playerCards) && isBomb(tableCards) || isBomb(playerCards) && tableCards.size() == 0)
             handType = Bomb;
         // if same handtype evualte which is higher
+        logger.info("evaluated Handtype in HandType: "+handType);
         canPlay = isHigher(tableCards, playerCards, handType);
 
         //special case --> special card dog cannot be bombed
@@ -43,6 +44,7 @@ public enum Srv_HandType {
             canPlay = true;
 
             }
+        logger.info("canPlay in HandType: "+ canPlay);
         return canPlay;
     }
 
@@ -667,10 +669,6 @@ public enum Srv_HandType {
                     table.dogPlayed();
                     logger.info("DogPlayed");
                     break;
-               /*case Mahjong:
-                    table.mahJongPlayed();
-                    logger.info("MahjongPlayed");
-                    break;*/
             }
         }
     }
@@ -685,6 +683,7 @@ public enum Srv_HandType {
 
             switch (handType) {
                 case SingleCard:
+                    logger.info("tableCards size: "+ tableCards.size() + tableCards);
                     if (tableCards.size() == 0) { // No card on the table -> Player has automatically the higher SingleCard
                         isHigher = true;
                         if (includesSpecialCards(playerCards) == true) { //specialCard?
@@ -709,6 +708,7 @@ public enum Srv_HandType {
                             }
                         }
                     }
+                    logger.info("IS HIGHER TRUE? "+ isHigher);
                     break;
                 case OnePair:
                     if (tableCards.size() == 0) { //No card on the table -> Player has automatically the higher OnePair

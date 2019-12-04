@@ -34,6 +34,7 @@ public class Srv_Table {
     }
 
 
+
     //@author thomas
     protected Srv_Deck createDeck(){
         this.deck = new Srv_Deck();
@@ -69,10 +70,7 @@ public class Srv_Table {
         boolean canPlay = false;
         //if the cards which are chosen from the player have the same handtype and are higher than the last played cards:
         logger.info("card to play -->: "+ playerCards);
-
-        for(Player p: playersAtTable){
-           logger.info(p + " " + p.isHasWishedCard()+" Can the player play the wished card?");
-        }
+        logger.info("Last played card in playCards() "+lastPlayedCards);
         if(Srv_HandType.evaluateHand(lastPlayedCards, playerCards)) {
             logger.info("HandType successfuly evaluated");
             //add the last played cards to the allPlayedCards list and clear the lastPlayedCards list for the next cards
@@ -81,6 +79,7 @@ public class Srv_Table {
             //add the new played cards to the list
             lastPlayedCards.addAll(playerCards);
             canPlay = true;
+            logger.info("canPlay? "+canPlay);
         }
 
 
@@ -237,16 +236,17 @@ public class Srv_Table {
             }
         }
     }
-    logger.info("LASTPLAYED CARDS SIZE: "+lastPlayedCards.size());
     //if the last played handtype was a singlecard and the player has the wished card on the hand set hasWishedCard to true
     if(lastPlayedCards.size() == 1 ){
         for(Player p: playersWithWishedCard){
+            logger.info("Players with wished card: "+playersWithWishedCard);
             p.setHasWishedCard(true);
         }
         // if the last played cards were a street with mahjong card in it, check if a player has the wished card on the hand and could play it
     }else if (Srv_HandType.isStreet(lastPlayedCards) && lastPlayedCards.size() >=5){
         for(Player p: playersWithWishedCard){
             if(Srv_HandType.mahJongWishStreet(p.getHandCards(),lastPlayedCards,mahJongWishCard) ){
+                logger.info("Players with wished card: "+playersWithWishedCard);
                 p.setHasWishedCard(true); //if the player has the card set the variable to true
             }
         }
@@ -266,9 +266,11 @@ public class Srv_Table {
                         lastPlayedCards.size() >= 5 && !Srv_HandType.mahJongWishStreet(mj.getHandCards(), lastPlayedCards, mahJongWishCard) ) {
                     for (Player p : playersAtTable) {
                         p.setHasWishedCard(false);
+                        logger.info("player :"+p+" can no more play the wished card. HasWIshedCardStatus: "+p.isHasWishedCard());
                     }
                 } else {
                     if (lastPlayedCards.contains(mahJongWishCard.getRank()) && !wishCardPlayedOut) {
+                        wishCardPlayedOut=true;
                         for (Player p : playersAtTable) {
                             p.setHasWishedCard(false);
                         }

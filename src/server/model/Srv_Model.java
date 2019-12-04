@@ -3,6 +3,7 @@ package server.model;
 import resources.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 public class Srv_Model {
@@ -232,13 +233,24 @@ public class Srv_Model {
     }
     //@author Fabio
     public void removePlayedCardsFromPlayerHand(int senderID, ArrayList<Card> playedCards){
-
+        logger.info("removePlayedCardsFromPlayerHand: ID "+senderID);
         for(Player p : game.getTable().getPlayersAtTable()){
             if(p.getClientID() == senderID){
                 p.getHandCards().removeAll(playedCards);
             }
         }
 
+    }
+
+    public boolean checkIfWishedCardIsInPlayedCards(ArrayList<Card> playedCards){
+        ArrayList<Card> clonedCards = (ArrayList<Card>) playedCards.clone();
+        boolean playsWishedCard = false;
+        for(Card wish: clonedCards){
+            if(wish.getRank() == this.getGame().getTable().getMahJongWishCard().getRank()){
+                playsWishedCard = true;
+            }
+        }
+        return playsWishedCard;
     }
 
     public Srv_Game getGame() {

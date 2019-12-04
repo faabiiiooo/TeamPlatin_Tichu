@@ -197,7 +197,6 @@ public class Clt_Controller { //Controller is a Singleton
           successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
                logger.info("Cards sent to Server.");
-               logger.info(this.toString()+"I Send info to show wish View");
                dataStore.getHandCards().removeAll(cardsToSend);
                cardsToSend.clear(); //remove the played cards out of the list
 
