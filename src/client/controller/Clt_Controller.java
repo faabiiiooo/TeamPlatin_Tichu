@@ -483,7 +483,10 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
-                this.changeRiceLabel();
+
+                Platform.runLater(() -> {
+                    changeRiceLabel();
+                });
 
                 logger.info("Added Players to datastore");
                 break;
