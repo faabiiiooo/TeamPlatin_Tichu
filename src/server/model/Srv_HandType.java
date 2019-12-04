@@ -697,7 +697,8 @@ public enum Srv_HandType {
                                     isHigher = true;
                                 }
                             } else {
-                                if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal()) { //compare with normal rank
+                                if (tableCards.get(0).getRank().ordinal() < playerCards.get(0).getRank().ordinal() &&
+                                        playerCards.get(0).getRank() != Rank.Mahjong && playerCards.get(0).getRank() != Rank.Dog) { //compare with normal rank if not Mahjong and Dog
                                     isHigher = true;
                                     logger.info("Player SingleCard isHigher");
                                 }else{
