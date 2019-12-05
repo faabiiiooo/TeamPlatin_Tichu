@@ -1,5 +1,6 @@
 package server.model;
 
+import javafx.application.Platform;
 import resources.Card;
 import resources.Player;
 import resources.Rank;
@@ -108,7 +109,14 @@ public class Srv_Table {
         logger.info("Table_Skip_Process started");
         boolean foundNextPlayer = false;
 
-       if(playersThatSkipped.size() >= 4){
+        int playersInGame = 0;
+        for(Player p : playersAtTable){
+            if(p.getHandCards().size() > 0){
+                playersInGame++;
+            }
+        }
+
+       if(playersThatSkipped.size() >= playersInGame){
             int playerIDOfLastPlayedCards = lastPlayedCards.get(0).getPlayerId();
             for(Player p : playersAtTable){
                 if(p.getPLAYER_ID() == playerIDOfLastPlayedCards){
@@ -188,13 +196,25 @@ public class Srv_Table {
                 p.setActive(false);
             }
         }
-        int indexOfWinner = playersAtTable.indexOf(winner);
-        playersAtTable.get(indexOfWinner).setActive(true);
-        logger.info("Winner: " + playersAtTable.get(indexOfWinner).toString());
+        if(winner.getHandCards().size() != 0){
+            int indexOfWinner = playersAtTable.indexOf(winner);
+            playersAtTable.get(indexOfWinner).setActive(true);
+            logger.info("Winner: " + playersAtTable.get(indexOfWinner).toString());
+        } else {
+            int idOfNextPlayer = winner.getNextPlayerID();
+            for(Player p : playersAtTable){
+                if(idOfNextPlayer == p.getPLAYER_ID()){
+                    p.setActive(true);
+                }
+            }
+
+        }
+
         serviceLocator.getSrvModel().sendActivePlayerToClients();
         serviceLocator.getSrvModel().sendTableCardsToClients();
         serviceLocator.getSrvModel().sendPlayersToClients();
         serviceLocator.getSrvModel().sendStingNotification();
+
 
     }
 
@@ -454,5 +474,17 @@ public class Srv_Table {
 
     public void setBeginner(Player beginner) {
         this.beginner = beginner;
+    }
+
+    public ArrayList<Card> getAllPlayedCards() {
+        return allPlayedCards;
+    }
+
+    public boolean isWishCardPlayedOut() {
+        return wishCardPlayedOut;
+    }
+
+    public void setWishCardPlayedOut(boolean wishCardPlayedOut) {
+        this.wishCardPlayedOut = wishCardPlayedOut;
     }
 }

@@ -27,6 +27,9 @@ public class Clt_DataStore {
     private final SimpleIntegerProperty cardsPlayerRight = new SimpleIntegerProperty();
     private final SimpleIntegerProperty cardsPlayerLeft = new SimpleIntegerProperty();
 
+    private final SimpleIntegerProperty teamScore = new SimpleIntegerProperty(0);
+
+
     private int nextPlayerID;
 
     private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
@@ -177,4 +180,15 @@ public class Clt_DataStore {
 
     public void setWantsCardWish(boolean wishedCardIsSet) { this.wantsCardWish.set(wishedCardIsSet); }
 
+    public int getTeamScore() {
+        return teamScore.get();
+    }
+
+    public SimpleIntegerProperty teamScoreProperty() {
+        return teamScore;
+    }
+
+    public void setTeamScore(int teamScore) {
+        this.teamScore.set(teamScore);
+    }
 }

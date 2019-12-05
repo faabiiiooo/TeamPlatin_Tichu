@@ -1,5 +1,6 @@
 package server.model;
 
+import javafx.application.Platform;
 import resources.*;
 
 import java.util.ArrayList;
@@ -278,6 +279,96 @@ public class Srv_Model {
             }
         }
         return playsWishedCard;
+    }
+
+    //@author Fabio
+    public void roundFinished(){
+        Srv_Round currentRound = game.getRounds().get(game.getRounds().size()-1);
+        Srv_Team winningTeam = null;
+        boolean teamWins = false;
+        for(Srv_Team t : game.getTeams()){ //calculate roundScore of Teams
+            t.calcGameScore();
+        }
+
+        winningTeam = game.evaluateWinner();
+
+        if(winningTeam == null){
+            Srv_Round nextRound = new Srv_Round();
+            for(Srv_Team t : game.getTeams()){
+                t.setRoundScore(0);
+            }
+            game.resetTable();
+            game.getRounds().add(nextRound);
+
+            this.sendTableCardsToClients();
+            this.sendScoresToClients();
+
+            for(Player p : game.getTable().getPlayersAtTable()){
+                p.getHandCards().clear();
+                p.getWonCards().clear();
+            }
+
+            this.sendPlayerHandsToClient();
+            this.sendNextPlayerIdToClients();
+            this.sendPlayersToClients();
+
+            this.startNewRound();
+
+
+        } else {
+            this.gameFinished();
+        }
+
+
+
+
+
+    }
+
+    private void startNewRound(){
+        logger.info("Starting new Round");
+        game.getTable().dealCards();
+        logger.info("dealed first 8 cards");
+        this.sendPlayerHandsToClient();
+        Countdown countdown = new Countdown();
+        countdown.startCountdown();
+        logger.info("waiting for players to announce big tichu");
+        while (countdown.isAlive()){
+        }
+        game.getTable().dealRestOfCards();
+        game.getRounds().get(game.getRounds().size()-1).checkBeginner(game.getTeams());
+        this.sendPlayerHandsToClient();
+        logger.info("dealed all cards");
+        this.sendPlayersToClients();
+        this.sendHasBombStatusToClients();
+        this.sendActivePlayerToClients();
+    }
+
+    private void gameFinished(){
+
+    }
+
+    //@author Fabio
+    private void sendScoresToClients(){
+        Srv_Server server = serviceLocator.getServer();
+
+        for(int i = 0; i < game.getTeams().size(); i++){ //get each Team
+            int teamScore = game.getTeams().get(i).getGameScore();
+            for(int j = 0; j < game.getTeams().get(i).getMembers().size(); j++){
+                Message msgOut = null;
+                int clientThreadIndex = server.searchIndexOfClientThreadByID(game.getTeams().get(i).getMembers().get(i).getPLAYER_ID());
+
+                try{
+                    msgOut = new Message("string/score", teamScore);
+                    server.getClientThreads().get(clientThreadIndex).send(msgOut);
+                    logger.info("Sen't GameScore to client");
+                } catch (Exception e){
+                    logger.severe("Can't send GameScore to client");
+                }
+            }
+        }
+
+
     }
 
     public Srv_Game getGame() {

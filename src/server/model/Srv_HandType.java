@@ -680,7 +680,6 @@ public enum Srv_HandType {
                 return false;
             }
 
-
             switch (handType) {
                 case SingleCard:
                     logger.info("tableCards size: "+ tableCards.size() + tableCards);

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import resources.*;
 import server.model.Srv_HandType;
 import server.model.Srv_Model;
+import server.model.Srv_Round;
 import server.model.Srv_Table;
 import resources.Player;
 
@@ -146,13 +147,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 }
                 break;
 
-
-
-
-            case "player":
-
-
-                break;
             //@author thomas
             case "card/wishCard": //setting the wished card from the player
                 model.getGame().getTable().setMahJongWishCard((Card)msgIn.getObjects().get(0));
@@ -163,6 +157,26 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 model.getGame().getTable().skip();
                 model.sendActivePlayerToClients();
                 model.sendPlayersToClients();
+                break;
+
+            case "string/finished": //@author Fabio
+                logger.info("Player " + msgIn.getSenderID() + " finished the round");
+
+                Srv_Round thisRound = model.getGame().getRounds().get(model.getGame().getRounds().size()-1);
+                int senderID = msgIn.getSenderID();
+
+                if(thisRound.getFinisher().size() < 3){
+                    for(Player p : model.getGame().getTable().getPlayersAtTable()){
+                        if(p.getPLAYER_ID() == senderID){
+                            thisRound.getFinisher().add(p);
+                        }
+                    }
+                } else {
+                    model.roundFinished();
+
+                }
+                msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
+
                 break;
 
             case "string":

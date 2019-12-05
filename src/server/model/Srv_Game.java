@@ -8,7 +8,7 @@ import java.util.Collections;
 public class Srv_Game { //@author Thomas
 
     protected ArrayList<Srv_Team> teams = new ArrayList<Srv_Team>();;
-    protected final int G_MIN_SCORE = 1000;
+    protected final static int G_MIN_SCORE = 1000;
     protected Srv_Team winner;
     private ArrayList<Srv_Round> rounds;
     private Srv_Table table;
@@ -80,8 +80,13 @@ public class Srv_Game { //@author Thomas
             Collections.sort(winningRangeTeams);
             this.winner = winningRangeTeams.get(0);
         }else{ // if both teams have the same amount of points, set the winner to null
-            if(winningRangeTeams.get(0).getGameScore() == winningRangeTeams.get(1).getGameScore() )
-            this.winner = null;
+            if(winningRangeTeams.get(0).getGameScore() == winningRangeTeams.get(1).getGameScore()){
+                this.winner = null;
+            } else {
+                if(winningRangeTeams.isEmpty()){
+                    winner = null;
+                }
+            }
         }
         return winner;
     }
@@ -93,9 +98,16 @@ public class Srv_Game { //@author Thomas
         return table;
     }
 
-    // reset the table Object
-    private void resetTable(){
-        this.table = null;
+
+    public void resetTable(){
+        table.createDeck();
+        table.getPlayersThatSkipped().clear();
+        table.getLastPlayedCards().clear();
+        table.setMahJongWishCard(null);
+        table.getAllPlayedCards().clear();
+        table.setBeginner(null);
+        table.setWishCardPlayedOut(false);
+
     }
 
     //getters and setters

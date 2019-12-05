@@ -200,6 +200,10 @@ public class Clt_Controller { //Controller is a Singleton
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
                cardsToSend.clear(); //remove the played cards out of the list
+               if(dataStore.getHandCards().size() == 0){
+                   Message msgFinished = new Message("string/finished","");
+                   model.sendMessage(msgFinished);
+               }
 
            } else { //else give feedback to the user
                logger.info(this.toString()+"Cards declined by server. player has to replay.");
@@ -492,6 +496,15 @@ public class Clt_Controller { //Controller is a Singleton
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
             break;
+
+            case "string/score": //@author Fabio
+
+                int teamScore = (int) msgIn.getObjects().get(0);
+                Platform.runLater(() -> {
+                    dataStore.setTeamScore(teamScore);
+                });
+
+                break;
 
             case "string":
                 logger.info("Recieved a String, going to evaluate it.");
