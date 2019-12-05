@@ -188,7 +188,7 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     //@author Fabio
-    synchronized public void processPlayButton(){
+    public void processPlayButton(){
         boolean successful = false;
         Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
 
@@ -200,6 +200,10 @@ public class Clt_Controller { //Controller is a Singleton
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
                cardsToSend.clear(); //remove the played cards out of the list
+               if(dataStore.getHandCards().size() == 0){
+                   Message msgFinished = new Message("string/finished","");
+                   model.sendMessage(msgFinished);
+               }
 
            } else { //else give feedback to the user
                logger.info(this.toString()+"Cards declined by server. player has to replay.");
@@ -246,7 +250,6 @@ public class Clt_Controller { //Controller is a Singleton
                 CardView cv = new CardView(c);
                 cv.setOnMouseClicked(e -> processCardClicked(e));
                 view.getTableView().getPlayerView().addCards(cv);
-                //updateCardAmountView();
             });
         }
 
@@ -298,25 +301,31 @@ public class Clt_Controller { //Controller is a Singleton
 
     //@author Sandro
     private void changeRiceLabel() {
+        logger.info("Changing RiceLabel");
         if (dataStore.getPlayerTop().isActive()) {
+            logger.info("Player Top is active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(true);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
         }
         if (dataStore.getPlayerLeft().isActive()) {
+            logger.info("Player Left is active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(true);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
         }
         if (dataStore.getPlayerRight().isActive()) {
+            logger.info("Player right is active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(true);
         }
-        if (dataStore.getPlayerTop().isActive() == false && dataStore.getPlayerLeft().isActive() == false && dataStore.getPlayerRight().isActive() == false) {
+        if (!dataStore.getPlayerTop().isActive() && !dataStore.getPlayerLeft().isActive() && !dataStore.getPlayerRight().isActive()) {
+            logger.info("You are active");
             view.getTableView().getRivalTop().getRiceLabel().setVisible(false);
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
+            view.getTableView().getPlayerView().getRice().setVisible(true);
         }
     }
 
@@ -420,7 +429,10 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("HandCards: " + dataStore.getHandCards().toString());
                 break;
 
-            case "card/tableCards":
+            case "card/tableCards": //@author Fabio
+                Platform.runLater(() -> {
+                    view.getTableView().getTichuLabel().setText("");
+                });
                 ArrayList<Card> tableCards = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     tableCards.add((Card) o);
@@ -445,48 +457,54 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("HasBomb set to: "+hasBomb );
                 break;
 
-            case "player":
+            case "player": //recieveing all other players from server -> it is necessary that nextPlayerID is already set
                 ArrayList<Player> otherPlayers = new ArrayList<>();
-                for(Object o : msgIn.getObjects()){
+                for(Object o : msgIn.getObjects()){ //generate player objects
                     otherPlayers.add((Player) o);
                 }
-                for(Player p : otherPlayers){
-                    logger.info("oP"+p.getPLAYER_ID() +" c:"+p.getHandCards().size());
-
-                }
-                logger.info(otherPlayers.size()+"");
-
 
                 for(int i = 0; i < otherPlayers.size(); i++){
-                    logger.info("P"+otherPlayers.get(i).getPLAYER_ID()+" c:"+otherPlayers.get(i).getHandCards().size());
-                    if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){
+                    if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){ //set the nextPlayer as playerRight
                         dataStore.setPlayerRight(otherPlayers.get(i));
                     }
                 }
-                otherPlayers.remove(dataStore.getPlayerRight());
+                otherPlayers.remove(dataStore.getPlayerRight()); //remove already set player from list
                 for(Player p : otherPlayers){
-                    if(p.getTeamID() == dataStore.getPlayerRight().getTeamID()){
+                    if(p.getTeamID() == dataStore.getPlayerRight().getTeamID()){ //if player is in same team like playerRight, this is player left
                         dataStore.setPlayerLeft(p);
                     }
                 }
-                otherPlayers.remove(dataStore.getPlayerLeft());
-                if(otherPlayers.size() == 1){
+                otherPlayers.remove(dataStore.getPlayerLeft()); //remove already set player from list
+                if(otherPlayers.size() == 1){ //remaining player is playerTop
                     dataStore.setPlayerTop(otherPlayers.get(0));
                 }
 
                 dataStore.setCardAmountProperties();
 
+                Platform.runLater(() -> {
+                    changeRiceLabel();
+                });
+
                 logger.info("Added Players to datastore");
                 break;
 
-            case "string/nextPlayer":
-                int nextPlayerID = (int) msgIn.getObjects().get(0);
+            case "string/nextPlayer": //@author Fabio
+                int nextPlayerID = (int) msgIn.getObjects().get(0); //getting nextPlayer from Server
                 dataStore.setNextPlayerID(nextPlayerID);
                 break;
+
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
-                //wishedCardfromMahjong();
+            break;
 
+            case "string/score": //@author Fabio
+
+                int teamScore = (int) msgIn.getObjects().get(0);
+                Platform.runLater(() -> {
+                    dataStore.setTeamScore(teamScore);
+                });
+
+                break;
 
             case "string":
                 logger.info("Recieved a String, going to evaluate it.");
@@ -515,6 +533,25 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 break;
+
+            case "string/stingNotification": //@author Fabio -> Show which player stung
+                String notification = (String) msgIn.getObjects().get(0);
+                String[] temp = notification.split(";");
+                int playerID = Integer.parseInt(temp[0]);
+                String message = temp[1];
+
+                if(playerID != dataStore.getPlayerRight().getPLAYER_ID() &&
+                playerID != dataStore.getPlayerLeft().getPLAYER_ID() &&
+                playerID != dataStore.getPlayerTop().getPLAYER_ID()){
+                    Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("model.player")+" "+
+                            playerID + " " + translator.getString("player.sting.notification")));
+                } else {
+                    Platform.runLater(() -> view.getTableView().getTichuLabel().setText(translator.getString("model.player")+ " "+  playerID + " " +
+                            translator.getString("player.sting.notification")));
+                }
+                this.changeRiceLabel();
+                break;
+
 
             case "connection-lost": //stop game. A client got disconnected.
                 logger.warning("Client is going to stop because of connection loss");

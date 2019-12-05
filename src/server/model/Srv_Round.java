@@ -33,6 +33,7 @@ public class Srv_Round extends Srv_Game { //@author Thomas
                     if(teams.get(i).getMembers().get(j).getHandCards().get(z).getRank() == Rank.Mahjong){
                         logger.info("Mahjong found");
                         teams.get(i).getMembers().get(j).setActive(true);
+                        super.getTable().setBeginner(teams.get(i).getMembers().get(j));
                     }
                 }
             }
