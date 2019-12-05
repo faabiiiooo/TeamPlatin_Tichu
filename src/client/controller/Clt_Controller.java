@@ -221,8 +221,10 @@ public class Clt_Controller { //Controller is a Singleton
             Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
                 if (view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
                     for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
-                        if (tb == new_toggle) {
+                        if (tb == new_toggle && tb.getText() != "N") {
                             createWishedCard(tb.getText());
+                        }else{
+                            processSkipButton(); // if no card is wished just skip to next player
                         }
 
                     }
@@ -393,9 +395,6 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
             case "A":
                 wishRank = Rank.Ace;
-                break;
-            case "N":
-                wishRank = null;
                 break;
         }
 
