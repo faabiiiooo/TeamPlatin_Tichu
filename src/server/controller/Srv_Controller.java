@@ -236,7 +236,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         int msgId = msgIn.getSenderID();
                         logger.info(msgId+" msgId bomb active change");
                         logger.info("Bomb: active status change");
-                        if(model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog ) {//can only bomb if there wasnt played a dog
+                        if(model.getGame().getTable().getLastPlayedCards().size() == 0 ||model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog ) {//can only bomb if there wasnt played a dog
 
 
                             for (Player p : model.getGame().getTable().getPlayersAtTable()) {

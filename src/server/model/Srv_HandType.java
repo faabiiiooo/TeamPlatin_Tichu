@@ -543,6 +543,7 @@ public enum Srv_HandType {
 
         ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
         Collections.sort(clonedCards);
+        logger.info(clonedCards.size() +"cloned cards size in bombOnHand" + clonedCards);
 
         //first we need to remove the special cards from the deck of the players (no special cards can be played with bomb)
         for(int g = 0; g < clonedCards.size()-1; g++){
@@ -579,18 +580,20 @@ public enum Srv_HandType {
                     swordsCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Swords).sorted().collect(Collectors.toList());
                     jadeCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Jade).sorted().collect(Collectors.toList());
                     listOfSuitLists.add(starsCards); listOfSuitLists.add(pagodaCards); listOfSuitLists.add(swordsCards); listOfSuitLists.add(jadeCards);
-
+                    logger.info("Stream Star Cards: "+ listOfSuitLists+ "size: " +listOfSuitLists.size());
                     /*
                     check every suit separately, if the first checked number is only 1 higher than the next.
                     if 5 cards are found set found to true.
                      */
-                    for (int k = 0; k < listOfSuitLists.size()-1 && counterB!=5; k++){
+                    for (int k = 0; k < listOfSuitLists.size() && counterB!=5; k++){
                         counterB = 1;
                         countCards=0;
 
-                        for(int u = countCards; u < listOfSuitLists.get(k).size()-1; u++) {
+                        for(int u = countCards; u < listOfSuitLists.get(k).size()-1 && counterB!=5; u++) {
 
                             if ((listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 == listOfSuitLists.get(k).get(u+1).getRank().ordinal())) {
+                                logger.info(listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 + " == "+ listOfSuitLists.get(k).get(u+1).getRank().ordinal());
+                                logger.info(counterB+"counter B");
                                 counterB++;
                             }
                         }

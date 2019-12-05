@@ -56,17 +56,20 @@ public class Srv_Model {
         this.sendActivePlayerToClients();
 
     }
-
+    //@author thomas
     public void sendHasBombStatusToClients(){
         ArrayList<Player> players = game.getTable().getPlayersAtTable();
         Srv_Server server = serviceLocator.getServer();
+        logger.info("sending hasBombStatus to Clients");
 
         for(int i = 0; i < players.size(); i++){
             Message msgOut = null;
             int clientThreadID = server.searchIndexOfClientThreadByID(players.get(i).getClientID());
             try {
+
                 msgOut = new Message("boolean/hasBomb", players.get(i).isHasBomb());
                 server.getClientThreads().get(clientThreadID).send(msgOut);
+                logger.info("active Bomb status? "+players.get(i)+ " " +players.get(i).isHasBomb());
                 logger.info("Sent bomb status to Client!");
             } catch (Exception e){
                 logger.severe("cant send status to client!");

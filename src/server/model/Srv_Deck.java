@@ -67,7 +67,8 @@ public class Srv_Deck { //@author Sandro
     }
 
     public void shuffleCards() {
-        Collections.shuffle(this.cards);
+        //Collections.shuffle(this.cards);
+        Collections.sort(this.cards);
     }
 
     public ArrayList<Card> getCards() {
