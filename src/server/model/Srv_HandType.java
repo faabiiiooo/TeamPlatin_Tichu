@@ -40,7 +40,7 @@ public enum Srv_HandType {
         canPlay = isHigher(tableCards, playerCards, handType);
 
         //special case --> special card dog cannot be bombed
-        if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.get(0).getRank() != Rank.Dog  ){
+        if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.size() !=0 && tableCards.get(0).getRank() != Rank.Dog  ){
             canPlay = true;
 
             }
