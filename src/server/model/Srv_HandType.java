@@ -574,7 +574,7 @@ public enum Srv_HandType {
                 }
             }
             logger.info("counterA: "+counterA);
-            if(counterA == 4 && evaluateHand(fourOfAKindCards, lastPlayedCards)){ // if the counter reaches 4 there set found to true
+            if(counterA == 4 && evaluateHand(lastPlayedCards, fourOfAKindCards)){ // if the counter reaches 4 there set found to true
                 found = true;
             }else{
                 //Case if the player has a minimum of 5 in a straight with the same suit
