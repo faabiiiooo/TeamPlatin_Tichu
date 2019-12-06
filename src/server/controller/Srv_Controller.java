@@ -157,6 +157,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 model.getGame().getTable().skip();
                 model.sendActivePlayerToClients();
                 model.sendPlayersToClients();
+                model.sendWishedCardToClients();
                 break;
 
             case "string/finished": //@author Fabio

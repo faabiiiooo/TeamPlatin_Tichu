@@ -98,6 +98,9 @@ public class Clt_Controller { //Controller is a Singleton
         }else{
             Platform.runLater(() -> {
                 view.getTableView().getControls().getWishedCardLabel().setText("");
+
+
+
             });
         }
 

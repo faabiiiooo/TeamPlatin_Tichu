@@ -94,12 +94,12 @@ public class Srv_Model {
     }
 
     //@author thomas
-    public void sendWishedCardToClients(int clientThreadID){
+    public void sendWishedCardToClients(){
         Message msgOutMJWish = null;
         Srv_Server server = serviceLocator.getServer();
             msgOutMJWish = new Message("card/wishedCard", game.getTable().getMahJongWishCard()); //send info to open clients wish view because of played MJ
             server.broadcast(msgOutMJWish);
-            logger.info("Sent info to open Wish View to Client: " +clientThreadID);
+            logger.info("Sent wished card to Client ");
 
     }
 
@@ -324,8 +324,9 @@ public class Srv_Model {
             this.sendPlayerHandsToClient();
             this.sendNextPlayerIdToClients();
             this.sendPlayersToClients();
-
+            this.sendWishedCardToClients();
             this.startNewRound();
+
 
 
         } else {
