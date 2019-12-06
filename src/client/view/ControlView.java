@@ -1,9 +1,12 @@
 package client.view;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import resources.ServiceLocator;
 import resources.Translator;
 
@@ -15,6 +18,7 @@ public class ControlView extends HBox {
 
     private Button playButton, passButton, bombButton, callTichuButton;
     private Label countDownLabel;
+    private Label wishedCardLabel;
 
 
 
@@ -25,19 +29,25 @@ public class ControlView extends HBox {
         this.bombButton = new Button(translator.getString("button.bomb"));
         this.callTichuButton = new Button(translator.getString("button.callTichu"));
         this.countDownLabel = new Label("");
+        this.wishedCardLabel = new Label();
+
 
         playButton.getStyleClass().add("controlButtons");
         passButton.getStyleClass().add("controlButtons");
         bombButton.getStyleClass().add("controlButtons");
         callTichuButton.getStyleClass().add("controlButtons");
 
+        Region region1 = new Region();
+        this.setHgrow(region1, Priority.ALWAYS);
+
         this.setId("bottom");
-        this.getChildren().addAll(countDownLabel,playButton,passButton,bombButton,callTichuButton);
+        this.getChildren().addAll(countDownLabel,playButton,passButton,bombButton,callTichuButton, region1, wishedCardLabel);
         //Bomb button is always disabled at the beginning, only able it when player got a bomb
         this.bombButton.setDisable(true);
         //disable buttons until player is active
         this.playButton.setDisable(true);
         this.passButton.setDisable(true);
+        this.wishedCardLabel.setAlignment(Pos.TOP_RIGHT);
 
 
     }
@@ -62,4 +72,7 @@ public class ControlView extends HBox {
         return countDownLabel;
     }
 
+    public Label getWishedCardLabel() { return wishedCardLabel; }
+
+    public void setWishedCardLabel(Label wishedCardLabel) { this.wishedCardLabel = wishedCardLabel; }
 }

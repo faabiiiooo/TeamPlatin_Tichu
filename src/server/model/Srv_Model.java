@@ -93,6 +93,16 @@ public class Srv_Model {
 
     }
 
+    //@author thomas
+    public void sendWishedCardToClients(int clientThreadID){
+        Message msgOutMJWish = null;
+        Srv_Server server = serviceLocator.getServer();
+            msgOutMJWish = new Message("card/wishedCard", game.getTable().getMahJongWishCard()); //send info to open clients wish view because of played MJ
+            server.broadcast(msgOutMJWish);
+            logger.info("Sent info to open Wish View to Client: " +clientThreadID);
+
+    }
+
     //@author Fabio
     public void sendPlayerHandsToClient(){
 

@@ -85,9 +85,24 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
         model.getDataStore().isWantsCardWish().addListener( (observable, oldValue, newValue) -> wishedCardfromMahjong(newValue));
+        dataStore.wishedCardProperty().addListener((observable, oldValue, newValue) -> wishedCardInView((Card)newValue));
 
 
     }
+    //@author Thomas
+    private void wishedCardInView(Card wishedCard) { //set the Label with the wished card.
+        if(wishedCard != null){
+        Platform.runLater(() -> {
+        view.getTableView().getControls().getWishedCardLabel().setText(translator.getString("label.wishedCard") + " "+ wishedCard.getRank());
+        });
+        }else{
+            Platform.runLater(() -> {
+                view.getTableView().getControls().getWishedCardLabel().setText("");
+            });
+        }
+
+    }
+
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
         if(newValue){
@@ -439,6 +454,11 @@ public class Clt_Controller { //Controller is a Singleton
                 dataStore.getTableCards().clear();
                 dataStore.getTableCards().addAll(tableCards);
                 logger.info("Added TableCards to table");
+                break;
+
+            case "card/wishedCard": //set the wished card on clients to set info in gui
+                logger.info("Wished card has been set in data store");
+                dataStore.setWishedCard((Card) msgIn.getObjects().get(0));
                 break;
 
             case "boolean/isActive": //client gets information if he is the active player or not
