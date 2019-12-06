@@ -124,6 +124,7 @@ public class Srv_Table {
         }
 
        if(playersThatSkipped.size() >= playersInGame){
+           logger.info(playersThatSkipped.size()+ "size from skipped list");
             int playerIDOfLastPlayedCards = lastPlayedCards.get(0).getPlayerId();
             for(Player p : playersAtTable){
                 if(p.getPLAYER_ID() == playerIDOfLastPlayedCards){

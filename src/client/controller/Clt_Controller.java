@@ -241,8 +241,11 @@ public class Clt_Controller { //Controller is a Singleton
                     for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
                         if (tb == new_toggle && tb.getText() != "N") {
                             createWishedCard(tb.getText());
+                            logger.info(tb.getText()+ "Text from button");
                         }else{
+                            if(tb == new_toggle && tb.getText() == "N")
                             processSkipButton(); // if no card is wished just skip to next player
+                            logger.info("Card wish N");
                         }
 
                     }
