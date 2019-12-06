@@ -100,8 +100,8 @@ public class Srv_Table {
 
        logger.info(playersAtTable+ " Amount of players when checking bomb status");
         for(int i = 0; i < playersAtTable.size(); i++){
-            logger.info(Srv_HandType.isBombOnHand(playersAtTable.get(i).getHandCards()) + " has a bomb" +playersAtTable.get(i));
-            if(Srv_HandType.isBombOnHand(playersAtTable.get(i).getHandCards())){
+            logger.info(Srv_HandType.isBombOnHand(playersAtTable.get(i).getHandCards(), this.lastPlayedCards) + " has a bomb" +playersAtTable.get(i));
+            if(Srv_HandType.isBombOnHand(playersAtTable.get(i).getHandCards(), this.getLastPlayedCards())){
                 logger.info(playersAtTable.get(i).toString() + " has a bomb");
                 playersAtTable.get(i).setHasBomb(true);
 

@@ -528,7 +528,8 @@ public enum Srv_HandType {
         return foundFullHouse;
     }
 
-    public static boolean isBombOnHand(ArrayList<Card> cards) { //@author thomas
+
+    public static boolean isBombOnHand(ArrayList<Card> cards, ArrayList<Card> lastPlayedCards) { //@author thomas
         //method it is  written to check the whole deck from the players for bombs
         //create all the variables we need for the checks
         boolean found = false;
@@ -540,6 +541,9 @@ public enum Srv_HandType {
         List<Card> starsCards = new ArrayList<>();
         List<Card> swordsCards = new ArrayList<>();
         ArrayList<List<Card>> listOfSuitLists = new ArrayList<>();
+        ArrayList<Card> fourOfAKindCards = new ArrayList<>();
+        ArrayList<Card> straightFlushCards = new ArrayList<>();
+
 
         ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
         Collections.sort(clonedCards);
@@ -556,18 +560,21 @@ public enum Srv_HandType {
             for(int i = 0; i < clonedCards.size() && counterA != 4 ;i++){
                 logger.info("i: "+i );
                 counterA = 0;
+                fourOfAKindCards.clear();
                 for(int j = clonedCards.size()-1 ; j >= 0 && counterA != 4 ; j--){// check if four cards are of the same ordinal --> if not reset the counter and check the next
                     logger.info(" j:"+j);
                     if(clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() ){
                         logger.info("4 of the same Rank to check ");
                         logger.info("Cards: " +clonedCards.get(i)+ " "+ clonedCards.get(j)+" is it true? "+ (clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() && counterA != 4 ) );
+                        //add the cards to a list to check if they still can be played when other player bombed before
+                        fourOfAKindCards.add(clonedCards.get(i)); fourOfAKindCards.add(clonedCards.get(j));
                         counterA ++;
                         logger.info("counterA: "+counterA);
                     }
                 }
             }
             logger.info("counterA: "+counterA);
-            if(counterA == 4){ // if the counter reaches 4 there set found to true
+            if(counterA == 4 && evaluateHand(fourOfAKindCards, lastPlayedCards)){ // if the counter reaches 4 there set found to true
                 found = true;
             }else{
                 //Case if the player has a minimum of 5 in a straight with the same suit
@@ -588,17 +595,20 @@ public enum Srv_HandType {
                     for (int k = 0; k < listOfSuitLists.size() && counterB!=5; k++){
                         counterB = 1;
                         countCards=0;
+                        straightFlushCards.clear();
 
                         for(int u = countCards; u < listOfSuitLists.get(k).size()-1 && counterB!=5; u++) {
 
                             if ((listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 == listOfSuitLists.get(k).get(u+1).getRank().ordinal())) {
+                                //add the cards to the list to check them if they could still be played when the player before also played a bomb
+                                straightFlushCards.add(listOfSuitLists.get(k).get(u));  straightFlushCards.add(listOfSuitLists.get(k).get(u+1));
                                 logger.info(listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 + " == "+ listOfSuitLists.get(k).get(u+1).getRank().ordinal());
                                 logger.info(counterB+"counter B");
                                 counterB++;
                             }
                         }
                     }
-                    if(counterB >= 5){
+                    if(counterB >= 5 && evaluateHand(lastPlayedCards, straightFlushCards)){
                         logger.info("bomb on hands -> Straight flush " + counterB);
                         found = true;
                     }
@@ -644,6 +654,7 @@ public enum Srv_HandType {
             }
         return found;
         }
+
 
 
     public static boolean includesSpecialCards(ArrayList<Card> cards) { //specialCard played? @author Sandro, Thomas

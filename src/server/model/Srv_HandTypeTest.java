@@ -374,11 +374,11 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     }
 
     @Test // This is the test method for isStreet in HandType.
-    public void testIsBombOnHand() {
+   /* public void testIsBombOnHand() {
         for (ArrayList<Card> hand : bombHandsPlayerFullHand) {
-            assertTrue(Srv_HandType.isBombOnHand(hand));
+            assertTrue(Srv_HandType.isBombOnHand(hand,));
         }
-    }
+    }*/
 
     /**
      * Make an ArrayList of hands from an array of string-arrays
