@@ -559,6 +559,8 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
+                this.endTask = true; //countdown task should be ended, if someone played a card
+                this.countdownThread.interrupt(); //countdown thread should be ended, if someone played a card
             break;
 
             case "string/score": //@author Fabio
