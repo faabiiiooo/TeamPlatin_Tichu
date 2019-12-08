@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -28,19 +29,13 @@ public class Clt_TableView extends BorderPane {
     private final TableCards tableCards;
     private final VBox bottom;
     private final HBox top;
-    private final Label countdown;
     private final Label tichuLabel;
-
-
-
-
+    private ProgressIndicator countdownDisplay;
 
     private final Stage primaryStage;
 
     private final ServiceLocator sl = ServiceLocator.getServiceLocator();
     private final Translator translator = sl.getTranslator();
-
-
 
     public Clt_TableView(Stage primaryStage){
 
@@ -54,7 +49,7 @@ public class Clt_TableView extends BorderPane {
         this.pointView = new PointView();
         this.bottom = new VBox();
         this.top = new HBox();
-        this.countdown = new Label();
+        this.countdownDisplay = new ProgressIndicator(0);
         this.controls = new ControlView();
         this.tableCards = new TableCards();
         this.tichuLabel=new Label();
@@ -62,7 +57,7 @@ public class Clt_TableView extends BorderPane {
         this.setLeft(rivalLeft);
         this.setRight(rivalRight);
 
-        top.getChildren().addAll(rivalTop, pointView);
+        top.getChildren().addAll(countdownDisplay, rivalTop, pointView);
         this.setTop(top);
 
 
@@ -85,10 +80,6 @@ public class Clt_TableView extends BorderPane {
         this.primaryStage.setTitle(translator.getString("program.name"));
         this.primaryStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.primaryStage.show();
-
-
-
-
     }
 
     public StackPane getRoot() {
@@ -119,7 +110,6 @@ public class Clt_TableView extends BorderPane {
         return controls;
     }
 
-
     public VBox getBottomBox() {
         return bottom;
     }
@@ -128,8 +118,8 @@ public class Clt_TableView extends BorderPane {
         return top;
     }
 
-    public Label getCountdown() {
-        return countdown;
+    public ProgressIndicator getCountdownDisplay() {
+        return this.countdownDisplay;
     }
 
     public Label getTichuLabel() {

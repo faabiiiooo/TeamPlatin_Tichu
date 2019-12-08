@@ -9,6 +9,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -28,6 +29,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Observable;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 //Controller for Client Part of the Game
@@ -42,6 +44,9 @@ public class Clt_Controller { //Controller is a Singleton
     private Logger logger = serviceLocator.getLogger();
     private final Translator translator = serviceLocator.getTranslator();
     private final Clt_DataStore dataStore = Clt_DataStore.getDataStore();
+    private Thread countdownThread;
+    private Countdown countdown;
+    private boolean endTask = false; //for countdown-task
 
 
 
@@ -136,6 +141,8 @@ public class Clt_Controller { //Controller is a Singleton
 
         if(successful){ //does Server accept the skip?
             logger.info("Skip-String sent to Server.");
+            this.endTask = true; //countdown task should be ended, if someone skipped
+            this.countdownThread.interrupt(); //countdown thread should be ended, if someone skipped
         } else { //else give feedback to the user
             logger.info("Skipping not possible");
         }
@@ -222,7 +229,8 @@ public class Clt_Controller { //Controller is a Singleton
                    Message msgFinished = new Message("string/finished","");
                    model.sendMessage(msgFinished);
                }
-
+               this.endTask = true; //countdown task should be ended, if someone played a card
+               this.countdownThread.interrupt(); //countdown thread should be ended, if someone played a card
            } else { //else give feedback to the user
                logger.info(this.toString()+"Cards declined by server. player has to replay.");
                this.displayWrongCardsStatus();
@@ -307,7 +315,6 @@ public class Clt_Controller { //Controller is a Singleton
              });
             }
         }
-
     }
 
 
@@ -473,6 +480,38 @@ public class Clt_Controller { //Controller is a Singleton
                     dataStore.isActiveProperty().set(isActive);
                     changeRiceLabel();
                 });
+
+                this.endTask = false;
+                if (isActive) { //If player is active start new thread with a countdown-task
+
+                    Task task = new Task() { //New Task for countdown
+                        @Override
+                        protected Object call() throws Exception {
+                            Clt_Controller.this.countdown = new Countdown();
+                            Clt_Controller.this.countdown.startCountdown();
+                            Platform.runLater(() -> {
+                                view.getTableView().getCountdownDisplay().setProgress(Clt_Controller.this.countdown.getCurrent()); //TODO: Find Solution for Countdown-Display
+                            });
+                            Clt_Controller.this.countdown.join(); //Task waits for countdown
+                            processSkipButton(); //If countdown is finish -> skip automatically
+                            return null;
+                        }
+                    };
+
+                    this.countdownThread = new Thread(task) { //new Thread for the task
+                        public void run() {
+                            task.run();
+                            while (!endTask) { //wait until task is finish or player played a card or skipped
+                            }
+                            Clt_Controller.this.countdown.interrupt();
+                            Clt_Controller.this.countdown.stopCountdown();
+                            task.cancel(true); //Cancel task if countdown is finish
+                            logger.info("Countdown_Expired");
+                        }
+                    };
+
+                    this.countdownThread.start();
+                }
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
