@@ -4,6 +4,9 @@ import client.model.Clt_DataStore;
 import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
+import javafx.animation.Animation;
+import javafx.animation.PathTransition;
+import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -19,9 +22,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import resources.*;
 
 import javax.tools.Tool;
@@ -98,12 +103,11 @@ public class Clt_Controller { //Controller is a Singleton
     private void wishedCardInView(Card wishedCard) { //set the Label with the wished card.
         if(wishedCard != null){
         Platform.runLater(() -> {
-        view.getTableView().getControls().getWishedCardLabel().setText(translator.getString("label.wishedCard") + " "+ wishedCard.getRank());
+            view.getTableView().getStatusView().getWished().setText(translator.getString("label.wishedCard") + " "+ wishedCard.getRank());
         });
         }else{
             Platform.runLater(() -> {
-                view.getTableView().getControls().getWishedCardLabel().setText("");
-
+                view.getTableView().getStatusView().getWished().setText("");
 
 
             });
@@ -123,6 +127,7 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Player has no Bomb - disable the button");
                 Platform.runLater(() -> {
                     view.getTableView().getControls().getBombButton().setDisable(true);
+
                 });
 
             }
@@ -159,8 +164,18 @@ public class Clt_Controller { //Controller is a Singleton
             logger.info("Tichu-String sent to Server");
             Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
+            Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
+
+            ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+            st.setByX(1.5f);
+            st.setByY(1.5f);
+            st.setCycleCount(2);
+            st.setAutoReverse(true);
+            st.play();
         } else {
             logger.info("saying tichu is not possible");
+
+
         }
 
 
@@ -205,7 +220,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getStartScreen().close();
         view.getStartScreen().getMp().stop();// Stops the sound
         view.startTableView();
-       // view.startDcView();
+        //view.startDcView();
         this.setTableViewOnAction();
 
     }
@@ -215,7 +230,7 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Fabio
     public void processPlayButton(){
         boolean successful = false;
-        Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
+        //Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         Collections.sort(cardsToSend);
@@ -225,6 +240,7 @@ public class Clt_Controller { //Controller is a Singleton
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
                cardsToSend.clear(); //remove the played cards out of the list
+               view.getTableView().getControls().getCallTichuButton().setDisable(true);
                if(dataStore.getHandCards().size() == 0){
                    Message msgFinished = new Message("string/finished","");
                    model.sendMessage(msgFinished);
@@ -249,11 +265,14 @@ public class Clt_Controller { //Controller is a Singleton
                     for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
                         if (tb == new_toggle && tb.getText() != "N") {
                             createWishedCard(tb.getText());
+                            //view.getTableView().getStatusView().getWished().setText(tb.getText());
                             logger.info(tb.getText()+ "Text from button");
                         }else{
                             if(tb == new_toggle && tb.getText() == "N")
                             processSkipButton(); // if no card is wished just skip to next player
                             logger.info("Card wish N");
+
+                            //view.getTableView().getStatusView().getWished().setText(tb.getText());
                         }
 
                     }
@@ -364,23 +383,40 @@ public class Clt_Controller { //Controller is a Singleton
         logger.info("clicked on card");
         CardView source = (CardView) e.getSource();
         if(!source.isSelected()){
-            source.getStyleClass().add("card-selected");
             Card c = source.getCard();
             model.getDataStore().addCardsToSend(c);
             source.setSelected(true);
+
+            PathElement p1=new MoveTo(52,83);// Start Position
+            PathElement p2=new LineTo(52,55);//End Position
+
+            Path path=new Path();
+            path.getElements().addAll(p1,p2);
+
+            PathTransition move=new PathTransition(Duration.millis(150),path,source);
+            move.play();
+
         } else {
             if(source.isSelected()){
-                source.getStyleClass().remove("card-selected");
                 Card c = source.getCard();
                 model.getDataStore().getCardsToSend().remove(c);
                 source.setSelected(false);
+
+                PathElement p3=new MoveTo(52,55);
+                PathElement p4=new LineTo(52,83);
+
+                Path path=new Path();
+                path.getElements().addAll(p3,p4);
+
+                PathTransition move=new PathTransition(Duration.millis(150),path,source);
+                move.play();
             }
         }
     }
 
-    private void createWishedCard(String rank){
+    private void createWishedCard(String rank) {
         boolean successful = false;
-        logger.info("going to create new card: "+rank);
+        logger.info("going to create new card: " + rank);
         int value = 0;
         Suit suit = Suit.Swords;
         Rank wishRank = null;
@@ -559,6 +595,7 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
+
             break;
 
             case "string/score": //@author Fabio
@@ -609,9 +646,22 @@ public class Clt_Controller { //Controller is a Singleton
                 playerID != dataStore.getPlayerTop().getPLAYER_ID()){
                     Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("model.player")+" "+
                             playerID + " " + translator.getString("player.sting.notification")));
+                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+                    st.setByX(1.5f);
+                    st.setByY(1.5f);
+                    st.setCycleCount(2);
+                    st.setAutoReverse(true);
+                    st.play();
+
+                    Platform.runLater(()->view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+
+                    playerID +" " +translator.getString("player.sting.notification")));
                 } else {
+
                     Platform.runLater(() -> view.getTableView().getTichuLabel().setText(translator.getString("model.player")+ " "+  playerID + " " +
                             translator.getString("player.sting.notification")));
+                    //Set a stinged Text in the status Label
+                    Platform.runLater(()->view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+
+                            playerID +" " +translator.getString("player.sting.notification")));
                 }
                 this.changeRiceLabel();
                 break;
@@ -619,6 +669,12 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "connection-lost": //stop game. A client got disconnected.
                 logger.warning("Client is going to stop because of connection loss");
+
+                view.startDcView();
+
+
+
+
 
 
                 break;

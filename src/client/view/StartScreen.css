@@ -1,11 +1,16 @@
 
 /* Default styles like font, fontsize, etc*/
-*{
-
+* {
 }
+    #backGif{
+
+        -fx-background-image: url(../../resources/images/backgrounds/scroll.png);
+        -fx-background-size: cover;
+    }
 
 #start-pane{
-    -fx-background-image: url(../../resources/images/backgrounds/scroll.png);
+    -fx-background-image: url(../../resources/images/backgrounds/fire.gif);
+
     -fx-background-size: cover;
 }
 
