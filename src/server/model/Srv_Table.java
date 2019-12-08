@@ -97,11 +97,18 @@ public class Srv_Table {
     //@author thomas
     //check player hands on bombs
     public void checkPlayerHandsOnBomb(){
-        for(Player p : playersAtTable){
-            if(Srv_HandType.isBombOnHand(p.getHandCards())){
-                logger.info(p.toString() + " has a bomb");
-                p.setHasBomb(true);
+
+       logger.info(playersAtTable+ " Amount of players when checking bomb status");
+        for(int i = 0; i < playersAtTable.size(); i++){
+            logger.info(Srv_HandType.isBombOnHand(playersAtTable.get(i).getHandCards(), this.lastPlayedCards) + " has a bomb" +playersAtTable.get(i));
+            if(Srv_HandType.isBombOnHand(playersAtTable.get(i).getHandCards(), this.getLastPlayedCards())){
+                logger.info(playersAtTable.get(i).toString() + " has a bomb");
+                playersAtTable.get(i).setHasBomb(true);
+
+            }else{
+                playersAtTable.get(i).setHasBomb(false);
             }
+
         }
     }
 
@@ -117,6 +124,7 @@ public class Srv_Table {
         }
 
        if(playersThatSkipped.size() >= playersInGame){
+           logger.info(playersThatSkipped.size()+ "size from skipped list");
             int playerIDOfLastPlayedCards = lastPlayedCards.get(0).getPlayerId();
             for(Player p : playersAtTable){
                 if(p.getPLAYER_ID() == playerIDOfLastPlayedCards){

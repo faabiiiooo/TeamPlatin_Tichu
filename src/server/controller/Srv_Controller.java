@@ -137,6 +137,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             logger.info("Case Wished Cards: Sending success Response");
                             msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                             standardProcessPlayCards(msgIn.getSenderID(), cardsToPlay);
+                        }else {
+                            msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                         }
                     }else {
                         msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
@@ -150,13 +152,15 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
             //@author thomas
             case "card/wishCard": //setting the wished card from the player
                 model.getGame().getTable().setMahJongWishCard((Card)msgIn.getObjects().get(0));
-                logger.info("RECEIVED WISHED CARD FROM CLIENT: "+ ((Card)msgIn.getObjects().get(0)));
+//                logger.info("RECEIVED WISHED CARD FROM CLIENT: "+ ((Card)msgIn.getObjects().get(0)));
                 msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                 logger.info("Wished card has been set on Table : " + model.getGame().getTable().getMahJongWishCard().getRank());
-                model.getGame().getTable().mahJongPlayed();
                 model.getGame().getTable().skip();
+                model.getGame().getTable().mahJongPlayed();
+               // model.getGame().getTable().skip();
                 model.sendActivePlayerToClients();
                 model.sendPlayersToClients();
+                model.sendWishedCardToClients();
                 break;
 
             case "string/finished": //@author Fabio
@@ -236,7 +240,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         int msgId = msgIn.getSenderID();
                         logger.info(msgId+" msgId bomb active change");
                         logger.info("Bomb: active status change");
-                        if(model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog ) {//can only bomb if there wasnt played a dog
+                        if(model.getGame().getTable().getLastPlayedCards().size() == 0 ||model.getGame().getTable().getLastPlayedCards().get(0).getRank() != Rank.Dog ) {//can only bomb if there wasnt played a dog
 
 
                             for (Player p : model.getGame().getTable().getPlayersAtTable()) {

@@ -56,17 +56,20 @@ public class Srv_Model {
         this.sendActivePlayerToClients();
 
     }
-
+    //@author thomas
     public void sendHasBombStatusToClients(){
         ArrayList<Player> players = game.getTable().getPlayersAtTable();
         Srv_Server server = serviceLocator.getServer();
+        logger.info("sending hasBombStatus to Clients");
 
         for(int i = 0; i < players.size(); i++){
             Message msgOut = null;
             int clientThreadID = server.searchIndexOfClientThreadByID(players.get(i).getClientID());
             try {
+
                 msgOut = new Message("boolean/hasBomb", players.get(i).isHasBomb());
                 server.getClientThreads().get(clientThreadID).send(msgOut);
+                logger.info("active Bomb status? "+players.get(i)+ " " +players.get(i).isHasBomb());
                 logger.info("Sent bomb status to Client!");
             } catch (Exception e){
                 logger.severe("cant send status to client!");
@@ -87,6 +90,16 @@ public class Srv_Model {
         } catch (Exception e){
             logger.severe("cant send message to client");
         }
+
+    }
+
+    //@author thomas
+    public void sendWishedCardToClients(){
+        Message msgOutMJWish = null;
+        Srv_Server server = serviceLocator.getServer();
+            msgOutMJWish = new Message("card/wishedCard", game.getTable().getMahJongWishCard()); //send info to open clients wish view because of played MJ
+            server.broadcast(msgOutMJWish);
+            logger.info("Sent wished card to Client ");
 
     }
 
@@ -311,8 +324,9 @@ public class Srv_Model {
             this.sendPlayerHandsToClient();
             this.sendNextPlayerIdToClients();
             this.sendPlayersToClients();
-
+            this.sendWishedCardToClients();
             this.startNewRound();
+
 
 
         } else {

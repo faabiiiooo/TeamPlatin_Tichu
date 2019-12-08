@@ -2,6 +2,7 @@ package client.model;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
@@ -28,6 +29,8 @@ public class Clt_DataStore {
     private final SimpleIntegerProperty cardsPlayerLeft = new SimpleIntegerProperty();
 
     private final SimpleIntegerProperty teamScore = new SimpleIntegerProperty(0);
+
+    private SimpleObjectProperty wishedCard = new SimpleObjectProperty();
 
 
     private int nextPlayerID;
@@ -190,5 +193,13 @@ public class Clt_DataStore {
 
     public void setTeamScore(int teamScore) {
         this.teamScore.set(teamScore);
+    }
+
+    public Object getWishedCard() { return wishedCard.get(); }
+
+    public SimpleObjectProperty wishedCardProperty() { return wishedCard; }
+
+    public void setWishedCard(Object wishedCard) {
+        this.wishedCard.set(wishedCard);
     }
 }

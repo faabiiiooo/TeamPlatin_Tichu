@@ -53,7 +53,7 @@ public class RivalPaneT extends HBox {
         imgViewRice.setPreserveRatio(true);
 
 
-        gridPane.setPadding(new Insets(0,450,0,660));
+        gridPane.setPadding(new Insets(0,450,0,460));
         gridPane.add(avatarLabel,0,1);
         gridPane.add(stack,0,2);
         gridPane.add(rice,2,1);

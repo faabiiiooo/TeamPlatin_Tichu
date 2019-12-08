@@ -18,6 +18,10 @@ import javafx.stage.Stage;
 import resources.ServiceLocator;
 import resources.Translator;
 
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 
 import java.util.ArrayList;
 
@@ -51,7 +55,7 @@ public class Clt_CardWishView extends HBox {
         mLabel.getStyleClass().add("mahjong");
         imgViewMahjong.setPreserveRatio(true);
 
-
+        //Loop to create Buttons from 2 to 10
         for(int i=2;i<11;i++) {
             ToggleButton b = new ToggleButton(Integer.toString(i));
             cardButtons.add(b);
@@ -75,6 +79,7 @@ public class Clt_CardWishView extends HBox {
             mLabel.setPadding(new Insets(10,10,10,10));
             this.setId("hBox");
             wishStage.setResizable(false);
+            //Fenster darf man nicht schliessen können
 
             scene.getStylesheets().add(getClass().getResource("CardWishView.css").toExternalForm());
             this.wishStage.setTitle(translator.getString("program.name"));

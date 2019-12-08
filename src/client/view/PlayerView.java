@@ -31,6 +31,7 @@ public class PlayerView extends HBox {
         this.rice.getStyleClass().add("rice");
         imgViewRice.setPreserveRatio(true);
 
+
     }
 
     public void addCards(CardView cardView){

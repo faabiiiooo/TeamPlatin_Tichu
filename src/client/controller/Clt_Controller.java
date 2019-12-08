@@ -4,11 +4,15 @@ import client.model.Clt_DataStore;
 import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
+import javafx.animation.Animation;
+import javafx.animation.PathTransition;
+import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,9 +22,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import resources.*;
 
 import javax.tools.Tool;
@@ -28,6 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Observable;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 //Controller for Client Part of the Game
@@ -42,6 +49,9 @@ public class Clt_Controller { //Controller is a Singleton
     private Logger logger = serviceLocator.getLogger();
     private final Translator translator = serviceLocator.getTranslator();
     private final Clt_DataStore dataStore = Clt_DataStore.getDataStore();
+    private Thread countdownThread;
+    private Countdown countdown;
+    private boolean endTask = false; //for countdown-task
 
 
 
@@ -85,9 +95,26 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().hasBombProperty().addListener( (observable, oldValue, newValue) -> updateBombButton(newValue));
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
         model.getDataStore().isWantsCardWish().addListener( (observable, oldValue, newValue) -> wishedCardfromMahjong(newValue));
+        dataStore.wishedCardProperty().addListener((observable, oldValue, newValue) -> wishedCardInView((Card)newValue));
 
 
     }
+    //@author Thomas
+    private void wishedCardInView(Card wishedCard) { //set the Label with the wished card.
+        if(wishedCard != null){
+        Platform.runLater(() -> {
+            view.getTableView().getStatusView().getWished().setText(translator.getString("label.wishedCard") + " "+ wishedCard.getRank());
+        });
+        }else{
+            Platform.runLater(() -> {
+                view.getTableView().getStatusView().getWished().setText("");
+
+
+            });
+        }
+
+    }
+
     //@author Thomas Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
         if(newValue){
@@ -100,6 +127,7 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Player has no Bomb - disable the button");
                 Platform.runLater(() -> {
                     view.getTableView().getControls().getBombButton().setDisable(true);
+
                 });
 
             }
@@ -118,6 +146,8 @@ public class Clt_Controller { //Controller is a Singleton
 
         if(successful){ //does Server accept the skip?
             logger.info("Skip-String sent to Server.");
+            this.endTask = true; //countdown task should be ended, if someone skipped
+            this.countdownThread.interrupt(); //countdown thread should be ended, if someone skipped
         } else { //else give feedback to the user
             logger.info("Skipping not possible");
         }
@@ -134,8 +164,18 @@ public class Clt_Controller { //Controller is a Singleton
             logger.info("Tichu-String sent to Server");
             Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
+            Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
+
+            ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+            st.setByX(1.5f);
+            st.setByY(1.5f);
+            st.setCycleCount(2);
+            st.setAutoReverse(true);
+            st.play();
         } else {
             logger.info("saying tichu is not possible");
+
+
         }
 
 
@@ -180,7 +220,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getStartScreen().close();
         view.getStartScreen().getMp().stop();// Stops the sound
         view.startTableView();
-       // view.startDcView();
+        //view.startDcView();
         this.setTableViewOnAction();
 
     }
@@ -190,7 +230,7 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Fabio
     public void processPlayButton(){
         boolean successful = false;
-        Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
+        //Platform.runLater(()->view.getTableView().getTichuLabel().setText(""));
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         Collections.sort(cardsToSend);
@@ -200,11 +240,13 @@ public class Clt_Controller { //Controller is a Singleton
                logger.info("Cards sent to Server.");
                dataStore.getHandCards().removeAll(cardsToSend);
                cardsToSend.clear(); //remove the played cards out of the list
+               view.getTableView().getControls().getCallTichuButton().setDisable(true);
                if(dataStore.getHandCards().size() == 0){
                    Message msgFinished = new Message("string/finished","");
                    model.sendMessage(msgFinished);
                }
-
+               this.endTask = true; //countdown task should be ended, if someone played a card
+               this.countdownThread.interrupt(); //countdown thread should be ended, if someone played a card
            } else { //else give feedback to the user
                logger.info(this.toString()+"Cards declined by server. player has to replay.");
                this.displayWrongCardsStatus();
@@ -221,8 +263,16 @@ public class Clt_Controller { //Controller is a Singleton
             Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
                 if (view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
                     for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
-                        if (tb == new_toggle) {
+                        if (tb == new_toggle && tb.getText() != "N") {
                             createWishedCard(tb.getText());
+                            //view.getTableView().getStatusView().getWished().setText(tb.getText());
+                            logger.info(tb.getText()+ "Text from button");
+                        }else{
+                            if(tb == new_toggle && tb.getText() == "N")
+                            processSkipButton(); // if no card is wished just skip to next player
+                            logger.info("Card wish N");
+
+                            //view.getTableView().getStatusView().getWished().setText(tb.getText());
                         }
 
                     }
@@ -284,7 +334,6 @@ public class Clt_Controller { //Controller is a Singleton
              });
             }
         }
-
     }
 
 
@@ -334,16 +383,33 @@ public class Clt_Controller { //Controller is a Singleton
         logger.info("clicked on card");
         CardView source = (CardView) e.getSource();
         if(!source.isSelected()){
-            source.getStyleClass().add("card-selected");
             Card c = source.getCard();
             model.getDataStore().addCardsToSend(c);
             source.setSelected(true);
+
+            PathElement p1=new MoveTo(52,83);// Start Position
+            PathElement p2=new LineTo(52,55);//End Position
+
+            Path path=new Path();
+            path.getElements().addAll(p1,p2);
+
+            PathTransition move=new PathTransition(Duration.millis(150),path,source);
+            move.play();
+
         } else {
             if(source.isSelected()){
-                source.getStyleClass().remove("card-selected");
                 Card c = source.getCard();
                 model.getDataStore().getCardsToSend().remove(c);
                 source.setSelected(false);
+
+                PathElement p3=new MoveTo(52,55);
+                PathElement p4=new LineTo(52,83);
+
+                Path path=new Path();
+                path.getElements().addAll(p3,p4);
+
+                PathTransition move=new PathTransition(Duration.millis(150),path,source);
+                move.play();
             }
         }
     }
@@ -394,9 +460,6 @@ public class Clt_Controller { //Controller is a Singleton
             case "A":
                 wishRank = Rank.Ace;
                 break;
-            case "N":
-                wishRank = null;
-                break;
         }
 
         Card wishedCard = new Card(suit, wishRank, value);
@@ -442,12 +505,49 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Added TableCards to table");
                 break;
 
+            case "card/wishedCard": //set the wished card on clients to set info in gui
+                logger.info("Wished card has been set in data store");
+                dataStore.setWishedCard((Card) msgIn.getObjects().get(0));
+                break;
+
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
                 Platform.runLater(() -> {
                     dataStore.isActiveProperty().set(isActive);
                     changeRiceLabel();
                 });
+
+                this.endTask = false;
+                if (isActive) { //If player is active start new thread with a countdown-task
+
+                    Task task = new Task() { //New Task for countdown
+                        @Override
+                        protected Object call() throws Exception {
+                            Clt_Controller.this.countdown = new Countdown();
+                            Clt_Controller.this.countdown.startCountdown();
+                            Platform.runLater(() -> {
+                                view.getTableView().getCountdownDisplay().setProgress(Clt_Controller.this.countdown.getCurrent()); //TODO: Find Solution for Countdown-Display
+                            });
+                            Clt_Controller.this.countdown.join(); //Task waits for countdown
+                            processSkipButton(); //If countdown is finish -> skip automatically
+                            return null;
+                        }
+                    };
+
+                    this.countdownThread = new Thread(task) { //new Thread for the task
+                        public void run() {
+                            task.run();
+                            while (!endTask) { //wait until task is finish or player played a card or skipped
+                            }
+                            Clt_Controller.this.countdown.interrupt();
+                            Clt_Controller.this.countdown.stopCountdown();
+                            task.cancel(true); //Cancel task if countdown is finish
+                            logger.info("Countdown_Expired");
+                        }
+                    };
+
+                    this.countdownThread.start();
+                }
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
 
@@ -495,6 +595,8 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
+                this.endTask = true; //countdown task should be ended, if someone played a card
+                this.countdownThread.interrupt(); //countdown thread should be ended, if someone played a card
             break;
 
             case "string/score": //@author Fabio
@@ -545,9 +647,22 @@ public class Clt_Controller { //Controller is a Singleton
                 playerID != dataStore.getPlayerTop().getPLAYER_ID()){
                     Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("model.player")+" "+
                             playerID + " " + translator.getString("player.sting.notification")));
+                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+                    st.setByX(1.5f);
+                    st.setByY(1.5f);
+                    st.setCycleCount(2);
+                    st.setAutoReverse(true);
+                    st.play();
+
+                    Platform.runLater(()->view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+
+                    playerID +" " +translator.getString("player.sting.notification")));
                 } else {
+
                     Platform.runLater(() -> view.getTableView().getTichuLabel().setText(translator.getString("model.player")+ " "+  playerID + " " +
                             translator.getString("player.sting.notification")));
+                    //Set a stinged Text in the status Label
+                    Platform.runLater(()->view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+
+                            playerID +" " +translator.getString("player.sting.notification")));
                 }
                 this.changeRiceLabel();
                 break;
@@ -555,6 +670,12 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "connection-lost": //stop game. A client got disconnected.
                 logger.warning("Client is going to stop because of connection loss");
+
+                view.startDcView();
+
+
+
+
 
 
                 break;
