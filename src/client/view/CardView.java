@@ -1,6 +1,7 @@
 package client.view;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +25,7 @@ public class CardView extends Label { //@author Sandro -> Reference: Poker_Proje
         setCard(card);
         this.card = card;
         this.selected.set(false);
+
     }
 
     public void setCard(Card card) { //set the right image of the card

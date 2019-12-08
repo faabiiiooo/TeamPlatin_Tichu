@@ -7,10 +7,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 
@@ -24,6 +21,10 @@ public class RivalPaneL extends VBox {
     private GridPane gridPane=new GridPane();
     private StackPane stack = new StackPane();
     private Text cardAmountText = new Text();
+
+
+
+
 
     public RivalPaneL(){
 
@@ -54,12 +55,14 @@ public class RivalPaneL extends VBox {
         this.rice.getStyleClass().add("rice");
         imgViewRice.setPreserveRatio(true);
 
+
         this.setPadding(new Insets(0,80,0,30));
         gridPane.add(rice,1,2);
         gridPane.add(avatarLabel,1,3);
 
         gridPane.add(stack,2,3);
         gridPane.setHgap(5);
+
         this.getChildren().add(gridPane);
         //this.setId("left");
     }

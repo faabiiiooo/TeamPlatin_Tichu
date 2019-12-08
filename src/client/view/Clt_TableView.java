@@ -29,13 +29,21 @@ public class Clt_TableView extends BorderPane {
     private final TableCards tableCards;
     private final VBox bottom;
     private final HBox top;
+    private final Label countdown;
     private final Label tichuLabel;
+    private final StatusView statusView;
     private ProgressIndicator countdownDisplay;
+
+
+
+
 
     private final Stage primaryStage;
 
     private final ServiceLocator sl = ServiceLocator.getServiceLocator();
     private final Translator translator = sl.getTranslator();
+
+
 
     public Clt_TableView(Stage primaryStage){
 
@@ -49,15 +57,17 @@ public class Clt_TableView extends BorderPane {
         this.pointView = new PointView();
         this.bottom = new VBox();
         this.top = new HBox();
-        this.countdownDisplay = new ProgressIndicator(0);
+        this.countdown = new Label();
         this.controls = new ControlView();
         this.tableCards = new TableCards();
         this.tichuLabel=new Label();
+        this.statusView=new StatusView();
+        this.countdownDisplay=new ProgressIndicator(0);
 
         this.setLeft(rivalLeft);
         this.setRight(rivalRight);
 
-        top.getChildren().addAll(countdownDisplay, rivalTop, pointView);
+        top.getChildren().addAll(countdownDisplay,statusView,rivalTop, pointView);
         this.setTop(top);
 
 
@@ -65,7 +75,8 @@ public class Clt_TableView extends BorderPane {
         this.setBottom(bottom);
 
         this.setCenter(tableCards);
-
+        this.tichuLabel.setPadding(new Insets(40,0,0,0));
+        this.tichuLabel.setId("tichuLabel");
 
         root.getChildren().addAll(this);
         root.getChildren().add(tichuLabel);
@@ -80,6 +91,10 @@ public class Clt_TableView extends BorderPane {
         this.primaryStage.setTitle(translator.getString("program.name"));
         this.primaryStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.primaryStage.show();
+
+
+
+
     }
 
     public StackPane getRoot() {
@@ -110,6 +125,7 @@ public class Clt_TableView extends BorderPane {
         return controls;
     }
 
+
     public VBox getBottomBox() {
         return bottom;
     }
@@ -118,8 +134,13 @@ public class Clt_TableView extends BorderPane {
         return top;
     }
 
-    public ProgressIndicator getCountdownDisplay() {
-        return this.countdownDisplay;
+    public Label getCountdown() {
+        return countdown;
+    }
+
+
+    public StatusView getStatusView() {
+        return statusView;
     }
 
     public Label getTichuLabel() {
@@ -128,5 +149,13 @@ public class Clt_TableView extends BorderPane {
 
     public TableCards getTableCards() {
         return tableCards;
+    }
+
+    public ProgressIndicator getCountdownDisplay() {
+        return countdownDisplay;
+    }
+
+    public void setCountdownDisplay(ProgressIndicator countdownDisplay) {
+        this.countdownDisplay = countdownDisplay;
     }
 }

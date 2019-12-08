@@ -87,7 +87,8 @@ public class Clt_StartScreen extends StackPane {
         this.startStage.setResizable(false);
         this.startStage.setWidth(875);
         this.startStage.setHeight(502);
-        //this.startStage.initStyle(StageStyle.TRANSPARENT);
+        //this.startStage.initStyle(StageStyle.TRANSPARENT);d
+        gridPane.setId("backGif");
         this.setId("start-pane");
         this.startStage.setTitle(translator.getString("program.name"));
         this.startStage.getIcons().add(new Image("./resources/images/logo.jpg"));
