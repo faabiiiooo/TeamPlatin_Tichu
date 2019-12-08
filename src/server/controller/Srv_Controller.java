@@ -137,6 +137,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             logger.info("Case Wished Cards: Sending success Response");
                             msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                             standardProcessPlayCards(msgIn.getSenderID(), cardsToPlay);
+                        }else {
+                            msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                         }
                     }else {
                         msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
