@@ -3,10 +3,13 @@ package client.view;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import resources.ServiceLocator;
 import resources.Translator;
+
+import javax.swing.*;
 
 //@author Pascal
 public class StatusView extends GridPane {
@@ -24,10 +27,15 @@ public class StatusView extends GridPane {
         this.sp3=new ScrollPane();
         this.wishHeader = new Label(translator.getString("label.wishHeader"));
         this.wished = new Label();
-        this.tichuHeader = new Label("Tichu       ");
+        this.tichuHeader = new Label("Tichu");
         this.tichuYesOrNo = new Label();
         this.statusHeader=new Label("Status");
         this.status=new Label();
+
+        this.wishHeader.setId("statusTitle");
+        this.tichuHeader.setId("statusTitle");
+        this.statusHeader.setId("statusTitle");
+
 
         this.setVgap(5);
 
@@ -44,20 +52,25 @@ public class StatusView extends GridPane {
 
         sp1.setContent(wished);
         sp1.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        sp1.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        sp1.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp1.setStyle("-fx-background-color:transparent");
 
         sp2.setContent(status);
         sp2.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        sp2.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        sp2.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp2.setStyle("-fx-background-color:transparent");
 
         sp3.setContent(tichuYesOrNo);
         sp3.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        sp3.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        sp3.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp3.setStyle("-fx-background-color:transparent");
+
 
         this.getStyleClass().add("wishView");
         this.tichuYesOrNo.setId("status");
         this.status.setId("status");
         this.wished.setId("status");
+
 
 
     }
