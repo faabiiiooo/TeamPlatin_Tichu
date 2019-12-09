@@ -77,4 +77,9 @@ public class Countdown extends Thread { //@author Sandro Countdown is a Thread
     public double getCurrent() { // Double Value to change ProgressIndicator
         return (this.currentProperty.get()*0.0333333); // (1 divide with 30 seconds) * current
     }
+
+
+    public SimpleIntegerProperty currentCountdownProperty() {
+        return currentProperty;
+    }
 }

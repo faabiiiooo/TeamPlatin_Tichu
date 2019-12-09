@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -17,8 +18,8 @@ public class ControlView extends HBox {
     private final Translator translator = serviceLocator.getTranslator();
 
     private Button playButton, passButton, bombButton, callTichuButton;
-    private Label countDownLabel;
-    private Label wishedCardLabel;
+    private ProgressIndicator countDown = new ProgressIndicator(0);
+
 
 
 
@@ -28,8 +29,6 @@ public class ControlView extends HBox {
         this.passButton = new Button(translator.getString("button.pass"));
         this.bombButton = new Button(translator.getString("button.bomb"));
         this.callTichuButton = new Button(translator.getString("button.callTichu"));
-        this.countDownLabel = new Label("");
-        this.wishedCardLabel = new Label();
 
 
         playButton.getStyleClass().add("controlButtons");
@@ -39,15 +38,17 @@ public class ControlView extends HBox {
 
         Region region1 = new Region();
         this.setHgrow(region1, Priority.ALWAYS);
+        countDown.setPrefHeight(65);
+        countDown.setPrefWidth(65);
 
         this.setId("bottom");
-        this.getChildren().addAll(countDownLabel,playButton,passButton,bombButton,callTichuButton, region1, wishedCardLabel);
+        this.getChildren().addAll(playButton,passButton,bombButton,callTichuButton, region1, countDown );
         //Bomb button is always disabled at the beginning, only able it when player got a bomb
         this.bombButton.setDisable(true);
         //disable buttons until player is active
         this.playButton.setDisable(true);
         this.passButton.setDisable(true);
-        this.wishedCardLabel.setAlignment(Pos.TOP_RIGHT);
+
 
 
     }
@@ -68,11 +69,5 @@ public class ControlView extends HBox {
         return callTichuButton;
     }
 
-    public Label getCountDownLabel() {
-        return countDownLabel;
-    }
-
-    public Label getWishedCardLabel() { return wishedCardLabel; }
-
-    public void setWishedCardLabel(Label wishedCardLabel) { this.wishedCardLabel = wishedCardLabel; }
+    public ProgressIndicator getCountDown() { return countDown; }
 }

@@ -4,9 +4,7 @@ import client.model.Clt_DataStore;
 import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
-import javafx.animation.Animation;
-import javafx.animation.PathTransition;
-import javafx.animation.ScaleTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -162,16 +160,10 @@ public class Clt_Controller { //Controller is a Singleton
         successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
         if (successful) {
             logger.info("Tichu-String sent to Server");
-            Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
+            //Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
-            Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
+            //Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
 
-            ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
-            st.setByX(1.5f);
-            st.setByY(1.5f);
-            st.setCycleCount(2);
-            st.setAutoReverse(true);
-            st.play();
         } else {
             logger.info("saying tichu is not possible");
 
@@ -255,7 +247,7 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     }
-
+    //@author Thomas
     private void wishedCardfromMahjong(boolean newValue){
         logger.info(this.toString()+ "I get Info to show Wish view");
         if(newValue) {
@@ -414,9 +406,9 @@ public class Clt_Controller { //Controller is a Singleton
         }
     }
 
-    private void createWishedCard(String rank) {
+    private void createWishedCard(String rank){
         boolean successful = false;
-        logger.info("going to create new card: " + rank);
+        logger.info("going to create new card: "+rank);
         int value = 0;
         Suit suit = Suit.Swords;
         Rank wishRank = null;
@@ -484,6 +476,43 @@ public class Clt_Controller { //Controller is a Singleton
                     handCards.add((Card) o);
                 }
                 Platform.runLater(() -> {
+                    if(handCards.size() == 8){
+                        Task task = new Task() { //New Task for countdown
+                            @Override
+                            protected Object call() throws Exception {
+                                Clt_Controller.this.countdown = new Countdown();
+                                Clt_Controller.this.countdown.startCountdown();
+
+                                Platform.runLater(() -> {
+                                    view.getTableView().getControls().getCountDown().progressProperty().bind(Clt_Controller.this.countdown.currentCountdownProperty().divide(30.0));
+                                    Timeline timeline = new Timeline(
+                                            new KeyFrame(Duration.ZERO, new KeyValue(Clt_Controller.this.countdown.currentCountdownProperty(), 0))
+                                    );
+                                    timeline.setCycleCount(1);
+                                    timeline.play();
+
+
+                                });
+                                Clt_Controller.this.countdown.join(); //Task waits for countdown
+                                return null;
+                            }
+                        };
+
+                        this.countdownThread = new Thread(task) { //new Thread for the task
+                            public void run() {
+                                task.run();
+                                while (!endTask) { //wait until task is finish or player played a card or skipped
+                                }
+                                Clt_Controller.this.countdown.interrupt();
+                                Clt_Controller.this.countdown.stopCountdown();
+                                task.cancel(true); //Cancel task if countdown is finish
+                                logger.info("Countdown_Expired");
+                            }
+                        };
+
+                        this.countdownThread.start();
+                    }
+
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
                     Collections.sort(dataStore.getHandCards());
@@ -525,8 +554,16 @@ public class Clt_Controller { //Controller is a Singleton
                         protected Object call() throws Exception {
                             Clt_Controller.this.countdown = new Countdown();
                             Clt_Controller.this.countdown.startCountdown();
+
                             Platform.runLater(() -> {
-                                view.getTableView().getCountdownDisplay().setProgress(Clt_Controller.this.countdown.getCurrent()); //TODO: Find Solution for Countdown-Display
+                                view.getTableView().getControls().getCountDown().progressProperty().bind(Clt_Controller.this.countdown.currentCountdownProperty().divide(30.0));
+                                Timeline timeline = new Timeline(
+                                        new KeyFrame(Duration.ZERO, new KeyValue(Clt_Controller.this.countdown.currentCountdownProperty(), 0))
+                                );
+                                timeline.setCycleCount(1);
+                                timeline.play();
+
+
                             });
                             Clt_Controller.this.countdown.join(); //Task waits for countdown
                             processSkipButton(); //If countdown is finish -> skip automatically
@@ -595,7 +632,8 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
-
+                this.endTask = true; //countdown task should be ended, if someone played a card
+                this.countdownThread.interrupt(); //countdown thread should be ended, if someone played a card
             break;
 
             case "string/score": //@author Fabio
@@ -664,18 +702,63 @@ public class Clt_Controller { //Controller is a Singleton
                             playerID +" " +translator.getString("player.sting.notification")));
                 }
                 this.changeRiceLabel();
+
+               if(this.countdownThread.isAlive()){
+                    endTask = true; //countdown task should be ended, if someone played a card
+                    this.countdownThread.interrupt();
+                }
+
+                break;
+
+            case "string/oSaidSmallTichu":
+                int pID = (int) msgIn.getObjects().get(0);
+                Platform.runLater(() -> {
+                    view.getTableView().getTichuLabel().setText(translator.getString("model.player").toUpperCase() + pID +
+                            " "+ translator.getString("player.said.smalltichu").toUpperCase());
+
+                    String tempTichuText = view.getTableView().getStatusView().getTichuYesOrNo().getText();
+                    tempTichuText += "\n" + translator.getString("model.player").toUpperCase() + pID +
+                            " "+ translator.getString("player.said.smalltichu").toUpperCase();
+
+                    view.getTableView().getStatusView().getTichuYesOrNo().setText(tempTichuText);
+
+                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+                    st.setByX(1.5f);
+                    st.setByY(1.5f);
+                    st.setCycleCount(2);
+                    st.setAutoReverse(true);
+                    st.play();
+                });
+                break;
+
+            case "string/oSaidBigTichu":
+                int plID = (int) msgIn.getObjects().get(0);
+                Platform.runLater(() -> {
+                    view.getTableView().getTichuLabel().setText(translator.getString("model.player").toUpperCase() + plID +
+                            " "+ translator.getString("player.said.bigtichu").toUpperCase());
+
+                    String tempTichuText = view.getTableView().getStatusView().getTichuYesOrNo().getText();
+                    tempTichuText += "\n" + translator.getString("model.player").toUpperCase() + plID +
+                            " "+ translator.getString("player.said.bigtichu").toUpperCase();
+
+                    view.getTableView().getStatusView().getTichuYesOrNo().setText(tempTichuText);
+
+                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+                    st.setByX(1.5f);
+                    st.setByY(1.5f);
+                    st.setCycleCount(2);
+                    st.setAutoReverse(true);
+                    st.play();
+                });
                 break;
 
 
             case "connection-lost": //stop game. A client got disconnected.
                 logger.warning("Client is going to stop because of connection loss");
 
-                view.startDcView();
-
-
-
-
-
+                Platform.runLater(() -> {
+                    view.startDcView();
+                });
 
                 break;
 
