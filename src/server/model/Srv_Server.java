@@ -94,7 +94,7 @@ public class Srv_Server extends Thread {
         this.broadcast(stopMsg);
     }
 
-    private boolean searchDisconnectedClients(){ //finds closed Client threads, and removes them from server
+    public boolean searchDisconnectedClients(){ //finds closed Client threads, and removes them from server
 
        ArrayList<Srv_ClientThread> stoppedClients = new ArrayList<>(); //temporary List for inactive Clients
        boolean stoppedClientFound = false;

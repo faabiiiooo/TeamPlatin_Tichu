@@ -665,18 +665,21 @@ public class Clt_Controller { //Controller is a Singleton
                             playerID +" " +translator.getString("player.sting.notification")));
                 }
                 this.changeRiceLabel();
+
+               if(this.countdownThread.isAlive()){
+                    endTask = true; //countdown task should be ended, if someone played a card
+                    this.countdownThread.interrupt();
+                }
+
                 break;
 
 
             case "connection-lost": //stop game. A client got disconnected.
                 logger.warning("Client is going to stop because of connection loss");
 
-                view.startDcView();
-
-
-
-
-
+                Platform.runLater(() -> {
+                    view.startDcView();
+                });
 
                 break;
 
