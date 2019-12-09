@@ -162,16 +162,10 @@ public class Clt_Controller { //Controller is a Singleton
         successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
         if (successful) {
             logger.info("Tichu-String sent to Server");
-            Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
+            //Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
-            Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
+            //Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
 
-            ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
-            st.setByX(1.5f);
-            st.setByY(1.5f);
-            st.setCycleCount(2);
-            st.setAutoReverse(true);
-            st.play();
         } else {
             logger.info("saying tichu is not possible");
 
@@ -671,6 +665,48 @@ public class Clt_Controller { //Controller is a Singleton
                     this.countdownThread.interrupt();
                 }
 
+                break;
+
+            case "string/oSaidSmallTichu":
+                int pID = (int) msgIn.getObjects().get(0);
+                Platform.runLater(() -> {
+                    view.getTableView().getTichuLabel().setText(translator.getString("model.player").toUpperCase() + pID +
+                            " "+ translator.getString("player.said.smalltichu").toUpperCase());
+
+                    String tempTichuText = view.getTableView().getStatusView().getTichuYesOrNo().getText();
+                    tempTichuText += "\n" + translator.getString("model.player").toUpperCase() + pID +
+                            " "+ translator.getString("player.said.smalltichu").toUpperCase();
+
+                    view.getTableView().getStatusView().getTichuYesOrNo().setText(tempTichuText);
+
+                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+                    st.setByX(1.5f);
+                    st.setByY(1.5f);
+                    st.setCycleCount(2);
+                    st.setAutoReverse(true);
+                    st.play();
+                });
+                break;
+
+            case "string/oSaidBigTichu":
+                int plID = (int) msgIn.getObjects().get(0);
+                Platform.runLater(() -> {
+                    view.getTableView().getTichuLabel().setText(translator.getString("model.player").toUpperCase() + plID +
+                            " "+ translator.getString("player.said.bigtichu").toUpperCase());
+
+                    String tempTichuText = view.getTableView().getStatusView().getTichuYesOrNo().getText();
+                    tempTichuText += "\n" + translator.getString("model.player").toUpperCase() + plID +
+                            " "+ translator.getString("player.said.bigtichu").toUpperCase();
+
+                    view.getTableView().getStatusView().getTichuYesOrNo().setText(tempTichuText);
+
+                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+                    st.setByX(1.5f);
+                    st.setByY(1.5f);
+                    st.setCycleCount(2);
+                    st.setAutoReverse(true);
+                    st.play();
+                });
                 break;
 
 
