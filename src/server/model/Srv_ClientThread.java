@@ -66,6 +66,7 @@ public class Srv_ClientThread extends Thread {
 
         } catch (Exception e){
             logger.severe("Failed to recieve Message");
+            server.searchDisconnectedClients();
             server.clientDisconnected();
             e.printStackTrace();
         }

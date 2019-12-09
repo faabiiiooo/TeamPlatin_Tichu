@@ -48,7 +48,7 @@ public class Srv_Model {
         while (countdown.isAlive()){
         }
         game.getTable().dealRestOfCards();
-        game.getRounds().get(0).checkBeginner(game.getTeams());
+        game.getRounds().get(game.getRounds().size()-1).checkBeginner(game.getTeams());
         this.sendPlayerHandsToClient();
         logger.info("dealed all cards");
         this.sendPlayersToClients();
