@@ -26,7 +26,14 @@
     -fx-font-size: 50px;
 
 }
+.progress-indicator .percentage {
+    -fx-fill:null;
+}
 
+.progress-indicator {
+    -fx-progress-color: red;
+    -fx-padding: 0 0 -16 0;
+}
 
 .avatar{
     -fx-min-width: 50;

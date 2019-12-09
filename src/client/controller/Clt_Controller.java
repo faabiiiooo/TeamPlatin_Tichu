@@ -4,9 +4,7 @@ import client.model.Clt_DataStore;
 import client.model.Clt_Model;
 import client.view.CardView;
 import client.view.Clt_View;
-import javafx.animation.Animation;
-import javafx.animation.PathTransition;
-import javafx.animation.ScaleTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -255,7 +253,7 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     }
-
+    //@author Thomas
     private void wishedCardfromMahjong(boolean newValue){
         logger.info(this.toString()+ "I get Info to show Wish view");
         if(newValue) {
@@ -484,6 +482,43 @@ public class Clt_Controller { //Controller is a Singleton
                     handCards.add((Card) o);
                 }
                 Platform.runLater(() -> {
+                    if(handCards.size() == 8){
+                        Task task = new Task() { //New Task for countdown
+                            @Override
+                            protected Object call() throws Exception {
+                                Clt_Controller.this.countdown = new Countdown();
+                                Clt_Controller.this.countdown.startCountdown();
+
+                                Platform.runLater(() -> {
+                                    view.getTableView().getControls().getCountDown().progressProperty().bind(Clt_Controller.this.countdown.currentCountdownProperty().divide(30.0));
+                                    Timeline timeline = new Timeline(
+                                            new KeyFrame(Duration.ZERO, new KeyValue(Clt_Controller.this.countdown.currentCountdownProperty(), 0))
+                                    );
+                                    timeline.setCycleCount(1);
+                                    timeline.play();
+
+
+                                });
+                                Clt_Controller.this.countdown.join(); //Task waits for countdown
+                                return null;
+                            }
+                        };
+
+                        this.countdownThread = new Thread(task) { //new Thread for the task
+                            public void run() {
+                                task.run();
+                                while (!endTask) { //wait until task is finish or player played a card or skipped
+                                }
+                                Clt_Controller.this.countdown.interrupt();
+                                Clt_Controller.this.countdown.stopCountdown();
+                                task.cancel(true); //Cancel task if countdown is finish
+                                logger.info("Countdown_Expired");
+                            }
+                        };
+
+                        this.countdownThread.start();
+                    }
+
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
                     Collections.sort(dataStore.getHandCards());
@@ -525,8 +560,16 @@ public class Clt_Controller { //Controller is a Singleton
                         protected Object call() throws Exception {
                             Clt_Controller.this.countdown = new Countdown();
                             Clt_Controller.this.countdown.startCountdown();
+
                             Platform.runLater(() -> {
-                                view.getTableView().getCountdownDisplay().setProgress(Clt_Controller.this.countdown.getCurrent()); //TODO: Find Solution for Countdown-Display
+                                view.getTableView().getControls().getCountDown().progressProperty().bind(Clt_Controller.this.countdown.currentCountdownProperty().divide(30.0));
+                                Timeline timeline = new Timeline(
+                                        new KeyFrame(Duration.ZERO, new KeyValue(Clt_Controller.this.countdown.currentCountdownProperty(), 0))
+                                );
+                                timeline.setCycleCount(1);
+                                timeline.play();
+
+
                             });
                             Clt_Controller.this.countdown.join(); //Task waits for countdown
                             processSkipButton(); //If countdown is finish -> skip automatically

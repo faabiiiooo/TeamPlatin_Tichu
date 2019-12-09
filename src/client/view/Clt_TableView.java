@@ -32,7 +32,6 @@ public class Clt_TableView extends BorderPane {
     private final Label countdown;
     private final Label tichuLabel;
     private final StatusView statusView;
-    private ProgressIndicator countdownDisplay;
 
 
 
@@ -62,12 +61,11 @@ public class Clt_TableView extends BorderPane {
         this.tableCards = new TableCards();
         this.tichuLabel=new Label();
         this.statusView=new StatusView();
-        this.countdownDisplay=new ProgressIndicator(0);
 
         this.setLeft(rivalLeft);
         this.setRight(rivalRight);
 
-        top.getChildren().addAll(countdownDisplay,statusView,rivalTop, pointView);
+        top.getChildren().addAll(statusView,rivalTop, pointView);
         this.setTop(top);
 
 
@@ -151,11 +149,4 @@ public class Clt_TableView extends BorderPane {
         return tableCards;
     }
 
-    public ProgressIndicator getCountdownDisplay() {
-        return countdownDisplay;
-    }
-
-    public void setCountdownDisplay(ProgressIndicator countdownDisplay) {
-        this.countdownDisplay = countdownDisplay;
-    }
 }
