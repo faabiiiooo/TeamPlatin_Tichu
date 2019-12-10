@@ -95,6 +95,9 @@ public class Clt_Controller { //Controller is a Singleton
         model.getDataStore().isWantsCardWish().addListener( (observable, oldValue, newValue) -> wishedCardfromMahjong(newValue));
         dataStore.wishedCardProperty().addListener((observable, oldValue, newValue) -> wishedCardInView((Card)newValue));
 
+        view.getTableView().getPointView().getScoreTeam1().textProperty().bind(dataStore.teamScoreT1Property());
+        view.getTableView().getPointView().getScoreTeam2().textProperty().bind(dataStore.teamScoreT2Property());
+
 
     }
     //@author Thomas
@@ -472,7 +475,7 @@ public class Clt_Controller { //Controller is a Singleton
                     handCards.add((Card) o);
                 }
                 Platform.runLater(() -> {
-                    if(handCards.size() == 8){
+                    /*if(handCards.size() == 8){
                         Task task = new Task() { //New Task for countdown
                             @Override
                             protected Object call() throws Exception {
@@ -507,7 +510,7 @@ public class Clt_Controller { //Controller is a Singleton
                         };
 
                         this.countdownThread.start();
-                    }
+                    }*/
 
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
@@ -596,10 +599,24 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "string/score": //@author Fabio
 
-                int teamScore = (int) msgIn.getObjects().get(0);
-                Platform.runLater(() -> {
-                    dataStore.setTeamScore(teamScore);
-                });
+                ArrayList<String> teamScores = new ArrayList<>();
+                for(Object o : msgIn.getObjects()){
+                    teamScores.add((String) o);
+                }
+
+                for(String s : teamScores){
+                    String[] parts = s.split(";");
+                    if(parts[0].equals("1")){
+                        Platform.runLater(() -> {
+                            dataStore.setTeamScoreT1(parts[1]);
+                        });
+                    }
+                    if(parts[0].equals("2")){
+                        Platform.runLater(() -> {
+                            dataStore.setTeamScoreT2(parts[1]);
+                        });
+                    }
+                }
 
                 break;
 

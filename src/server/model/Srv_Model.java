@@ -371,19 +371,16 @@ public class Srv_Model {
     private void sendScoresToClients(){
         Srv_Server server = serviceLocator.getServer();
 
-        for(int i = 0; i < game.getTeams().size(); i++){ //get each Team
-            int teamScore = game.getTeams().get(i).getGameScore();
-            for(int j = 0; j < game.getTeams().get(i).getMembers().size(); j++){
-                Message msgOut = null;
-                int clientThreadIndex = server.searchIndexOfClientThreadByID(game.getTeams().get(i).getMembers().get(i).getPLAYER_ID());
+        ArrayList<String> teamScores = new ArrayList<>();
 
-                try{
-                    msgOut = new Message("string/score", teamScore);
-                    server.getClientThreads().get(clientThreadIndex).send(msgOut);
-                    logger.info("Sen't GameScore to client");
-                } catch (Exception e){
-                    logger.severe("Can't send GameScore to client");
-                }
+        for(int i = 0; i < game.getTeams().size(); i++){ //get each Team
+            teamScores.add(game.getTeams().get(i).getTEAM_ID() +";"+game.getTeams().get(i).getGameScore());
+            try{
+                Message msgOut = new Message("string/score", teamScores.toArray());
+                server.broadcast(msgOut);
+                logger.info("Sen't GameScore to client");
+            } catch (Exception e){
+                logger.severe("Can't send GameScore to client");
             }
         }
 

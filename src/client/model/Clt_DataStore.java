@@ -3,6 +3,7 @@ package client.model;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
@@ -29,7 +30,8 @@ public class Clt_DataStore {
     private final SimpleIntegerProperty cardsPlayerRight = new SimpleIntegerProperty();
     private final SimpleIntegerProperty cardsPlayerLeft = new SimpleIntegerProperty();
 
-    private final SimpleIntegerProperty teamScore = new SimpleIntegerProperty(0);
+    private final SimpleStringProperty teamScoreT1 = new SimpleStringProperty("Team 1: 0");
+    private final SimpleStringProperty teamScoreT2 = new SimpleStringProperty("Team 2: 0");
 
     private SimpleObjectProperty wishedCard = new SimpleObjectProperty();
 
@@ -185,16 +187,28 @@ public class Clt_DataStore {
 
     public void setWantsCardWish(boolean wishedCardIsSet) { this.wantsCardWish.set(wishedCardIsSet); }
 
-    public int getTeamScore() {
-        return teamScore.get();
+    public String getTeamScoreT1() {
+        return teamScoreT1.get();
     }
 
-    public SimpleIntegerProperty teamScoreProperty() {
-        return teamScore;
+    public SimpleStringProperty teamScoreT1Property() {
+        return teamScoreT1;
     }
 
-    public void setTeamScore(int teamScore) {
-        this.teamScore.set(teamScore);
+    public void setTeamScoreT1(String teamScore) {
+        this.teamScoreT1.set("Team 1: " + teamScore);
+    }
+
+    public String getTeamScoreT2() {
+        return teamScoreT2.get();
+    }
+
+    public SimpleStringProperty teamScoreT2Property() {
+        return teamScoreT2;
+    }
+
+    public void setTeamScoreT2(String teamScoreT2) {
+        this.teamScoreT2.set("Team 2: "+teamScoreT2);
     }
 
     public Object getWishedCard() { return wishedCard.get(); }
