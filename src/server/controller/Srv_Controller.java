@@ -265,6 +265,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             model.sendActivePlayerToClients();
                             model.sendPlayersToClients();
                         }
+
                       /*  if (ok){
                             for(Player p : model.getGame().getTable().getPlayersAtTable()){
                                 logger.info("Active status players: "+ p.getPLAYER_ID()+" Status "+p.isActive());

@@ -24,9 +24,9 @@ public class Clt_StartScreen extends StackPane {
     private final Translator translator = serviceLocator.getTranslator();
 
     private final CheckBox beServer;
-    private final TextField txtIpAddress,txtName;
+    private final TextField txtIpAddress;
     private final ToggleButton toggleDE, toggleEN;
-    private final Label lblLanguage, lblBeServer, lblIpAddress, lblTitle,lblName;
+    private final Label lblLanguage, lblBeServer, lblIpAddress, lblTitle;
     private final Button btnNext;
     private final Stage startStage;
     private Media media;
@@ -39,7 +39,7 @@ public class Clt_StartScreen extends StackPane {
 
         this.beServer = new CheckBox();
         this.txtIpAddress = new TextField();
-        this.txtName=new TextField();
+
 
         this.btnNext = new Button(translator.getString("button.next"));
 
@@ -48,7 +48,7 @@ public class Clt_StartScreen extends StackPane {
         this.lblLanguage = new Label(translator.getString("label.language"));
         this.lblBeServer = new Label(translator.getString("label.beServer"));
         this.lblIpAddress = new Label(translator.getString("label.serverIp"));
-        this.lblName=new Label("Name");
+
 
 
         ToggleGroup language = new ToggleGroup();
@@ -67,8 +67,7 @@ public class Clt_StartScreen extends StackPane {
         gridPane.add(lblIpAddress,0,2);
         gridPane.add(txtIpAddress,1,2);
 
-        gridPane.add(lblName,0,3);
-        gridPane.add(txtName,1,3);
+
 
         gridPane.add(btnNext,0,4);
 
@@ -82,7 +81,7 @@ public class Clt_StartScreen extends StackPane {
         StackPane.setAlignment(gridPane,Pos.CENTER);
 
         gridPane.setHgap(15);
-        gridPane.setVgap(10);
+        gridPane.setVgap(20);
 
 
         Scene startScene = new Scene(this);

@@ -53,12 +53,13 @@ public class Clt_Controller { //Controller is a Singleton
 
 
 
-    public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model){
+    public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model) {
         this.primaryStage = primaryStage;
         this.view = view;
         this.model = model;
         serviceLocator.setCltController(this);
         this.setStartScreenOnAction();
+
 
 
     }
@@ -79,6 +80,7 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
     private void setTableViewOnAction() {
+
         view.getTableView().getControls().getPlayButton().setOnAction(e -> processPlayButton());
         view.getTableView().getControls().getCallTichuButton().setOnAction(e -> processTichuButton());
         view.getTableView().getControls().getPassButton().setOnAction(e -> processSkipButton());
@@ -94,6 +96,7 @@ public class Clt_Controller { //Controller is a Singleton
         view.getTableView().getControls().getBombButton().setOnAction(e -> processBombButton());
         model.getDataStore().isWantsCardWish().addListener( (observable, oldValue, newValue) -> wishedCardfromMahjong(newValue));
         dataStore.wishedCardProperty().addListener((observable, oldValue, newValue) -> wishedCardInView((Card)newValue));
+
 
 
     }
@@ -130,8 +133,8 @@ public class Clt_Controller { //Controller is a Singleton
 
             }
         }
-    }
 
+    }
 
 
 
@@ -200,6 +203,9 @@ public class Clt_Controller { //Controller is a Singleton
             model.startClient("127.0.0.1");
 
 
+
+
+
         } else { //else just start client with connection to entered ip address
             String serverIp = view.getStartScreen().getTxtIpAddress().getText();
             model.startClient(serverIp);
@@ -212,7 +218,6 @@ public class Clt_Controller { //Controller is a Singleton
         view.getStartScreen().close();
         view.getStartScreen().getMp().stop();// Stops the sound
         view.startTableView();
-        //view.startDcView();
         this.setTableViewOnAction();
 
     }
@@ -367,6 +372,7 @@ public class Clt_Controller { //Controller is a Singleton
             view.getTableView().getRivalLeft().getRiceLabel().setVisible(false);
             view.getTableView().getRivalRight().getRiceLabel().setVisible(false);
             view.getTableView().getPlayerView().getRice().setVisible(true);
+
         }
     }
 
@@ -474,9 +480,12 @@ public class Clt_Controller { //Controller is a Singleton
                 ArrayList<Card> handCards = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     handCards.add((Card) o);
+
                 }
                 Platform.runLater(() -> {
+
                     if(handCards.size() == 8){
+
                         Task task = new Task() { //New Task for countdown
                             @Override
                             protected Object call() throws Exception {
@@ -490,6 +499,7 @@ public class Clt_Controller { //Controller is a Singleton
                                     );
                                     timeline.setCycleCount(1);
                                     timeline.play();
+
 
 
                                 });
@@ -539,12 +549,25 @@ public class Clt_Controller { //Controller is a Singleton
                 dataStore.setWishedCard((Card) msgIn.getObjects().get(0));
                 break;
 
+
+
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
+
+
+
                 Platform.runLater(() -> {
+
+
                     dataStore.isActiveProperty().set(isActive);
                     changeRiceLabel();
+
+
+
                 });
+
+
+
 
                 this.endTask = false;
                 if (isActive) { //If player is active start new thread with a countdown-task
@@ -595,14 +618,18 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "player": //recieveing all other players from server -> it is necessary that nextPlayerID is already set
+
+
                 ArrayList<Player> otherPlayers = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){ //generate player objects
                     otherPlayers.add((Player) o);
+
                 }
 
                 for(int i = 0; i < otherPlayers.size(); i++){
                     if(dataStore.getNextPlayerID() == otherPlayers.get(i).getPLAYER_ID()){ //set the nextPlayer as playerRight
                         dataStore.setPlayerRight(otherPlayers.get(i));
+
                     }
                 }
                 otherPlayers.remove(dataStore.getPlayerRight()); //remove already set player from list
@@ -617,7 +644,10 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
-
+                //Set the Player ID
+                Platform.runLater(()->view.getTableView().getRivalTop().gettName().setText(translator.getString("model.player")+" "+dataStore.getPlayerTop().getPLAYER_ID()+""));
+                Platform.runLater(()->view.getTableView().getRivalRight().getrName().setText(translator.getString("model.player")+" "+dataStore.getPlayerRight().getPLAYER_ID()+""));
+                Platform.runLater(()->view.getTableView().getRivalLeft().getlName().setText(translator.getString("model.player")+" "+dataStore.getPlayerLeft().getPLAYER_ID()+""));
                 Platform.runLater(() -> {
                     changeRiceLabel();
                 });
@@ -629,6 +659,8 @@ public class Clt_Controller { //Controller is a Singleton
                 int nextPlayerID = (int) msgIn.getObjects().get(0); //getting nextPlayer from Server
                 dataStore.setNextPlayerID(nextPlayerID);
                 break;
+
+
 
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
@@ -644,6 +676,9 @@ public class Clt_Controller { //Controller is a Singleton
                 });
 
                 break;
+
+
+
 
             case "string":
                 logger.info("Recieved a String, going to evaluate it.");

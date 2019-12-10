@@ -54,16 +54,19 @@ public class StatusView extends GridPane {
         sp1.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp1.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         sp1.setStyle("-fx-background-color:transparent");
+        sp1.vvalueProperty().bind(wished.heightProperty());
 
         sp2.setContent(status);
         sp2.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp2.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         sp2.setStyle("-fx-background-color:transparent");
+        sp2.vvalueProperty().bind(status.heightProperty());
 
         sp3.setContent(tichuYesOrNo);
         sp3.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp3.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         sp3.setStyle("-fx-background-color:transparent");
+        sp3.vvalueProperty().bind(tichuYesOrNo.heightProperty());
 
 
         this.getStyleClass().add("wishView");
