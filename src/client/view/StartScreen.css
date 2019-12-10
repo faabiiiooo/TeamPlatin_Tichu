@@ -30,7 +30,7 @@
 }
 
 .button:pressed {
-    -fx-background-color: green;
+    -fx-background-color: rgba(168, 1, 9, 0.84);;
 }
 
 .toggle-button {

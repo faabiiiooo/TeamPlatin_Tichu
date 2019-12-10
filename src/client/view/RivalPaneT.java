@@ -1,5 +1,7 @@
 package client.view;
 
+import client.model.Clt_DataStore;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -9,10 +11,11 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
+import resources.Player;
 
 public class RivalPaneT extends HBox {
 
-    private Label avatarLabel, cardsLabel, rice;
+    private Label avatarLabel, cardsLabel, rice,tName;
     private Image team2 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team1_avatar.png"));
     private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
     private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
@@ -52,13 +55,17 @@ public class RivalPaneT extends HBox {
         this.rice.setId("riceTop");
         imgViewRice.setPreserveRatio(true);
 
-
-        gridPane.setPadding(new Insets(0,450,0,460));
+        this.tName=new Label();
+       // this.tName.setPadding(new Insets(5));
+        this.tName.setId("playerIdTop");
+        gridPane.setPadding(new Insets(0,450,0,350));
         gridPane.add(avatarLabel,0,1);
-        gridPane.add(stack,0,2);
+        gridPane.add(tName,0,2);
+        gridPane.add(stack,0,3);
         gridPane.add(rice,2,1);
         gridPane.setHgap(8);
         this.getChildren().add(gridPane);
+
 
     }
 
@@ -71,4 +78,10 @@ public class RivalPaneT extends HBox {
     public Label getRiceLabel() {
         return this.rice;
     }
+
+    public Label gettName() {
+        return tName;
+    }
 }
+
+

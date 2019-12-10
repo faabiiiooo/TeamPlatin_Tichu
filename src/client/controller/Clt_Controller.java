@@ -53,7 +53,7 @@ public class Clt_Controller { //Controller is a Singleton
 
 
 
-    public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model){
+    public Clt_Controller(Stage primaryStage, Clt_View view, Clt_Model model) {
         this.primaryStage = primaryStage;
         this.view = view;
         this.model = model;
@@ -130,8 +130,8 @@ public class Clt_Controller { //Controller is a Singleton
 
             }
         }
-    }
 
+    }
 
 
 
@@ -210,7 +210,6 @@ public class Clt_Controller { //Controller is a Singleton
         view.getStartScreen().close();
         view.getStartScreen().getMp().stop();// Stops the sound
         view.startTableView();
-        //view.startDcView();
         this.setTableViewOnAction();
 
     }
@@ -575,7 +574,10 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
-
+                //Set the Player ID
+                Platform.runLater(()->view.getTableView().getRivalTop().gettName().setText(translator.getString("model.player")+" "+dataStore.getPlayerTop().getPLAYER_ID()+""));
+                Platform.runLater(()->view.getTableView().getRivalRight().getrName().setText(translator.getString("model.player")+" "+dataStore.getPlayerRight().getPLAYER_ID()+""));
+                Platform.runLater(()->view.getTableView().getRivalLeft().getlName().setText(translator.getString("model.player")+" "+dataStore.getPlayerLeft().getPLAYER_ID()+""));
                 Platform.runLater(() -> {
                     changeRiceLabel();
                 });

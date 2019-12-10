@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 
 public class RivalPaneL extends VBox {
 
-    private Label avatarLabel, cardsLabel, rice;
+    private Label avatarLabel, cardsLabel, rice,lName;
     private Image team1 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team2_avatar.png"));
     private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
     private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
@@ -46,7 +46,9 @@ public class RivalPaneL extends VBox {
         stack.getChildren().addAll(cardsLabel,cardAmountText);
         cardAmountText.setId("cardAmount");
 
-
+        this.lName=new Label();
+        this.lName.setPadding(new Insets(2));
+        this.lName.setId("playerIdLR");
         this.rice = new Label();
         ImageView imgViewRice = new ImageView(riceImg);
         this.rice.setGraphic(imgViewRice);
@@ -56,12 +58,15 @@ public class RivalPaneL extends VBox {
         imgViewRice.setPreserveRatio(true);
 
 
-        this.setPadding(new Insets(0,80,0,30));
-        gridPane.add(rice,1,2);
+        this.setPadding(new Insets(2,80,0,30));
+        gridPane.setPadding(new Insets(0,0,25,0));
+        gridPane.add(rice,1,1);
         gridPane.add(avatarLabel,1,3);
+        gridPane.add(lName,1,2);
 
         gridPane.add(stack,2,3);
         gridPane.setHgap(5);
+        //gridPane.setVgap(5);
 
         this.getChildren().add(gridPane);
         //this.setId("left");
@@ -74,5 +79,9 @@ public class RivalPaneL extends VBox {
 
     public Label getRiceLabel() {
         return this.rice;
+    }
+
+    public Label getlName() {
+        return lName;
     }
 }

@@ -40,6 +40,7 @@ public class Clt_StartScreen extends StackPane {
         this.beServer = new CheckBox();
         this.txtIpAddress = new TextField();
 
+
         this.btnNext = new Button(translator.getString("button.next"));
 
         this.lblTitle = new Label(translator.getString("label.welcome")+"\n\n");
@@ -47,6 +48,7 @@ public class Clt_StartScreen extends StackPane {
         this.lblLanguage = new Label(translator.getString("label.language"));
         this.lblBeServer = new Label(translator.getString("label.beServer"));
         this.lblIpAddress = new Label(translator.getString("label.serverIp"));
+
 
 
         ToggleGroup language = new ToggleGroup();
@@ -65,7 +67,9 @@ public class Clt_StartScreen extends StackPane {
         gridPane.add(lblIpAddress,0,2);
         gridPane.add(txtIpAddress,1,2);
 
-        gridPane.add(btnNext,0,3);
+
+
+        gridPane.add(btnNext,0,4);
 
 
         gridPane.add(lblLanguage,2,1);

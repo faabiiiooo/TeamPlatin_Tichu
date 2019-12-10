@@ -24,6 +24,7 @@ public class Clt_DataStore {
     private Player playerRight;
     private Player playerLeft;
 
+
     private final SimpleIntegerProperty cardsPlayerTop = new SimpleIntegerProperty();
     private final SimpleIntegerProperty cardsPlayerRight = new SimpleIntegerProperty();
     private final SimpleIntegerProperty cardsPlayerLeft = new SimpleIntegerProperty();
@@ -34,6 +35,7 @@ public class Clt_DataStore {
 
 
     private int nextPlayerID;
+
 
     private final ObservableList<Card> tableCards = FXCollections.observableArrayList();
     private SimpleBooleanProperty wantsCardWish = new SimpleBooleanProperty(false);
@@ -202,4 +204,6 @@ public class Clt_DataStore {
     public void setWishedCard(Object wishedCard) {
         this.wishedCard.set(wishedCard);
     }
+
+
 }
