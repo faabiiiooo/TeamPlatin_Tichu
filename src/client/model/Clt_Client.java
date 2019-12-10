@@ -58,6 +58,7 @@ public class Clt_Client extends Thread{
 
         } catch (Exception e){
             logger.severe("Error while retrieving messages");
+            e.printStackTrace();
         }
 
 

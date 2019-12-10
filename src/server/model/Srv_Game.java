@@ -73,6 +73,11 @@ public class Srv_Game { //@author Thomas
                 winningRangeTeams.add(teams.get(1));
             }
         }
+
+        if(winningRangeTeams.isEmpty()){
+            return null;
+        }
+
         /* check the size of the list to see if there is a team who reached 1000 points or more.
         for the case that both teams reached the 1000 points, sort the list and get the team with more points.
         The instance variable winner will be set to the winner team and returned*/

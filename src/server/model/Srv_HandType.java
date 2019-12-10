@@ -86,6 +86,10 @@ public enum Srv_HandType {
         ArrayList<Card> pairCards = new ArrayList<>();
         ArrayList<Card> uniqueList = new ArrayList<>();
 
+        if(cards.isEmpty()){
+            return false;
+        }
+
         Collections.sort(clonedCards); //sort our lists with the cards
         Collections.sort(cards);
         //case with no played specialcard

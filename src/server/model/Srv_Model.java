@@ -296,22 +296,26 @@ public class Srv_Model {
 
     //@author Fabio
     public void roundFinished(){
+        logger.info("Round finished");
         Srv_Round currentRound = game.getRounds().get(game.getRounds().size()-1);
         Srv_Team winningTeam = null;
         boolean teamWins = false;
         for(Srv_Team t : game.getTeams()){ //calculate roundScore of Teams
             t.calcGameScore();
+            logger.info("Team: "+t.getTEAM_ID() + " Score:"+ t.getGameScore());
         }
 
         winningTeam = game.evaluateWinner();
 
         if(winningTeam == null){
+            logger.info("No Team achieved 1000 Points");
             Srv_Round nextRound = new Srv_Round();
             for(Srv_Team t : game.getTeams()){
                 t.setRoundScore(0);
             }
             game.resetTable();
             game.getRounds().add(nextRound);
+            logger.info("Resetted table");
 
             this.sendTableCardsToClients();
             this.sendScoresToClients();

@@ -175,10 +175,12 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             thisRound.getFinisher().add(p);
                         }
                     }
-                } else {
-                    model.roundFinished();
-
                 }
+
+                if(thisRound.getFinisher().size() == 3){
+                    model.roundFinished();
+                }
+
                 msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
 
                 break;
