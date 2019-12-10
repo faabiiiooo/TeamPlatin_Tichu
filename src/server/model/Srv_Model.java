@@ -39,6 +39,7 @@ public class Srv_Model {
         logger.info("Created first Round");
         this.joinPlayersToTeam();
         this.sendNextPlayerIdToClients();
+        this.sendPlayersToClients();
         game.getTable().dealCards();
         logger.info("dealed first 8 cards");
         this.sendPlayerHandsToClient();
