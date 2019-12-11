@@ -254,15 +254,15 @@ public class Clt_Controller { //Controller is a Singleton
             Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
                 if (view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
                     for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
-                        if (tb == new_toggle && tb.getText() != "N") {
+                        if (tb == new_toggle && !tb.getText().equalsIgnoreCase("N")) {
                             createWishedCard(tb.getText());
                             //view.getTableView().getStatusView().getWished().setText(tb.getText());
                             logger.info(tb.getText()+ "Text from button");
                         }else{
-                            if(tb == new_toggle && tb.getText() == "N")
-                            processSkipButton(); // if no card is wished just skip to next player
-                            logger.info("Card wish N");
-
+                            if(tb == new_toggle && tb.getText().equalsIgnoreCase("N")) {
+                                processSkipButton(); // if no card is wished just skip to next player
+                                logger.info("Card wish N");
+                            }
                             //view.getTableView().getStatusView().getWished().setText(tb.getText());
                         }
 
