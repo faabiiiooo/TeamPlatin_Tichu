@@ -438,6 +438,7 @@ public class Srv_Table {
                 //Set the PhoenixRank 0.5 higher than the rank of the last played card. Ordinal + 2.5 because ordinal begins with 0
                 phoenix.setPhoenixRank(lastPlayedCards.get(0).getRank().ordinal() + 2.5);
 
+
             } else {
                 //If Dog played is the rank of the Phonix 1.5;
                 if (lastPlayedCards.get(0).getRank() == Rank.Dog) {

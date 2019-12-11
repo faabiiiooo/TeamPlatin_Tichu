@@ -1,4 +1,9 @@
+.PlayerView {
+    -fx-min-height: 165;
+
+}
 .card {
+
     -fx-border-color: black;
     -fx-border-width: 0.3px;
 
