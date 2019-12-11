@@ -93,7 +93,7 @@ public enum Srv_HandType {
         Collections.sort(clonedCards); //sort our lists with the cards
         Collections.sort(cards);
         //case with no played specialcard
-        if(!includesSpecialCards(cards) && cards.size() >= 4){
+        if(!includesSpecialCards(cards) && cards.size() >= 4 && cards.size() % 2 == 0){
             for(int i = 0; i < clonedCards.size() && pairsFound; i++){ //separately put 2 cards in a new list to send them to the isOnePair Method
                 logger.info("clonedCards size: "+ clonedCards.size());
                 logger.info("i: "+ i);
@@ -703,9 +703,6 @@ public enum Srv_HandType {
                     logger.info("tableCards size: "+ tableCards.size() + tableCards);
                     if (tableCards.size() == 0) { // No card on the table -> Player has automatically the higher SingleCard
                         isHigher = true;
-                        if (includesSpecialCards(playerCards) == true) { //specialCard?
-                            callSpecialCard(playerCards);
-                        }
                         logger.info("Player SingleCard isHigher");
                     } else {
                         if (tableCards.size() == 1 && playerCards.get(0).getRank() != Rank.Dog) { //One Card is on the table -> Dog not allowed to play in a running game
@@ -725,6 +722,9 @@ public enum Srv_HandType {
                                 isHigher = true;
                             }
                         }
+                    }
+                    if (includesSpecialCards(playerCards) && isHigher) { //specialCard?
+                        callSpecialCard(playerCards);
                     }
                     logger.info("IS HIGHER TRUE? "+ isHigher);
                     break;
