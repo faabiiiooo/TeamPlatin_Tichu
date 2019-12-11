@@ -15,6 +15,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import resources.ServiceLocator;
 import resources.Translator;
 
@@ -71,7 +72,7 @@ public class Clt_CardWishView extends HBox {
             cardButtons.add(jButton); cardButtons.add(qButton); cardButtons.add(kButton); cardButtons.add(aButton); cardButtons.add(nButton);
         }
             this.getChildren().addAll(jButton, qButton, kButton, aButton, nButton,mLabel);
-
+            wishStage.initStyle(StageStyle.UNDECORATED);
             Scene scene = new Scene(this, 1455, 130);
             this.setPadding(new Insets(10,40,10,40));
             this.setAlignment(Pos.CENTER);
