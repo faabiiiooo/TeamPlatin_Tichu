@@ -391,7 +391,7 @@ public class Srv_Table {
                         } else { //teamMember with Player_ID=1/2 not anymore in the game (already finish)
                             if (playersAtTable.get(i - 1).getHandCards().size() > 0) { //right player of the teammate with Player_ID=2/3 still in the game
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
-                                playersAtTable.get(i - 1).setActive(true); //Set new player with Seat_ID=2/3 on active
+                                playersAtTable.get(i - 1).setActive(true); //Set new player with Player_ID=2/3 on active
                                 foundNextPlayer = true;
                             } //right player of the teammate with Player_ID=2/3 not anymore in the game (already finish) -> Same Player who played the dog is still active
                         } //If Player who played dog already finish? Round is over (3 players are finish)
