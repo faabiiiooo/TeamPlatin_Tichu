@@ -659,6 +659,7 @@ public class Clt_Controller { //Controller is a Singleton
                 playerID != dataStore.getPlayerTop().getPLAYER_ID()){
                     Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("model.player")+" "+
                             playerID + " " + translator.getString("player.sting.notification")));
+
                     ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
                     st.setByX(1.5f);
                     st.setByY(1.5f);
@@ -672,6 +673,13 @@ public class Clt_Controller { //Controller is a Singleton
 
                     Platform.runLater(() -> view.getTableView().getTichuLabel().setText(translator.getString("model.player")+ " "+  playerID + " " +
                             translator.getString("player.sting.notification")));
+
+                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
+                    st.setByX(1.5f);
+                    st.setByY(1.5f);
+                    st.setCycleCount(2);
+                    st.setAutoReverse(true);
+                    st.play();
                     //Set a stinged Text in the status Label
                     Platform.runLater(()->view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+
                             playerID +" " +translator.getString("player.sting.notification")));

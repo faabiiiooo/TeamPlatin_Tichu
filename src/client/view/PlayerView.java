@@ -21,7 +21,7 @@ public class PlayerView extends HBox {
 
     public PlayerView(){
         super();
-        //this.getStyleClass().add("TableView");
+        this.getStyleClass().add("PlayerView");
 
         this.rice = new Label();
         ImageView imgViewRice = new ImageView(riceImg);
