@@ -433,8 +433,9 @@ public class Srv_Table {
     protected void phoenixPlayed(Card phoenix){
 
         if(!lastPlayedCards.isEmpty()) {
-
+            logger.info("Phoenix:"+lastPlayedCards.size());
             if (lastPlayedCards.size() == 1) { //If it a single Card
+                logger.info("Phoenix:"+lastPlayedCards.toString());
                 //Set the PhoenixRank 0.5 higher than the rank of the last played card. Ordinal + 2.5 because ordinal begins with 0
                 phoenix.setPhoenixRank(lastPlayedCards.get(0).getRank().ordinal() + 2.5);
 
@@ -442,6 +443,7 @@ public class Srv_Table {
             } else {
                 //If Dog played is the rank of the Phonix 1.5;
                 if (lastPlayedCards.get(0).getRank() == Rank.Dog) {
+                    logger.info("Phoenix:"+lastPlayedCards.toString());
                     phoenix.setPhoenixRank(1.5);
                 }
             }
