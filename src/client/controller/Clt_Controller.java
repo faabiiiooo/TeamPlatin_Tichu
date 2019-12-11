@@ -262,6 +262,7 @@ public class Clt_Controller { //Controller is a Singleton
                             if(tb == new_toggle && tb.getText().equalsIgnoreCase("N")) {
                                 processSkipButton(); // if no card is wished just skip to next player
                                 logger.info("Card wish N");
+                                break;
                             }
                             //view.getTableView().getStatusView().getWished().setText(tb.getText());
                         }
