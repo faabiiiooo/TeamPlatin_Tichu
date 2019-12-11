@@ -279,6 +279,8 @@ public class Clt_Controller { //Controller is a Singleton
     //@author Fabio
     private void displayWrongCardsStatus(){
 
+        view.getTableView().getStatusView().getStatus().setText(translator.getString("status.wrong.cards"));
+
     }
     //@author Fabio
     public void handCardChanged(){ //method gets called when client retrieves or playes card

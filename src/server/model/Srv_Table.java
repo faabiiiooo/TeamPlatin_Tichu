@@ -155,11 +155,11 @@ public class Srv_Table {
                                 playersAtTable.get(i).setActive(false); //Set old player on not active
                                 playersAtTable.get(j).setActive(true); //Set new player on active
                                 foundNextPlayer = true;
-                            } else { //Player with Player_ID 3&4 already finished -> Player with Player_ID 1 is next
-                                playersAtTable.get(i).setActive(false); //Set old player on not active
-                                playersAtTable.get(0).setActive(true); //Set new player on active
-                                foundNextPlayer = true;
                             }
+                        }
+                        if(playersAtTable.get(0).getHandCards().size() > 0 && !foundNextPlayer){
+                            playersAtTable.get(i).setActive(false); //Set old player on not active
+                            playersAtTable.get(0).setActive(true); //Set new player on active
                         }
                         break;
                     case 3: //Case ActivePlayer have Player_ID = 3
