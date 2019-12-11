@@ -75,6 +75,8 @@ public class Clt_Controller { //Controller is a Singleton
 
             }
         });
+        view.getStartScreen().getToggleDE().setOnAction(e -> selectLanguage());
+        view.getStartScreen().getToggleEN().setOnAction(e -> selectLanguage());
 
     }
 
@@ -135,6 +137,7 @@ public class Clt_Controller { //Controller is a Singleton
         }
 
     }
+
 
 
 
@@ -746,6 +749,16 @@ public class Clt_Controller { //Controller is a Singleton
 
         }
 
+    }
+
+    private void selectLanguage(){
+        if(view.getStartScreen().getToggleDE().isSelected() || view.getStartScreen().getToggleEN().isSelected()){
+            if(view.getStartScreen().getToggleDE().isSelected()){
+                serviceLocator.setTranslator(new Translator("de_CH"));
+            } else {
+                serviceLocator.setTranslator(new Translator("en"));
+            }
+        }
     }
 
     public void setPrimaryStage(Stage primaryStage) {

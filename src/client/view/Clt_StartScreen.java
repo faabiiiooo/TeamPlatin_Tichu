@@ -131,5 +131,13 @@ public class Clt_StartScreen extends StackPane {
     public MediaPlayer getMp() {
         return mp;
     }
+
+    public ToggleButton getToggleDE() {
+        return toggleDE;
+    }
+
+    public ToggleButton getToggleEN() {
+        return toggleEN;
+    }
 }
 
