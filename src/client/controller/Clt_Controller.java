@@ -164,14 +164,10 @@ public class Clt_Controller { //Controller is a Singleton
         successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
         if (successful) {
             logger.info("Tichu-String sent to Server");
-            //Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
-            //Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
 
         } else {
             logger.info("saying tichu is not possible");
-
-
         }
 
 
@@ -523,7 +519,7 @@ public class Clt_Controller { //Controller is a Singleton
                     Collections.sort(dataStore.getHandCards());
                 });
                 logger.info("Added Cards to hand");
-                logger.info("HandCards: " + dataStore.getHandCards().toString());
+                //logger.info("HandCards: " + dataStore.getHandCards().toString());
                 break;
 
             case "card/tableCards": //@author Fabio

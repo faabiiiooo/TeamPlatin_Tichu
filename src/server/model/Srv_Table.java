@@ -218,6 +218,8 @@ public class Srv_Table {
 
         }
 
+        this.playersThatSkipped.clear();
+
         serviceLocator.getSrvModel().sendActivePlayerToClients();
         serviceLocator.getSrvModel().sendTableCardsToClients();
         serviceLocator.getSrvModel().sendPlayersToClients();

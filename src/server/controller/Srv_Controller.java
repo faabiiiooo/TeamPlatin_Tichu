@@ -74,12 +74,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     }
                 }
 
-                if(!serviceLocator.getTable().getPlayersThatSkipped().isEmpty()){
-                    serviceLocator.getTable().getPlayersThatSkipped().clear();
-                }
-
-
-
                 if(!playingPlayer.isHasWishedCard() &&!playingPlayer.isWantBomb() ){
                     logger.info("Player wants to play: "+cardsToPlay );
                     if(model.getGame().getTable().playCards(cardsToPlay)) {
@@ -104,6 +98,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                 }
                             }
 
+                        }
+                        if(!serviceLocator.getTable().getPlayersThatSkipped().isEmpty()){ //belongs to sting, if player that skipped previously plays, everyone can replay.
+                            serviceLocator.getTable().getPlayersThatSkipped().clear();
                         }
                     }else{
                         msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
