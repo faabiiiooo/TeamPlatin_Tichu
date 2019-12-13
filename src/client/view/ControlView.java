@@ -18,9 +18,6 @@ public class ControlView extends HBox {
     private final Translator translator = serviceLocator.getTranslator();
 
     private Button playButton, passButton, bombButton, callTichuButton;
-    private ProgressIndicator countDown = new ProgressIndicator(0);
-
-
 
 
 
@@ -36,13 +33,9 @@ public class ControlView extends HBox {
         bombButton.getStyleClass().add("controlButtons");
         callTichuButton.getStyleClass().add("controlButtons");
 
-        Region region1 = new Region();
-        this.setHgrow(region1, Priority.ALWAYS);
-        countDown.setPrefHeight(65);
-        countDown.setPrefWidth(65);
 
         this.setId("bottom");
-        this.getChildren().addAll(playButton,passButton,bombButton,callTichuButton, region1, countDown );
+        this.getChildren().addAll(playButton,passButton,bombButton,callTichuButton);
         //Bomb button is always disabled at the beginning, only able it when player got a bomb
         this.bombButton.setDisable(true);
         //disable buttons until player is active
@@ -69,5 +62,4 @@ public class ControlView extends HBox {
         return callTichuButton;
     }
 
-    public ProgressIndicator getCountDown() { return countDown; }
 }

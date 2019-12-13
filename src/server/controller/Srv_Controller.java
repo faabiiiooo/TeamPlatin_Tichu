@@ -261,6 +261,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                                     logger.info("Player who pressed bomb button is now active");
                                     msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                                     model.sendActivePlayerToClients();
+                                    model.clientInfoPlayerWantsBomb(msgIn.getSenderID()+"");
                                 }
                             }
                             model.sendActivePlayerToClients();

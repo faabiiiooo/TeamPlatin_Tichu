@@ -518,7 +518,7 @@ public class Clt_Controller { //Controller is a Singleton
                 dataStore.hasBombProperty().set(hasBomb);
                 logger.info("HasBomb set to: "+hasBomb );
                 break;
-
+            //@author thomas
             case "boolean/wishedCardPlayedInfo":
                 boolean cardPlayed = (boolean) msgIn.getObjects().get(0);
                 if(cardPlayed){
@@ -566,6 +566,13 @@ public class Clt_Controller { //Controller is a Singleton
                 });
 
                 logger.info("Added Players to datastore");
+                break;
+
+            case "string/playerThatBombs":
+                String playerId = (String) msgIn.getObjects().get(0);
+                    Platform.runLater(() -> {
+                        view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+playerId+" "+ translator.getString("label.playerBombs") );
+                    });
                 break;
 
             case "string/nextPlayer": //@author Fabio
