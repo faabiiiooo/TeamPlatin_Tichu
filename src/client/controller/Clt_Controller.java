@@ -75,6 +75,8 @@ public class Clt_Controller { //Controller is a Singleton
 
             }
         });
+        view.getStartScreen().getToggleDE().setOnAction(e -> selectLanguage());
+        view.getStartScreen().getToggleEN().setOnAction(e -> selectLanguage());
 
     }
 
@@ -138,6 +140,7 @@ public class Clt_Controller { //Controller is a Singleton
 
 
 
+
     //@author Sandro
     private void processSkipButton() {
         logger.info("Clt_processSkipButton");
@@ -161,14 +164,10 @@ public class Clt_Controller { //Controller is a Singleton
         successful = model.sendMessage(model.createMessage("string", "tichu"));//Send a tichu String to Server
         if (successful) {
             logger.info("Tichu-String sent to Server");
-            //Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("player.said.tichu")));//Show a message in the Gui that the player has announced a Tichu
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
-            //Platform.runLater(()->view.getTableView().getStatusView().getTichuYesOrNo().setText(translator.getString("player.said.tichu")));
 
         } else {
             logger.info("saying tichu is not possible");
-
-
         }
 
 
@@ -278,6 +277,8 @@ public class Clt_Controller { //Controller is a Singleton
 
     //@author Fabio
     private void displayWrongCardsStatus(){
+
+        view.getTableView().getStatusView().getStatus().setText(translator.getString("status.wrong.cards"));
 
     }
     //@author Fabio
@@ -476,49 +477,12 @@ public class Clt_Controller { //Controller is a Singleton
                     handCards.add((Card) o);
                 }
                 Platform.runLater(() -> {
-                    /*if(handCards.size() == 8){
-                        Task task = new Task() { //New Task for countdown
-                            @Override
-                            protected Object call() throws Exception {
-                                Clt_Controller.this.countdown = new Countdown();
-                                Clt_Controller.this.countdown.startCountdown();
-
-                                Platform.runLater(() -> {
-                                    view.getTableView().getControls().getCountDown().progressProperty().bind(Clt_Controller.this.countdown.currentCountdownProperty().divide(30.0));
-                                    Timeline timeline = new Timeline(
-                                            new KeyFrame(Duration.ZERO, new KeyValue(Clt_Controller.this.countdown.currentCountdownProperty(), 0))
-                                    );
-                                    timeline.setCycleCount(1);
-                                    timeline.play();
-
-
-                                });
-                                Clt_Controller.this.countdown.join(); //Task waits for countdown
-                                return null;
-                            }
-                        };
-
-                        this.countdownThread = new Thread(task) { //new Thread for the task
-                            public void run() {
-                                task.run();
-                                while (!endTask) { //wait until task is finish or player played a card or skipped
-                                }
-                                Clt_Controller.this.countdown.interrupt();
-                                Clt_Controller.this.countdown.stopCountdown();
-                                task.cancel(true); //Cancel task if countdown is finish
-                                logger.info("Countdown_Expired");
-                            }
-                        };
-
-                        this.countdownThread.start();
-                    }*/
-
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
                     Collections.sort(dataStore.getHandCards());
                 });
                 logger.info("Added Cards to hand");
-                logger.info("HandCards: " + dataStore.getHandCards().toString());
+                //logger.info("HandCards: " + dataStore.getHandCards().toString());
                 break;
 
             case "card/tableCards": //@author Fabio
@@ -744,6 +708,16 @@ public class Clt_Controller { //Controller is a Singleton
 
         }
 
+    }
+
+    private void selectLanguage(){
+        if(view.getStartScreen().getToggleDE().isSelected() || view.getStartScreen().getToggleEN().isSelected()){
+            if(view.getStartScreen().getToggleDE().isSelected()){
+                serviceLocator.setTranslator(new Translator("de_CH"));
+            } else {
+                serviceLocator.setTranslator(new Translator("en"));
+            }
+        }
     }
 
     public void setPrimaryStage(Stage primaryStage) {
