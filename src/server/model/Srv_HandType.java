@@ -6,6 +6,9 @@ import resources.ServiceLocator;
 import resources.Suit;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -77,14 +80,23 @@ public enum Srv_HandType {
         }
         return found;
     }
+    //This code taken from https://www.baeldung.com/java-streams-distinct-by#1-using-the-listiteratedistinct
+    public static <T> Predicate<T> distinctByKey(
+            Function<? super T, ?> keyExtractor) {
 
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
+    //@author Thomas
     public static boolean isXPair(ArrayList<Card> cards) { //@author Thomas
         boolean pairsFound = true;
         boolean found = false;
         int correctCalculation = 0;
         ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
         ArrayList<Card> pairCards = new ArrayList<>();
-        ArrayList<Card> uniqueList = new ArrayList<>();
+        List<Card> uniqueList = new ArrayList<>();
+        List<Card> duplicateCards ;
 
         if(cards.isEmpty()){
             return false;
@@ -119,36 +131,42 @@ public enum Srv_HandType {
 
 
         }else {
-
             //the case if a phoenix is included
-            if (includesSpecialCards(clonedCards) && cards.size() >= 4){
-                callSpecialCard(clonedCards); //call the method for the special card
-                for(int i = cards.size()-1; i-1 >= 0; i--){
-                    pairCards.add(cards.get(i)); pairCards.add(cards.get(i-1)); //add 2 cards to the paircards list to check them in the isOnePair method
-                    if (isOnePair(pairCards)){ // if the cards are a pair add the second to the unique list (we dont want the phoenix to be in the unique list)
-                        uniqueList.add(pairCards.get(1));
-                        /*remove them from the list, in case the phoenix is used with the highest card in the list so
-                        we can check this pair at the end of our iteration and we can be sure the phoenix is assigned to the right card
-                         */
-                        clonedCards.remove(clonedCards.get(i)); clonedCards.remove(clonedCards.get(i-1));
-                        pairCards.clear(); // clear the pair cards after every iteration
-                        pairsFound = true;
-                    }else{//if the first checked cards are no pair, there is a chance that the highest card is used with the phoenix
-                        pairCards.clear();
-                        pairsFound = false;
-                    }
-
+            if (includesSpecialCards(clonedCards) && cards.size() >= 4 && cards.size() % 2 == 0){
+                //check if there is a phoenix played, than remove it from the list
+                if(clonedCards.get(0).getRank() == Rank.Phoenix){
+                    clonedCards.remove(clonedCards.get(0));
+                }
+                //filter all the pair cards which are in the list
+                duplicateCards= clonedCards.stream()
+                                .collect(Collectors.groupingBy(Card::getRank)) //group them by rank
+                                .entrySet().stream() //create a set out of the same ranks
+                                .filter(e->e.getValue().size() > 1)
+                                .flatMap(e->e.getValue().stream()) // create new stream out of the cards
+                                .collect(Collectors.toList()); // collect them
+                //remove the duplicates from the list to check if there is only one card left
+                clonedCards.removeAll(duplicateCards);
+                //it can only be xpair id there is now 1 card left in the list
+                if(clonedCards.size() == 1){
+                    //now get only the unique cards to check if they are subsequent
+                    uniqueList = duplicateCards.stream().filter(distinctByKey(c -> c.getRank())).collect(Collectors.toList());
+                    //also add the last card from the cloned cards
+                    uniqueList.add(clonedCards.get(0));
+                    pairsFound = true;
                 }
 
             }
+
             if(pairsFound){
                 /*
                 if there are only pairs we also need to check if they are subsequent.
                 We do not use the first card of the list for our calculation because it would adulterate the result
                  */
                 Collections.sort(uniqueList); //sort the list
-                for (int c = 2; c < uniqueList.size(); c++){
-                    correctCalculation = uniqueList.get(c-1).getRank().ordinal() - uniqueList.get(c).getRank().ordinal();
+                logger.info("Unique List: "+uniqueList);
+                for (int c = 0; c < uniqueList.size()-1; c++){
+                    correctCalculation = uniqueList.get(c).getRank().ordinal() - uniqueList.get(c+1).getRank().ordinal();
+                    logger.info("check subsequens: "+ (uniqueList.get(c+1).getRank().ordinal() - uniqueList.get(c).getRank().ordinal()) );
                 }
                 //if the result is 1 the pairs are subsequent and the xPair is true
                 if(correctCalculation == 1)
@@ -533,7 +551,7 @@ public enum Srv_HandType {
     }
 
 
-    public static boolean isBombOnHand(ArrayList<Card> cards, ArrayList<Card> lastPlayedCards) { //@author thomas
+    public static boolean isBombOnHand(ArrayList<Card> playerCards, ArrayList<Card> lastPlayedCards) { //@author thomas
         //method it is  written to check the whole deck from the players for bombs
         //create all the variables we need for the checks
         boolean found = false;
@@ -549,9 +567,8 @@ public enum Srv_HandType {
         ArrayList<Card> straightFlushCards = new ArrayList<>();
 
 
-        ArrayList<Card> clonedCards = (ArrayList<Card>) cards.clone();
+        ArrayList<Card> clonedCards = (ArrayList<Card>) playerCards.clone();
         Collections.sort(clonedCards);
-        logger.info(clonedCards.size() +"cloned cards size in bombOnHand" + clonedCards);
 
         //first we need to remove the special cards from the deck of the players (no special cards can be played with bomb)
         for(int g = 0; g < clonedCards.size()-1; g++){
@@ -562,25 +579,30 @@ public enum Srv_HandType {
         }
         logger.info(clonedCards+"");
             for(int i = 0; i < clonedCards.size() && counterA != 4 ;i++){
-                logger.info("i: "+i );
                 counterA = 0;
                 fourOfAKindCards.clear();
                 for(int j = clonedCards.size()-1 ; j >= 0 && counterA != 4 ; j--){// check if four cards are of the same ordinal --> if not reset the counter and check the next
-                    logger.info(" j:"+j);
                     if(clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() ){
-                        logger.info("4 of the same Rank to check ");
-                        logger.info("Cards: " +clonedCards.get(i)+ " "+ clonedCards.get(j)+" is it true? "+ (clonedCards.get(i).getRank().ordinal() == clonedCards.get(j).getRank().ordinal() && counterA != 4 ) );
                         //add the cards to a list to check if they still can be played when other player bombed before
                         fourOfAKindCards.add(clonedCards.get(i)); fourOfAKindCards.add(clonedCards.get(j));
                         counterA ++;
-                        logger.info("counterA: "+counterA);
                     }
                 }
             }
-            logger.info("counterA: "+counterA);
-            if(counterA == 4 && evaluateHand(lastPlayedCards, fourOfAKindCards)){ // if the counter reaches 4 there set found to true
+            if(counterA == 4 && lastPlayedCards.size() == 0){ // if the counter reaches 4 there set found to true if there are no other cards played
                 found = true;
-            }else{
+            }else if(counterA == 4 && lastPlayedCards.size() >= 1 ){ // if there are cards played we need to check if there is already a higher bomb on the table
+                if(isBomb(lastPlayedCards) && isHigher(lastPlayedCards, playerCards, Srv_HandType.Bomb)){
+                    found = true;
+                    }else{
+                        if(!isBomb(lastPlayedCards)){
+                        found = true;
+                    }
+                }
+                logger.info("evualted Hand from both bombs: "+ evaluateHand(lastPlayedCards,fourOfAKindCards));
+            }
+
+            else{
                 //Case if the player has a minimum of 5 in a straight with the same suit
                     /*
                     put all the different suits in different list, to make them easier to check.
@@ -591,7 +613,6 @@ public enum Srv_HandType {
                     swordsCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Swords).sorted().collect(Collectors.toList());
                     jadeCards = clonedCards.stream().filter(t -> t.getSuit() == Suit.Jade).sorted().collect(Collectors.toList());
                     listOfSuitLists.add(starsCards); listOfSuitLists.add(pagodaCards); listOfSuitLists.add(swordsCards); listOfSuitLists.add(jadeCards);
-                    logger.info("Stream Star Cards: "+ listOfSuitLists+ "size: " +listOfSuitLists.size());
                     /*
                     check every suit separately, if the first checked number is only 1 higher than the next.
                     if 5 cards are found set found to true.
@@ -606,20 +627,25 @@ public enum Srv_HandType {
                             if ((listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 == listOfSuitLists.get(k).get(u+1).getRank().ordinal())) {
                                 //add the cards to the list to check them if they could still be played when the player before also played a bomb
                                 straightFlushCards.add(listOfSuitLists.get(k).get(u));  straightFlushCards.add(listOfSuitLists.get(k).get(u+1));
-                                logger.info(listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 + " == "+ listOfSuitLists.get(k).get(u+1).getRank().ordinal());
-                                logger.info(counterB+"counter B");
                                 counterB++;
                             }
                         }
                     }
-                    if(counterB >= 5 && evaluateHand(lastPlayedCards, straightFlushCards)){
-                        logger.info("bomb on hands -> Straight flush " + counterB);
+                    if(counterB >= 5 && lastPlayedCards.size() <= 5){
                         found = true;
+                    }else if(counterB >= 5 && lastPlayedCards.size() >=5){
+                        if (isBomb(lastPlayedCards) && isHigher(lastPlayedCards, playerCards, Srv_HandType.Bomb)) {
+                            found = true;
+                        }else{
+                            if(!isBomb(lastPlayedCards)){
+                                found = true;
+                            }
+                        }
                     }
             }
 
 
-        logger.info("Checked hand on bomb, value: "+found +"Playerhands: "+cards );
+        logger.info("Checked hand on bomb, value: "+found +"Playerhands: "+playerCards );
         return found;
     }
 
@@ -708,6 +734,7 @@ public enum Srv_HandType {
                         if (tableCards.size() == 1 && playerCards.get(0).getRank() != Rank.Dog) { //One Card is on the table -> Dog not allowed to play in a running game
                             if (tableCards.get(0).getRank() == Rank.Phoenix) { //on the table a phoenix?
                                 if (tableCards.get(0).getPhoenixRank() < playerCards.get(0).getRank().ordinal()+2) { //compare with phoenixRank
+                                    logger.info(tableCards.get(0).getPhoenixRank()+"Phoenix Rank");
                                     isHigher = true;
                                 }
                             }
@@ -802,7 +829,6 @@ public enum Srv_HandType {
                 case Bomb:
                     Collections.sort(tableCards); Collections.sort(playerCards);
                     if(!includesSpecialCards(playerCards)) {
-
 
                         //if the playercards are the first cards played/no special cards are included/ size of playercards is 4 set isHigher to true
                         // is also true when the "street" from the player is higher than that on the table

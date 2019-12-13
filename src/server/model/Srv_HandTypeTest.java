@@ -6,6 +6,7 @@ import resources.Card;
 import resources.Rank;
 import resources.Suit;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertFalse;
@@ -35,7 +36,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
     private static String[][] XPairCardsPlayer = {
             //{ "8S", "9K", "9S", "8K", "PE", "7S"  }, //with phoenix
-            { "8S","8P","9K", "9S",  }, //no special card
+            { "8S","8P","9K", "PE","TP","TS"  }, //no special card
     };
 
 
@@ -88,7 +89,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     };
 
     private static String[][] bombCardsTable = {
-           { "4S", "4K", "4P"},
+           { "4S", "4K", "4P","4K"},
            // { "8S", "9S", "7S", "6S", "5S", }
 
     };
@@ -101,18 +102,18 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     };
 
     private static String[][] bombCardsTableFullHand = {
-           // { "4S", "4K", "4P", "4J"},
-           //{ "2S", "3S", "4S", "5S","6S", "7S", "8S", "9S", "TS", "ME"},
+            //{ "6S", "6K", "6P", "6J"},
+           { "2S", "3S", "4S", "5S",},
 
     };
 
     private static String[][] bombCardsPlayerFullHand = {
-           // { "5S", "5K", "5P", "5J"},
+            { "3K", "4K", "5K", "6K","PE" }
             //{ "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
            //{ "5K", "4K", "6K", "7K","8J", "9J", "5S", "8S", "6S", "8K", "PE"},
-           // { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K","PE"}, //4er + straight + special card
+          // { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K","PE"}, //4er + straight + special card
             //{ "ME", "AJ", "AP","AS", "6P", "4K", "2S", "7K","KK", "TK", "9K", "7S","QP" },
-            { "2K", "3K", "4K", "5K", "ME"}
+           // { "2K", "3K", "4K", "5K", "ME"}
 
     };
 
@@ -176,8 +177,8 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         bombHandsPlayer = makeHands(bombCardsPlayer);
         bombHandsTableFullHand = makeHands(bombCardsTableFullHand);
         bombHandsPlayerFullHand = makeHands(bombCardsPlayerFullHand);
-        mJStreetWishHandPlayer = makeHands(mJStreetWishCardsHandPlayer);
-        mJStreetWishHandTable = makeHands(mJStreetWishCardsHandsTable);
+       // mJStreetWishHandPlayer = makeHands(mJStreetWishCardsHandPlayer);
+        //mJStreetWishHandTable = makeHands(mJStreetWishCardsHandsTable);
     }
 
     @Test // This is the test method for isHigher in HandType.
@@ -350,14 +351,14 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
         }
     }
 
-    @Test // This is the test method for checking if some players has the wished card and the lastplayed card was a street with mahjong
+   /* @Test // This is the test method for checking if some players has the wished card and the lastplayed card was a street with mahjong
     public void testIsMjWishStreetOnHand() {
         for (ArrayList<Card> hand : mJStreetWishHandPlayer) {
             for (ArrayList<Card> handTable : mJStreetWishHandTable) {
                 assertTrue(Srv_HandType.mahJongWishStreet(hand, handTable, hand.get(3)));
             }
         }
-    }
+    }*/
 
     @Test // This is the test method for isStreet in HandType.
     public void testIsFullHouse() {
@@ -372,18 +373,20 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
             assertTrue(Srv_HandType.isBomb(hand));
         }
     }
-
-    @Test // This is the test method for isStreet in HandType.
-   /* public void testIsBombOnHand() {
-        for (ArrayList<Card> hand : bombHandsPlayerFullHand) {
-            assertTrue(Srv_HandType.isBombOnHand(hand,));
+    // This is the test method for isBombOnHand in HandType.
+    @Test
+    public void testIsBombOnHand() {
+        for (ArrayList<Card> playerHand : bombHandsPlayerFullHand) {
+            for(ArrayList<Card> tableHand: bombHandsTableFullHand) {
+                assertTrue(Srv_HandType.isBombOnHand(playerHand, tableHand));
+            }
         }
-    }*/
+    }
 
     /**
      * Make an ArrayList of hands from an array of string-arrays
      */
-    private ArrayList<ArrayList<Card>> makeHands(String[][] handsIn) {
+     ArrayList<ArrayList<Card>> makeHands(String[][] handsIn) {
         ArrayList<ArrayList<Card>> handsOut = new ArrayList<>();
         for (String[] hand : handsIn) {
             handsOut.add(makeHand(hand));
@@ -394,7 +397,7 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
     /**
      * Make a hand (ArrayList<Card>) from an array of 5 strings
      */
-    private ArrayList<Card> makeHand(String[] inStrings) {
+     ArrayList<Card> makeHand(String[] inStrings) {
         ArrayList<Card> hand = new ArrayList<>();
         for (String in : inStrings) {
             hand.add(makeCard(in));

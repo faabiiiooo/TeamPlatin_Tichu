@@ -248,7 +248,7 @@ public class Clt_Controller { //Controller is a Singleton
     }
     //@author Thomas
     private void wishedCardfromMahjong(boolean newValue){
-        logger.info(this.toString()+ "I get Info to show Wish view");
+        logger.info(this.toString()+  "Info to show Wish view");
         if(newValue) {
             Platform.runLater(() -> view.startWishView());
             Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
