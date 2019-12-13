@@ -387,8 +387,25 @@ public class Srv_Model {
 
 
     }
+    //@author thomas
+    public void clientInfoWishedCardPlayed(boolean cardPlayed) {
+        Srv_Server server = serviceLocator.getServer();
+        Message msgOut = new Message("boolean/wishedCardPlayedInfo", cardPlayed);
+        server.broadcast(msgOut);
+
+    }
+
+    //@author thomas
+    public void clientInfoPlayerWantsBomb(String playerName) {
+        Srv_Server server = serviceLocator.getServer();
+        Message msgOut = new Message("string/playerThatBombs", playerName);
+        server.broadcast(msgOut);
+
+    }
 
     public Srv_Game getGame() {
         return game;
     }
+
+
 }

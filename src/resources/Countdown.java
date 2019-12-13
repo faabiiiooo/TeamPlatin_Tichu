@@ -10,7 +10,7 @@ public class Countdown extends Thread { //@author Sandro Countdown is a Thread
     private static Logger logger = sl.getLogger();
     private int current = 0; //current value of the countdown
     private int minimum = 0; //minimum value of the countdown
-    private int maximum = 30; //30 second time for a move
+    private int maximum = 1; //30 second time for a move
     private boolean pause = true;
     private SimpleIntegerProperty currentProperty = new SimpleIntegerProperty();
 

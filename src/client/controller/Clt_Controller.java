@@ -250,7 +250,7 @@ public class Clt_Controller { //Controller is a Singleton
     }
     //@author Thomas
     private void wishedCardfromMahjong(boolean newValue){
-        logger.info(this.toString()+ "I get Info to show Wish view");
+        logger.info(this.toString()+  "Info to show Wish view");
         if(newValue) {
             Platform.runLater(() -> view.startWishView());
             Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
@@ -528,6 +528,21 @@ public class Clt_Controller { //Controller is a Singleton
                 dataStore.hasBombProperty().set(hasBomb);
                 logger.info("HasBomb set to: "+hasBomb );
                 break;
+            //@author thomas
+            case "boolean/wishedCardPlayedInfo":
+                boolean cardPlayed = (boolean) msgIn.getObjects().get(0);
+                if(cardPlayed){
+                    Platform.runLater(() -> {
+                        view.getTableView().getStatusView().getWished().setText(translator.getString("label.wishedCard.played"));
+                    });
+                }else{
+                    Platform.runLater(() -> {
+                        String temp = view.getTableView().getStatusView().getStatus().getText();
+                        view.getTableView().getStatusView().getStatus().setText(temp+ "\n"+ translator.getString("label.needToPlayWishCard"));
+                    });
+
+                }
+                break;
 
             case "player": //recieveing all other players from server -> it is necessary that nextPlayerID is already set
                 ArrayList<Player> otherPlayers = new ArrayList<>();
@@ -565,6 +580,13 @@ public class Clt_Controller { //Controller is a Singleton
 
                 logger.info("Added Players to datastore");
 
+                break;
+
+            case "string/playerThatBombs":
+                String playerId = (String) msgIn.getObjects().get(0);
+                    Platform.runLater(() -> {
+                        view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+playerId+" "+ translator.getString("label.playerBombs") );
+                    });
                 break;
 
             case "string/nextPlayer": //@author Fabio
