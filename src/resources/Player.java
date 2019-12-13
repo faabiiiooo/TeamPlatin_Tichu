@@ -57,6 +57,8 @@ public class Player implements Serializable {
 
     public int calculateScore(){
 
+        System.out.println("WonCards:"+wonCards.toString());
+
         for(Card c : wonCards){
             score += c.getValue();
         }

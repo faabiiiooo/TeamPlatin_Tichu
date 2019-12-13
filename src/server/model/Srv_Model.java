@@ -314,6 +314,9 @@ public class Srv_Model {
             Srv_Round nextRound = new Srv_Round();
             for(Srv_Team t : game.getTeams()){
                 t.setRoundScore(0);
+                for(Player p : t.getMembers()){
+                    p.setScore(0);
+                }
             }
             game.resetTable();
             game.getRounds().add(nextRound);

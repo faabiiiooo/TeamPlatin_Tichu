@@ -112,6 +112,8 @@ public class Srv_Game { //@author Thomas
         table.getAllPlayedCards().clear();
         table.setBeginner(null);
         table.setWishCardPlayedOut(false);
+        table.setDragonPlayed(false);
+        table.setpWhichGetsDragon(null);
 
     }
 

@@ -553,12 +553,16 @@ public class Clt_Controller { //Controller is a Singleton
 
                 dataStore.setCardAmountProperties();
                 //Set the Player ID
-                Platform.runLater(()->view.getTableView().getRivalTop().gettName().setText(translator.getString("model.player")+" "+dataStore.getPlayerTop().getPLAYER_ID()+""));
-                Platform.runLater(()->view.getTableView().getRivalRight().getrName().setText(translator.getString("model.player")+" "+dataStore.getPlayerRight().getPLAYER_ID()+""));
-                Platform.runLater(()->view.getTableView().getRivalLeft().getlName().setText(translator.getString("model.player")+" "+dataStore.getPlayerLeft().getPLAYER_ID()+""));
                 Platform.runLater(() -> {
+                    view.getTableView().getRivalTop().gettName().setText(translator.getString("model.player")+" "+dataStore.getPlayerTop().getPLAYER_ID()
+                            +" Team: "+ dataStore.getPlayerTop().getTeamID());
+                    view.getTableView().getRivalRight().getrName().setText(translator.getString("model.player")+" "+dataStore.getPlayerRight().getPLAYER_ID()
+                            +" Team: "+ dataStore.getPlayerRight().getTeamID());
+                    view.getTableView().getRivalLeft().getlName().setText(translator.getString("model.player")+" "+dataStore.getPlayerLeft().getPLAYER_ID()
+                            +" Team: "+ dataStore.getPlayerLeft().getTeamID());
                     changeRiceLabel();
                 });
+
                 logger.info("Added Players to datastore");
 
                 break;

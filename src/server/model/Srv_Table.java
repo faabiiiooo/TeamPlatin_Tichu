@@ -21,6 +21,8 @@ public class Srv_Table {
     private Player beginner;
 
     private Card mahJongWishCard;
+    private boolean dragonPlayed;
+    private Player pWhichGetsDragon;
 
 
     private boolean wishCardPlayedOut = false;
@@ -249,48 +251,59 @@ public class Srv_Table {
 
         ArrayList<Player> finisher = game.getRounds().get(game.getRounds().size()-1).getFinisher(); //getting finishers
 
-        if(finisher.size() < 3 && player != null){ //if true, game is still playing only transfer table cards
+
+        if(finisher.size() < 3 && player != null && !dragonPlayed){ //if true, game is still playing only transfer table cards
             allPlayedCards.addAll(lastPlayedCards);
             lastPlayedCards.clear();
-            logger.info("allPlayedCards: " + allPlayedCards.toString());
             player.getWonCards().addAll(allPlayedCards);
             allPlayedCards.clear();
             
-        } else { //else transfer cards from looser to winner and rival team
-            Player winner = finisher.get(0); //get winner of the round
-            Player looser = null;
-            for(Player p : playersAtTable){
-                if(p.getHandCards().size() > 0){ //get looser, the only player with cards on his hand.
-                    looser = p;
-                }
-            }
+        } else { //else check if dragon got played
+            if(dragonPlayed){
+                logger.info("Transfer dragon sting to: "+pWhichGetsDragon.getPLAYER_ID());
+                allPlayedCards.addAll(lastPlayedCards);
+                lastPlayedCards.clear();
+                pWhichGetsDragon.getWonCards().addAll(allPlayedCards);
+                allPlayedCards.clear();
+                dragonPlayed = false;
 
-
-            for(Card c : looser.getWonCards()){ //always add the wonCards of looser to the wonCards of winner
-                winner.getWonCards().add(c);
-            }
-
-            if(looser.getTeamID() == winner.getTeamID()){ //if winner and looser are in same team
-
-                Player plrFromOtherTeam = null;
-                for(Player p : finisher){   //get a player from the other team
-                    if(p.getTeamID() != looser.getTeamID()){
-                        plrFromOtherTeam = p;
-                        break;
+            } else { //else transfer cards from looser to winner
+                Player winner = finisher.get(0); //get winner of the round
+                Player looser = null;
+                for(Player p : playersAtTable){
+                    if(p.getHandCards().size() > 0){ //get looser, the only player with cards on his hand.
+                        looser = p;
                     }
                 }
 
-                for(Card c : looser.getHandCards()){ //add the hand cards of the looser to the player from the rival team
-                    plrFromOtherTeam.getWonCards().add(c);
-                }
-            }
 
-            if(looser.getTeamID() != winner.getTeamID()){ //if winner and looser are not in same team, transfer hand cards also to winner
-                for(Card c : looser.getHandCards()){
+                for(Card c : looser.getWonCards()){ //always add the wonCards of looser to the wonCards of winner
                     winner.getWonCards().add(c);
                 }
-            }
 
+                if(looser.getTeamID() == winner.getTeamID()){ //if winner and looser are in same team
+
+                    Player plrFromOtherTeam = null;
+                    for(Player p : finisher){   //get a player from the other team
+                        if(p.getTeamID() != looser.getTeamID()){
+                            plrFromOtherTeam = p;
+                            break;
+                        }
+                    }
+
+                    for(Card c : looser.getHandCards()){ //add the hand cards of the looser to the player from the rival team
+                        plrFromOtherTeam.getWonCards().add(c);
+                    }
+                }
+
+                if(looser.getTeamID() != winner.getTeamID()){ //if winner and looser are not in same team, transfer hand cards also to winner
+                    for(Card c : looser.getHandCards()){
+                        winner.getWonCards().add(c);
+                    }
+                }
+
+                looser.getWonCards().clear(); //reset wonCards of looser.
+            }
 
         }
 
@@ -413,6 +426,8 @@ public class Srv_Table {
     //@author Fabio
     protected void dragonPlayed(){
 
+        logger.info("Dragon played!");
+
         Player activePlayer = null;
         Player rival = null;
 
@@ -426,7 +441,9 @@ public class Srv_Table {
         }
 
         if(rival != null){ //transfer cards on table to rival
-            transferCards(rival);
+            this.pWhichGetsDragon = rival;
+            this.dragonPlayed = true;
+            logger.info("Player:"+pWhichGetsDragon.getPLAYER_ID()+"is going to recieve dragon sting");
         }
 
     }
@@ -501,5 +518,21 @@ public class Srv_Table {
 
     public void setWishCardPlayedOut(boolean wishCardPlayedOut) {
         this.wishCardPlayedOut = wishCardPlayedOut;
+    }
+
+    public boolean isDragonPlayed() {
+        return dragonPlayed;
+    }
+
+    public void setDragonPlayed(boolean dragonPlayed) {
+        this.dragonPlayed = dragonPlayed;
+    }
+
+    public Player getpWhichGetsDragon() {
+        return pWhichGetsDragon;
+    }
+
+    public void setpWhichGetsDragon(Player pWhichGetsDragon) {
+        this.pWhichGetsDragon = pWhichGetsDragon;
     }
 }

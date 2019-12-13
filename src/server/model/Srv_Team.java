@@ -103,6 +103,8 @@ public  class Srv_Team implements Comparable<Srv_Team> {
       // Check all Scores from the Team and add it to the roundScore
       for(Player p : this.members){
           this.roundScore += p.calculateScore();
+          System.out.println("Team:"+ this.getTEAM_ID()+" Score:"+this.getRoundScore());
+          System.out.println("PlayerScore "+p.getPLAYER_ID()+":" + p.calculateScore());
       }
 
       return roundScore;
