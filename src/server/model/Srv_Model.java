@@ -339,10 +339,6 @@ public class Srv_Model {
             this.gameFinished();
         }
 
-
-
-
-
     }
 
     private void startNewRound(){

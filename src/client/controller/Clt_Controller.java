@@ -482,7 +482,13 @@ public class Clt_Controller { //Controller is a Singleton
                     Collections.sort(dataStore.getHandCards());
                 });
                 logger.info("Added Cards to hand");
-                //logger.info("HandCards: " + dataStore.getHandCards().toString());
+
+                if(view.getTableView().getControls().getCallTichuButton().isDisabled()){
+                    Platform.runLater(() -> {
+                        view.getTableView().getControls().getCallTichuButton().setDisable(false);
+                    });
+                }
+
                 break;
 
             case "card/tableCards": //@author Fabio
