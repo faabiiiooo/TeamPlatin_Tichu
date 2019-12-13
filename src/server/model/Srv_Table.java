@@ -202,11 +202,12 @@ public class Srv_Table {
 
     private void sting(Player winner){
         this.transferCards(winner); //transfer Cards to the player which stung
+
         for(Player p : playersAtTable){
             if(p.isActive()){
                 p.setActive(false);
-                p.setStung(false);
             }
+            p.setStung(false);
         }
 
         playersAtTable.get(playersAtTable.indexOf(winner)).setStung(true);
