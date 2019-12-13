@@ -47,9 +47,7 @@ public class Clt_Controller { //Controller is a Singleton
     private Logger logger = serviceLocator.getLogger();
     private final Translator translator = serviceLocator.getTranslator();
     private final Clt_DataStore dataStore = Clt_DataStore.getDataStore();
-    private Thread countdownThread;
-    private Countdown countdown;
-    private boolean endTask = false; //for countdown-task
+    private boolean finishedStatusSent = false;
 
 
 
@@ -233,14 +231,19 @@ public class Clt_Controller { //Controller is a Singleton
                cardsToSend.clear(); //remove the played cards out of the list
                view.getTableView().getControls().getCallTichuButton().setDisable(true);
                if(dataStore.getHandCards().size() == 0){
-                   logger.info("Sending finishedMessage");
-                   Message msgFinished = new Message("string/finished","");
-                   model.sendMessage(msgFinished);
+                   logger.info("Finished?:"+dataStore.isFinish());
+                   dataStore.setFinish(true);
                }
            } else { //else give feedback to the user
                logger.info(this.toString()+"Cards declined by server. player has to replay.");
                this.displayWrongCardsStatus();
            }
+            if(dataStore.isFinish() && !finishedStatusSent){
+                logger.info("Sending finishedMessage");
+                Message msgFinished = new Message("string/finished","");
+                serviceLocator.getClient().send(msgFinished);
+                finishedStatusSent = true;
+            }
         }
 
 
@@ -472,6 +475,8 @@ public class Clt_Controller { //Controller is a Singleton
         switch (msgIn.getType()) {
 
             case "card/dealCards":  //getting the playerHand from server
+                dataStore.setFinish(false); //in case new round is started.
+                finishedStatusSent = false;
                 ArrayList<Card> handCards = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     handCards.add((Card) o);
@@ -483,11 +488,10 @@ public class Clt_Controller { //Controller is a Singleton
                 });
                 logger.info("Added Cards to hand");
 
-                if(view.getTableView().getControls().getCallTichuButton().isDisabled()){
-                    Platform.runLater(() -> {
-                        view.getTableView().getControls().getCallTichuButton().setDisable(false);
-                    });
-                }
+                Platform.runLater(() -> {
+                    view.getTableView().getControls().getCallTichuButton().setDisable(false);
+                });
+
 
                 break;
 
@@ -555,8 +559,8 @@ public class Clt_Controller { //Controller is a Singleton
                 Platform.runLater(() -> {
                     changeRiceLabel();
                 });
-
                 logger.info("Added Players to datastore");
+
                 break;
 
             case "string/nextPlayer": //@author Fabio
@@ -699,6 +703,13 @@ public class Clt_Controller { //Controller is a Singleton
                     st.setCycleCount(2);
                     st.setAutoReverse(true);
                     st.play();
+                });
+                break;
+
+            case "string/newRound":
+                Platform.runLater(() -> {
+                    dataStore.getHandCards().clear();
+                    dataStore.getTableCards().clear();
                 });
                 break;
 

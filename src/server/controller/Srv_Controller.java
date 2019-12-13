@@ -106,14 +106,12 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                     }
 
-                    //only skip if the player didnt play the mah jong - if he played mah jong he first needs to wish a card before skipping
-
                     model.getGame().getTable().checkPlayerHandsOnBomb(); //check all hands on possible bombs
                     model.sendHasBombStatusToClients();//send status to client
                     model.sendActivePlayerToClients();
                     model.sendPlayersToClients();
                     model.getGame().getTable().checkIfMJWishIsActive();
-                    for(Player p : serviceLocator.getTable().getPlayersAtTable()){ //if he skipped previosly and now can play
+                    for(Player p : serviceLocator.getTable().getPlayersAtTable()){ //if he skipped previously and now can play
                         if(p.getClientID() == msgIn.getSenderID()){
                             serviceLocator.getTable().getPlayersThatSkipped().remove(p);
                         }

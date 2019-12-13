@@ -226,16 +226,16 @@ public class Srv_Model {
     public void sendStingNotification(){
         Srv_Server server = serviceLocator.getServer();
         Player playerThatStung = null;
-        for(Player p : game.getTable().getPlayersAtTable()){
-            if(p.isActive()){
-                playerThatStung = p;
+            for(Player p : game.getTable().getPlayersAtTable()){ //searching player that stung
+                if(p.hasStung()){
+                    logger.info("pStung is true:"+p.getPLAYER_ID());
+                    playerThatStung = p;
             }
         }
+            logger.info("pStung finally:"+playerThatStung.getPLAYER_ID());
         for(int i = 0; i < game.getTable().getPlayersAtTable().size(); i++){
             Message msgOut = null;
             int clientThreadIndex = server.searchIndexOfClientThreadByID(game.getTable().getPlayersAtTable().get(i).getPLAYER_ID());
-
-
             try {
                 msgOut = new Message("string/stingNotification", playerThatStung.getPLAYER_ID() + ";" + "player.sting.notification");
                 server.getClientThreads().get(clientThreadIndex).send(msgOut);
@@ -300,6 +300,7 @@ public class Srv_Model {
         logger.info("Round finished");
         Srv_Round currentRound = game.getRounds().get(game.getRounds().size()-1);
         Srv_Team winningTeam = null;
+        game.getTable().transferCards(null);
         boolean teamWins = false;
         for(Srv_Team t : game.getTeams()){ //calculate roundScore of Teams
             t.calcGameScore();

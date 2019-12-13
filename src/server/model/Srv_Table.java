@@ -129,6 +129,7 @@ public class Srv_Table {
             for(Player p : playersAtTable){
                 if(p.getPLAYER_ID() == playerIDOfLastPlayedCards){
                     this.sting(p);
+                    logger.info("P that stung: "+p.getPLAYER_ID());
                     return;
                 }
             }
@@ -198,17 +199,21 @@ public class Srv_Table {
     }
 
     private void sting(Player winner){
-        this.transferCards(winner);
+        this.transferCards(winner); //transfer Cards to the player which stung
         for(Player p : playersAtTable){
             if(p.isActive()){
                 p.setActive(false);
+                p.setStung(false);
             }
         }
-        if(winner.getHandCards().size() != 0){
+
+        playersAtTable.get(playersAtTable.indexOf(winner)).setStung(true);
+
+        if(winner.getHandCards().size() != 0){ //if it wasn't the last card of player who stung
             int indexOfWinner = playersAtTable.indexOf(winner);
             playersAtTable.get(indexOfWinner).setActive(true);
             logger.info("Winner: " + playersAtTable.get(indexOfWinner).toString());
-        } else {
+        } else { //if player stung with his last card
             int idOfNextPlayer = winner.getNextPlayerID();
             for(Player p : playersAtTable){
                 if(idOfNextPlayer == p.getPLAYER_ID()){
@@ -400,11 +405,6 @@ public class Srv_Table {
                         break;
                 }
                 foundNextPlayer = true; //for case old isActive Player == new isActivePlayer
-            }
-        }
-        for (Player p : playersAtTable) { //Logger-Info for Testing
-            if (p.isActive()) {
-                logger.info("New active Player: "+p);
             }
         }
         logger.info("Table_DogPlayed_Process ended");

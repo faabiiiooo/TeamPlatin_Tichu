@@ -21,6 +21,8 @@ public class Clt_DataStore {
     private final ArrayList<Card> cardsToSend = new ArrayList<>();
     private final ArrayList<Message> waitingForResponse = new ArrayList<>();
 
+    private boolean finish = false;
+
     private Player playerTop;
     private Player playerRight;
     private Player playerLeft;
@@ -219,5 +221,11 @@ public class Clt_DataStore {
         this.wishedCard.set(wishedCard);
     }
 
+    public boolean isFinish() {
+        return finish;
+    }
 
+    public void setFinish(boolean finish) {
+        this.finish = finish;
+    }
 }

@@ -25,7 +25,7 @@ public class Player implements Serializable {
 
     private boolean isActive;
     private int teamID;
-    private String name;
+    private boolean stung;
     private int score;
     private int nextPlayerID = -1;
     private boolean hasBomb;
@@ -165,4 +165,12 @@ public class Player implements Serializable {
     public void setWantBomb(boolean wantBomb) { this.wantBomb = wantBomb; }
 
     public boolean isWantBomb() { return wantBomb; }
+
+    public boolean hasStung(){
+        return stung;
+    }
+
+    public void setStung(boolean stung){
+        this.stung = stung;
+    }
 }
