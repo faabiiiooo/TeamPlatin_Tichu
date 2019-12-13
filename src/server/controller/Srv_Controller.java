@@ -131,6 +131,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     if(model.checkIfWishedCardIsInPlayedCards(clonedCards) ){
                         logger.info("Case Wished Cards");
                         if(model.getGame().getTable().playCards(cardsToPlay)) { //is the card higher than the one played before?
+                            model.clientInfoWishedCardPlayed(true);
                             logger.info("Case Wished Cards: Sending success Response");
                             msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                             standardProcessPlayCards(msgIn.getSenderID(), cardsToPlay);
@@ -138,6 +139,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                         }
                     }else {
+                        model.clientInfoWishedCardPlayed(false);
                         msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
                     }
 

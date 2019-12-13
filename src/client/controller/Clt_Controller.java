@@ -519,6 +519,21 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("HasBomb set to: "+hasBomb );
                 break;
 
+            case "boolean/wishedCardPlayedInfo":
+                boolean cardPlayed = (boolean) msgIn.getObjects().get(0);
+                if(cardPlayed){
+                    Platform.runLater(() -> {
+                        view.getTableView().getStatusView().getWished().setText(translator.getString("label.wishedCard.played"));
+                    });
+                }else{
+                    Platform.runLater(() -> {
+                        String temp = view.getTableView().getStatusView().getStatus().getText();
+                        view.getTableView().getStatusView().getStatus().setText(temp+ "\n"+ translator.getString("label.needToPlayWishCard"));
+                    });
+
+                }
+                break;
+
             case "player": //recieveing all other players from server -> it is necessary that nextPlayerID is already set
                 ArrayList<Player> otherPlayers = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){ //generate player objects
