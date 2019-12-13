@@ -324,6 +324,7 @@ public class Srv_Model {
             for(Player p : game.getTable().getPlayersAtTable()){
                 p.getHandCards().clear();
                 p.getWonCards().clear();
+                p.setActive(false);
             }
 
             this.sendPlayerHandsToClient();
