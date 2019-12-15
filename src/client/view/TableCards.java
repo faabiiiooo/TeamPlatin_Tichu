@@ -3,15 +3,13 @@ package client.view;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-
+import javafx.scene.layout.Priority;
 
 
 public class TableCards extends HBox {
 
 
     public TableCards(){
-
-        this.setPadding(new Insets(0,0,20,0));
 
 
         this.getStyleClass().add("tableCards");

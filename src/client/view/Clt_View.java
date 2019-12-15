@@ -18,6 +18,7 @@ public class Clt_View {
     private Clt_TableView tableView;
     private Clt_CardWishView cardWishView;
     private Clt_DisconnectedView dcView;
+    private Clt_WinnerView winnerView;
 
 
     public Clt_View(Stage primaryStage, Clt_Model model) throws MalformedURLException {
@@ -35,6 +36,8 @@ public class Clt_View {
     public void startWishView(){cardWishView=new Clt_CardWishView(new Stage());}
 
     public void startDcView(){dcView=new Clt_DisconnectedView(primaryStage);}
+
+    public void startWinnView(){winnerView=new Clt_WinnerView(primaryStage);}
 
 
     //Start displaying View

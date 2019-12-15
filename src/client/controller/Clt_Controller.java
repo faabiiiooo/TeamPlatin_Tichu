@@ -17,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -164,6 +166,7 @@ public class Clt_Controller { //Controller is a Singleton
             logger.info("Tichu-String sent to Server");
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
 
+
         } else {
             logger.info("saying tichu is not possible");
         }
@@ -177,6 +180,7 @@ public class Clt_Controller { //Controller is a Singleton
     private void processBombButton(){
         logger.info("Clt_processBombButton");
         boolean successfulActiveStatusSent = false;
+
         //player who pressed bomb button needs to the the active player
         successfulActiveStatusSent = model.sendMessage(model.createMessage("string","bombActiveChange" ));
         if(successfulActiveStatusSent){
@@ -223,6 +227,7 @@ public class Clt_Controller { //Controller is a Singleton
 
         ArrayList<Card> cardsToSend = Clt_DataStore.getDataStore().getCardsToSend(); //get selected cards by player
         Collections.sort(cardsToSend);
+
         if(cardsToSend.size() > 0 ){ // if he has cards selected
           successful = model.sendMessage(model.createMessage("card/playCard",cardsToSend.toArray())); //send cards to server and get answer of server
            if(successful){ //does Server accept the cards? if yes, remove the cards from hand
@@ -383,6 +388,7 @@ public class Clt_Controller { //Controller is a Singleton
             model.getDataStore().addCardsToSend(c);
             source.setSelected(true);
 
+            //@author Pascal
             PathElement p1=new MoveTo(52,83);// Start Position
             PathElement p2=new LineTo(52,55);//End Position
 
@@ -398,6 +404,7 @@ public class Clt_Controller { //Controller is a Singleton
                 model.getDataStore().getCardsToSend().remove(c);
                 source.setSelected(false);
 
+                //@author Pascal
                 PathElement p3=new MoveTo(52,55);
                 PathElement p4=new LineTo(52,83);
 
@@ -526,6 +533,7 @@ public class Clt_Controller { //Controller is a Singleton
             case "boolean/hasBomb":
                 boolean hasBomb = (boolean) msgIn.getObjects().get(0);
                 dataStore.hasBombProperty().set(hasBomb);
+
                 logger.info("HasBomb set to: "+hasBomb );
                 break;
             //@author thomas
@@ -567,7 +575,8 @@ public class Clt_Controller { //Controller is a Singleton
                 }
 
                 dataStore.setCardAmountProperties();
-                //Set the Player ID
+                //@author Pascal
+                // Set the Player ID
                 Platform.runLater(() -> {
                     view.getTableView().getRivalTop().gettName().setText(translator.getString("model.player")+" "+dataStore.getPlayerTop().getPLAYER_ID()
                             +" Team: "+ dataStore.getPlayerTop().getTeamID());
@@ -603,6 +612,9 @@ public class Clt_Controller { //Controller is a Singleton
                 ArrayList<String> teamScores = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     teamScores.add((String) o);
+
+
+
                 }
 
                 for(String s : teamScores){
@@ -610,11 +622,14 @@ public class Clt_Controller { //Controller is a Singleton
                     if(parts[0].equals("1")){
                         Platform.runLater(() -> {
                             dataStore.setTeamScoreT1(parts[1]);
+
                         });
                     }
                     if(parts[0].equals("2")){
                         Platform.runLater(() -> {
                             dataStore.setTeamScoreT2(parts[1]);
+
+
                         });
                     }
                 }
@@ -658,6 +673,7 @@ public class Clt_Controller { //Controller is a Singleton
                 if(playerID != dataStore.getPlayerRight().getPLAYER_ID() &&
                 playerID != dataStore.getPlayerLeft().getPLAYER_ID() &&
                 playerID != dataStore.getPlayerTop().getPLAYER_ID()){
+                    //@author Pascal
                     Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("model.player")+" "+
                             playerID + " " + translator.getString("player.sting.notification")));
 
@@ -668,7 +684,7 @@ public class Clt_Controller { //Controller is a Singleton
                     st.setAutoReverse(true);
                     st.play();
 
-                    Platform.runLater(()->view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+
+                   Platform.runLater(()->view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+
                     playerID +" " +translator.getString("player.sting.notification")));
                 } else {
 
@@ -693,6 +709,7 @@ public class Clt_Controller { //Controller is a Singleton
             case "string/oSaidSmallTichu":
                 int pID = (int) msgIn.getObjects().get(0);
                 Platform.runLater(() -> {
+
                     view.getTableView().getTichuLabel().setText(translator.getString("model.player").toUpperCase() + pID +
                             " "+ translator.getString("player.said.smalltichu").toUpperCase());
 
@@ -714,6 +731,8 @@ public class Clt_Controller { //Controller is a Singleton
             case "string/oSaidBigTichu":
                 int plID = (int) msgIn.getObjects().get(0);
                 Platform.runLater(() -> {
+
+
                     view.getTableView().getTichuLabel().setText(translator.getString("model.player").toUpperCase() + plID +
                             " "+ translator.getString("player.said.bigtichu").toUpperCase());
 

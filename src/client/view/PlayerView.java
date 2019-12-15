@@ -23,6 +23,7 @@ public class PlayerView extends HBox {
         super();
         this.getStyleClass().add("PlayerView");
 
+
         this.rice = new Label();
         ImageView imgViewRice = new ImageView(riceImg);
         this.rice.setGraphic(imgViewRice);
