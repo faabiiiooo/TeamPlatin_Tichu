@@ -312,7 +312,7 @@ public class Srv_Model {
         if(winningTeam == null){
             logger.info("No Team achieved 1000 Points");
             Srv_Round nextRound = new Srv_Round();
-            for(Srv_Team t : game.getTeams()){
+            for(Srv_Team t : game.getTeams()){ //resetting Scores
                 t.setRoundScore(0);
                 for(Player p : t.getMembers()){
                     p.setScore(0);
@@ -340,11 +340,12 @@ public class Srv_Model {
 
 
         } else {
-            this.gameFinished();
+            this.gameFinished(winningTeam);
         }
 
     }
 
+    //@author Fabio
     private void startNewRound(){
         logger.info("Starting new Round");
         game.getTable().dealCards();
@@ -364,7 +365,23 @@ public class Srv_Model {
         this.sendActivePlayerToClients();
     }
 
-    private void gameFinished(){
+    private void sendNewRoundInfo(){
+        try{
+            Message msgOut = new Message("string/newRound");
+            serviceLocator.getServer().broadcast(msgOut);
+        } catch (Exception e){
+            logger.severe("Can't send newRound information to clients");
+        }
+    }
+
+    private void gameFinished(Srv_Team winningTeam){
+        try{
+            Message msgOut = new Message("string/gameFinished",winningTeam.getTEAM_ID());
+            serviceLocator.getServer().broadcast(msgOut);
+
+        } catch (Exception e){
+            logger.severe("Could not send gameFinished message to clients");
+        }
 
     }
 

@@ -10,7 +10,6 @@ public  class Srv_Team implements Comparable<Srv_Team> {
     private final int MAX_TEAM_MEMBERS =2;
     private final String EVEN_ODD;
     private ArrayList<Player>members;
-    private ArrayList<Srv_Seat>teamSeats;
     private Srv_Game game;
     private int gameScore;
     private int roundScore;
@@ -23,7 +22,6 @@ public  class Srv_Team implements Comparable<Srv_Team> {
     public Srv_Team(int TEAM_ID, Srv_Game game, String evenOdd){
         this.TEAM_ID=TEAM_ID;
         this.members=new ArrayList<Player>();
-        this.teamSeats=new ArrayList<Srv_Seat>();
         this.gameScore= 0;
         this.roundScore= 0;
         this.game=game;
@@ -31,28 +29,6 @@ public  class Srv_Team implements Comparable<Srv_Team> {
 
 
     }
-
-
-
-        // If the SEAT_ID odd(1 & 3) add it to teamSeats. If even (2 & 4) add it to the teamSeats
-    private void bookSeat() {
-        while (this.teamSeats.size() < this.getMAX_TEAM_MEMBERS()) {
-
-           ArrayList<Srv_Seat> seats = game.getTable().getSeats();
-            for(Srv_Seat s : seats){
-                if(s.getSEAT_ID() % 2 > 0 && EVEN_ODD.equals("odd")){
-                    teamSeats.add(s);
-                    members.add(s.getPlayer());
-                } else {
-                    if(s.getSEAT_ID() % 2 == 0 && EVEN_ODD.equals("even")){
-                        teamSeats.add(s);
-                        members.add(s.getPlayer());
-                    }
-                }
-            }
-        }
-    }
-
 
     //calculate game score
     public void calcGameScore () {

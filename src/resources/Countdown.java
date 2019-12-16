@@ -45,7 +45,7 @@ public class Countdown extends Thread { //@author Sandro Countdown is a Thread
 
     public void startCountdown() {
         setCountdownPause(false);
-        super.start(); //start thread
+        this.start(); //start thread
         logger.info("Start Countdown");
     }
 

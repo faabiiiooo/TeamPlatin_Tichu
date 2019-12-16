@@ -48,7 +48,7 @@ public class Clt_Controller { //Controller is a Singleton
     private Clt_Model model;
     private ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private Logger logger = serviceLocator.getLogger();
-    private final Translator translator = serviceLocator.getTranslator();
+    private Translator translator = serviceLocator.getTranslator();
     private final Clt_DataStore dataStore = Clt_DataStore.getDataStore();
     private boolean finishedStatusSent = false;
 
@@ -66,16 +66,6 @@ public class Clt_Controller { //Controller is a Singleton
 
     private void setStartScreenOnAction(){
         view.getStartScreen().getBtnNext().setOnAction(e -> startScreenBtnNext());
-        view.getStartScreen().getBeServer().setOnAction(e -> {
-            if (view.getStartScreen().getBeServer().isSelected()){
-              view.getStartScreen().getTxtIpAddress().setText("127.0.0.1");
-              view.getStartScreen().getTxtIpAddress().setDisable(true);
-            } else {
-                view.getStartScreen().getTxtIpAddress().setText("");
-                view.getStartScreen().getTxtIpAddress().setDisable(false);
-
-            }
-        });
         view.getStartScreen().getToggleDE().setOnAction(e -> selectLanguage());
         view.getStartScreen().getToggleEN().setOnAction(e -> selectLanguage());
 
@@ -197,17 +187,10 @@ public class Clt_Controller { //Controller is a Singleton
 
     //@author Fabio
     private void startScreenBtnNext(){
+        //start client
+        String serverIp = view.getStartScreen().getTxtIpAddress().getText();
+        model.startClient(serverIp);
 
-        if(view.getStartScreen().getBeServer().isSelected()){ //if user wants to be server, start server and client
-            model.startServer();
-            model.startClient("127.0.0.1");
-
-
-        } else { //else just start client with connection to entered ip address
-            String serverIp = view.getStartScreen().getTxtIpAddress().getText();
-            model.startClient(serverIp);
-
-        }
 
         Stage mainStage = new Stage(); //start client view
         this.primaryStage = mainStage;
@@ -307,7 +290,7 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
     //@auhtor Fabio
-    private void tableCardChanged(){
+    private void tableCardChanged(){ //ListChangeListener for table cards. Always clears the list before adding the new cards
         Platform.runLater(() -> {
             view.getTableView().getTableCards().clear();
         });
@@ -381,7 +364,7 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
     //@author Fabio
-    private void processCardClicked(MouseEvent e){ //sets a border around the card, adds it to send queue
+    private void processCardClicked(MouseEvent e){ //adds card to send queue and removes it if unclicked
         logger.info("clicked on card");
         CardView source = (CardView) e.getSource();
         if(!source.isSelected()){
@@ -488,9 +471,9 @@ public class Clt_Controller { //Controller is a Singleton
                 finishedStatusSent = false;
                 ArrayList<Card> handCards = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
-                    handCards.add((Card) o);
+                    handCards.add((Card) o); //getting cards from server
                 }
-                Platform.runLater(() -> {
+                Platform.runLater(() -> { //updating gui
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
                     Collections.sort(dataStore.getHandCards());
@@ -498,7 +481,7 @@ public class Clt_Controller { //Controller is a Singleton
                 });
                 logger.info("Added Cards to hand");
 
-                Platform.runLater(() -> {
+                Platform.runLater(() -> { //reenable tichu button
                     view.getTableView().getControls().getCallTichuButton().setDisable(false);
                     //@author Pascal
                     view.getTableView().getTichuLabel().setText(translator.getString("label.timeForTichu"));
@@ -518,14 +501,14 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "card/tableCards": //@author Fabio
                 Platform.runLater(() -> {
-                    view.getTableView().getTichuLabel().setText("");
+                    view.getTableView().getTichuLabel().setText(""); //reset Tichulabel
                 });
                 ArrayList<Card> tableCards = new ArrayList<>();
-                for(Object o : msgIn.getObjects()){
+                for(Object o : msgIn.getObjects()){ //getting the cards from the message
                     tableCards.add((Card) o);
                 }
-                dataStore.getTableCards().clear();
-                dataStore.getTableCards().addAll(tableCards);
+                dataStore.getTableCards().clear(); //clear existing tableCards
+                dataStore.getTableCards().addAll(tableCards); //add new cards to table
                 logger.info("Added TableCards to table");
                 break;
 
@@ -534,6 +517,7 @@ public class Clt_Controller { //Controller is a Singleton
                 dataStore.setWishedCard((Card) msgIn.getObjects().get(0));
                 break;
 
+            //@author Fabio
             case "boolean/isActive": //client gets information if he is the active player or not
                 boolean isActive = (boolean) msgIn.getObjects().get(0);
                 Platform.runLater(() -> {
@@ -625,37 +609,33 @@ public class Clt_Controller { //Controller is a Singleton
 
                 ArrayList<String> teamScores = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
-                    teamScores.add((String) o);
-
-
-
+                    teamScores.add((String) o); //getting infos from message
                 }
 
                 for(String s : teamScores){
                     String[] parts = s.split(";");
                     if(parts[0].equals("1")){
                         Platform.runLater(() -> {
-                            dataStore.setTeamScoreT1(parts[1]);
-
+                            dataStore.setTeamScoreT1(parts[1]); //setting score in datastore
                         });
                     }
                     if(parts[0].equals("2")){
                         Platform.runLater(() -> {
                             dataStore.setTeamScoreT2(parts[1]);
-
-
                         });
                     }
                 }
 
                 break;
 
-            case "string":
-                logger.info("Recieved a String, going to evaluate it.");
-
+            case "string/gameFinished":
+                int winningTeamID = (int) msgIn.getObjects().get(0);
+                view.startWinnView();
+                view.getWinnerView().getLabel().setText(translator.getString("label.winMessage") + "\nTeam "+winningTeamID
+                        +translator.getString("label.winMessage2"));
                 break;
 
-            case "response/string":
+            case "response/string": //checking if client recieves a response string
                 logger.info("Recieved a responseString, going to evaluate it.");
                 MessageResponse responseIn = (MessageResponse) msgIn; //Cast it to a Response
                 String info = (String) responseIn.getObjects().get(0); //Responses always contain only 1 string
@@ -680,7 +660,7 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "string/stingNotification": //@author Fabio -> Show which player stung
                 String notification = (String) msgIn.getObjects().get(0);
-                String[] temp = notification.split(";");
+                String[] temp = notification.split(";"); //getting nitification which player stung
                 int playerID = Integer.parseInt(temp[0]);
                 String message = temp[1];
 
@@ -766,9 +746,11 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "string/newRound":
-                Platform.runLater(() -> {
-                    dataStore.getHandCards().clear();
-                    dataStore.getTableCards().clear();
+                Platform.runLater(() -> {//display text that a new round started
+                    String displayText = view.getTableView().getStatusView().getStatus().getText();
+                    displayText += "\n"+translator.getString("status.newRound.start");
+                    view.getTableView().getTichuLabel().setText(translator.getString("status.newRound.start"));
+                    view.getTableView().getStatusView().getStatus().setText(displayText);
                 });
                 break;
 
@@ -785,7 +767,7 @@ public class Clt_Controller { //Controller is a Singleton
         }
 
     }
-
+    //@author Fabio
     private void selectLanguage(){
         if(view.getStartScreen().getToggleDE().isSelected() || view.getStartScreen().getToggleEN().isSelected()){
             if(view.getStartScreen().getToggleDE().isSelected()){
@@ -793,6 +775,7 @@ public class Clt_Controller { //Controller is a Singleton
             } else {
                 serviceLocator.setTranslator(new Translator("en"));
             }
+            this.translator = serviceLocator.getTranslator(); //reset translator in controller, so that language changes
         }
     }
 
