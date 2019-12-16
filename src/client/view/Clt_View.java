@@ -62,4 +62,8 @@ public class Clt_View {
     }
 
     public Clt_CardWishView getCardWishView() { return cardWishView; }
+
+    public Clt_WinnerView getWinnerView() {
+        return winnerView;
+    }
 }

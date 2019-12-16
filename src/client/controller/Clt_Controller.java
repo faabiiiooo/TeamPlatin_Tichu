@@ -634,7 +634,10 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "string/gameFinished":
+                int winningTeamID = (int) msgIn.getObjects().get(0);
                 view.startWinnView();
+                view.getWinnerView().getLabel().setText(translator.getString("label.winnMessage") + "\nTeam "+winningTeamID
+                        +translator.getString("label.winMessage2"));
                 break;
 
             case "string":
