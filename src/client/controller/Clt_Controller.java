@@ -612,9 +612,6 @@ public class Clt_Controller { //Controller is a Singleton
                 ArrayList<String> teamScores = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
                     teamScores.add((String) o);
-
-
-
                 }
 
                 for(String s : teamScores){
@@ -634,6 +631,10 @@ public class Clt_Controller { //Controller is a Singleton
                     }
                 }
 
+                break;
+
+            case "string/gameFinished":
+                view.startWinnView();
                 break;
 
             case "string":
