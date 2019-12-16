@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 public class Srv_Table {
 
     private final ArrayList<Player> playersAtTable = new ArrayList<>();
-    private final ArrayList<Srv_Seat> seats = new ArrayList<>();
     private final ArrayList<Card> lastPlayedCards = new ArrayList<>();
     private final ArrayList<Card> allPlayedCards = new ArrayList<>();
     private final ArrayList<Player> playersThatSkipped = new ArrayList<>();
@@ -32,7 +31,6 @@ public class Srv_Table {
 
     public Srv_Table(Srv_Game game){
         this.game = game;
-        this.createSeats();
         this.createDeck();
 
 
@@ -234,17 +232,6 @@ public class Srv_Table {
         serviceLocator.getSrvModel().sendStingNotification();
 
 
-    }
-
-    //@author Pascal
-    //Create new Seats with ID 1-4 and add it to the List
-    private Srv_Seat createSeats(){
-        for(int i=0;i<4;i++){
-            Srv_Seat s=new Srv_Seat(i+1);
-            this.seats.add(s);
-
-        }
-        return null;
     }
 
     //@author Fabio
@@ -480,9 +467,6 @@ public class Srv_Table {
 
 
 
-    public ArrayList<Srv_Seat> getSeats() {
-        return seats;
-    }
 
     //getter setter
     public Card getMahJongWishCard(){ return this.mahJongWishCard; }
