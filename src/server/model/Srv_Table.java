@@ -17,14 +17,11 @@ public class Srv_Table {
     private final ArrayList<Player> playersThatSkipped = new ArrayList<>();
     private Srv_Deck deck;
     private Srv_Game game;
-    private Player beginner;
+    private Player beginner, pWhichGetsDragon;
 
     private Card mahJongWishCard;
-    private boolean dragonPlayed;
-    private Player pWhichGetsDragon;
+    private boolean dragonPlayed, wishCardPlayedOut = false;
 
-
-    private boolean wishCardPlayedOut = false;
 
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
