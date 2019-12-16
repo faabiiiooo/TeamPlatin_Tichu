@@ -365,6 +365,15 @@ public class Srv_Model {
         this.sendActivePlayerToClients();
     }
 
+    private void sendNewRoundInfo(){
+        try{
+            Message msgOut = new Message("string/newRound");
+            serviceLocator.getServer().broadcast(msgOut);
+        } catch (Exception e){
+            logger.severe("Can't send newRound information to clients");
+        }
+    }
+
     private void gameFinished(Srv_Team winningTeam){
         try{
             Message msgOut = new Message("string/gameFinished",winningTeam.getTEAM_ID());

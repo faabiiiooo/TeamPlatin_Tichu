@@ -15,7 +15,8 @@ public class Test_StartTableView extends Application {
 
     public void start(Stage primaryStage){
         initialize();
-        Clt_TableView tblView = new Clt_TableView(primaryStage);
+        //Clt_TableView tblView = new Clt_TableView(primaryStage);
+        Clt_WinnerView winView = new Clt_WinnerView(primaryStage);
 
     }
 

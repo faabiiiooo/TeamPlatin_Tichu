@@ -90,7 +90,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             model.getGame().getTable().skip(); //normal skip if no dog played
                             model.sendPlayersToClients();
                         } else {
-                            if (cardsToPlay.get(0).getRank() == Rank.Mahjong) {
+                            if (cardsToPlay.get(0).getRank() == Rank.Mahjong && playingPlayer.getHandCards().size() != 0) {
                                 logger.info("Client: " + msgIn.getSenderID() + " want top open wishview --> model ");
                                 if (cardsToPlay.get(0).getRank() == Rank.Mahjong) {
                                     int senderID = msgIn.getSenderID();

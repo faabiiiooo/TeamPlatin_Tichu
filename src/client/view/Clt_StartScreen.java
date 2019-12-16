@@ -23,10 +23,9 @@ public class Clt_StartScreen extends StackPane {
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Translator translator = serviceLocator.getTranslator();
 
-    private final CheckBox beServer;
     private final TextField txtIpAddress;
     private final ToggleButton toggleDE, toggleEN;
-    private final Label lblLanguage, lblBeServer, lblIpAddress, lblTitle;
+    private final Label lblLanguage, lblIpAddress, lblTitle;
     private final Button btnNext;
     private final Stage startStage;
     private Media media;
@@ -36,8 +35,6 @@ public class Clt_StartScreen extends StackPane {
 
     public Clt_StartScreen(Stage startStage) throws MalformedURLException {
         this.startStage = startStage;
-
-        this.beServer = new CheckBox();
         this.txtIpAddress = new TextField();
 
 
@@ -46,7 +43,6 @@ public class Clt_StartScreen extends StackPane {
         this.lblTitle = new Label(translator.getString("label.welcome")+"\n\n");
         this.lblTitle.setId("lblTitle");
         this.lblLanguage = new Label(translator.getString("label.language"));
-        this.lblBeServer = new Label(translator.getString("label.beServer"));
         this.lblIpAddress = new Label(translator.getString("label.serverIp"));
 
 
@@ -60,12 +56,8 @@ public class Clt_StartScreen extends StackPane {
 
         gridPane.add(lblTitle,0,0, 2,1);
 
-
-        gridPane.add(lblBeServer,0,1);
-        gridPane.add(beServer,1,1);
-
-        gridPane.add(lblIpAddress,0,2);
-        gridPane.add(txtIpAddress,1,2);
+        gridPane.add(lblIpAddress,0,1);
+        gridPane.add(txtIpAddress,1,1);
 
 
 
@@ -110,10 +102,6 @@ public class Clt_StartScreen extends StackPane {
 
 
 
-    }
-
-    public CheckBox getBeServer() {
-        return beServer;
     }
 
     public TextField getTxtIpAddress() {
