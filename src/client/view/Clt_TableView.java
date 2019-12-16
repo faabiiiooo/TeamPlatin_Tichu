@@ -91,7 +91,7 @@ public class Clt_TableView extends BorderPane {
 
         Scene tableScene = new Scene(root,1480,900);
         tableScene.getStylesheets().add(getClass().getResource("TableView.css").toExternalForm());
-        this.primaryStage.setResizable(true);
+        this.primaryStage.setResizable(false);
         this.setId("start-pane");
         this.primaryStage.setScene(tableScene);
         this.primaryStage.setTitle(translator.getString("program.name"));

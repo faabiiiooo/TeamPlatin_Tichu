@@ -6,16 +6,6 @@
 }
 .card {
 
-
-/*
-    -fx-pref-width: 105;
-    -fx-pref-height:165;
-    -fx-min-width: 60;
-    -fx-min-height: 125;
-
-    -fx-max-width: 105;
-    -fx-max-height: 165;*/
-
     -fx-pref-width: 125;
     -fx-pref-height:185;
     -fx-min-width: 40;
@@ -25,12 +15,6 @@
     -fx-max-height: 165;
 
 
-
-
-
-}
-.card:hover{
- -fx-text-overrun: clip;
 
 }
 .tableCards{
@@ -145,7 +129,7 @@ cardBackTop{
 
 }
 .scoreLabels{
-    -fx-font-family: "Arial Black";
+    -fx-font-family: Algerian;
     -fx-font-size: 15;
     -fx-min-width: 130px;
     -fx-max-width: 130px;
@@ -170,7 +154,8 @@ cardBackTop{
 
 #tichuLabel{
     -fx-font-weight: bold;
-    -fx-font-family: Algerian;
+    -fx-font-family:Algerian;
+    -fx-font-size: 20px;
 
 
 }
@@ -181,13 +166,13 @@ cardBackTop{
     -fx-max-height: 250px;
     -fx-min-height: 250;
     -fx-font-size: 15px;
-    -fx-font-family: "Arial Black";
+    -fx-font-family: Algerian;
     -fx-font-weight: bold;
 
 }
 #status {
     -fx-font-size: 12px;
-    -fx-font-family: "Arial Black";
+    -fx-font-family: Algerian;
 }
 
 .scroll-pane{
@@ -214,7 +199,7 @@ cardBackTop{
 
 }
 #playerIdLR {
-    -fx-font-family: "Arial Black";
+    -fx-font-family: Algerian;
     -fx-text-fill: black;
     -fx-border-width: 2px;
     -fx-border-radius: 4px;
@@ -225,7 +210,7 @@ cardBackTop{
     -fx-background-color: linear-gradient(rgba(168, 1, 9, 0.24), rgba(170, 33, 40, 0.58));;
 }
 #playerIdTop {
-    -fx-font-family: "Arial Black";
+    -fx-font-family: Algerian;
     -fx-text-fill: black;
     -fx-border-width: 2px;
     -fx-border-radius: 4px;

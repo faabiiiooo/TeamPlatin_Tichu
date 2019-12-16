@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -398,6 +399,7 @@ public class Clt_Controller { //Controller is a Singleton
             PathTransition move=new PathTransition(Duration.millis(150),path,source);
             move.play();
 
+
         } else {
             if(source.isSelected()){
                 Card c = source.getCard();
@@ -492,11 +494,23 @@ public class Clt_Controller { //Controller is a Singleton
                     dataStore.getHandCards().clear();
                     dataStore.getHandCards().addAll(handCards);
                     Collections.sort(dataStore.getHandCards());
+
                 });
                 logger.info("Added Cards to hand");
 
                 Platform.runLater(() -> {
                     view.getTableView().getControls().getCallTichuButton().setDisable(false);
+                    //@author Pascal
+                    view.getTableView().getTichuLabel().setText(translator.getString("label.timeForTichu"));
+                    view.getTableView().getStatusView().getStatus().setText(translator.getString("label.timeForTichu"));
+                    if(dataStore.getHandCards().size()==14){
+                        view.getTableView().getTichuLabel().setText("");
+                    }
+
+
+
+
+
                 });
 
 
@@ -677,10 +691,10 @@ public class Clt_Controller { //Controller is a Singleton
                     Platform.runLater(()->view.getTableView().getTichuLabel().setText(translator.getString("model.player")+" "+
                             playerID + " " + translator.getString("player.sting.notification")));
 
-                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
-                    st.setByX(1.5f);
-                    st.setByY(1.5f);
-                    st.setCycleCount(2);
+                    ScaleTransition st = new ScaleTransition(Duration.millis(1000), view.getTableView().getTichuLabel());
+                    st.setByX(0.4);
+                    st.setByY(0.4);
+                    st.setCycleCount(4);
                     st.setAutoReverse(true);
                     st.play();
 
@@ -691,10 +705,10 @@ public class Clt_Controller { //Controller is a Singleton
                     Platform.runLater(() -> view.getTableView().getTichuLabel().setText(translator.getString("model.player")+ " "+  playerID + " " +
                             translator.getString("player.sting.notification")));
 
-                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
-                    st.setByX(1.5f);
-                    st.setByY(1.5f);
-                    st.setCycleCount(2);
+                    ScaleTransition st = new ScaleTransition(Duration.millis(1000), view.getTableView().getTichuLabel());
+                    st.setByX(0.4);
+                    st.setByY(0.4);
+                    st.setCycleCount(4);
                     st.setAutoReverse(true);
                     st.play();
                     //Set a stinged Text in the status Label
@@ -719,10 +733,10 @@ public class Clt_Controller { //Controller is a Singleton
 
                     view.getTableView().getStatusView().getTichuYesOrNo().setText(tempTichuText);
 
-                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
-                    st.setByX(1.5f);
-                    st.setByY(1.5f);
-                    st.setCycleCount(2);
+                    ScaleTransition st = new ScaleTransition(Duration.millis(1000), view.getTableView().getTichuLabel());
+                    st.setByX(0.4);
+                    st.setByY(0.4);
+                    st.setCycleCount(4);
                     st.setAutoReverse(true);
                     st.play();
                 });
@@ -742,10 +756,10 @@ public class Clt_Controller { //Controller is a Singleton
 
                     view.getTableView().getStatusView().getTichuYesOrNo().setText(tempTichuText);
 
-                    ScaleTransition st = new ScaleTransition(Duration.millis(2000), view.getTableView().getTichuLabel());
-                    st.setByX(1.5f);
-                    st.setByY(1.5f);
-                    st.setCycleCount(2);
+                    ScaleTransition st = new ScaleTransition(Duration.millis(1000), view.getTableView().getTichuLabel());
+                    st.setByX(0.4);
+                    st.setByY(0.4);
+                    st.setCycleCount(4);
                     st.setAutoReverse(true);
                     st.play();
                 });

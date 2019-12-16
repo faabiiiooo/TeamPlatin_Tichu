@@ -3,6 +3,7 @@ package client.view;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -27,7 +28,8 @@ public class Clt_WinnerView extends HBox {
         this.setAlignment(Pos.CENTER);
         scene.getStylesheets().add(getClass().getResource("WinnView.css").toExternalForm());
 
-
+        this.winStage.setTitle(translator.getString("program.name"));
+        this.winStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.winStage.setScene(scene);
         this.winStage.show();
     }
