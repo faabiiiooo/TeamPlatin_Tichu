@@ -25,18 +25,6 @@ public class Clt_Model {
     }
 
     //@author Fabio
-    public void startServer(){ //Start Server if user wants to be Server
-
-        Thread server = new Thread("serverThread"){ //starting server in its own thread
-            public void run(){
-                Tichu_Srv.main(new String[]{});
-            }
-        };
-        server.start();
-
-    }
-
-    //@author Fabio
     public void startClient(String serverIP){  //start client
         client = new Clt_Client(serverIP);
         client.start();
