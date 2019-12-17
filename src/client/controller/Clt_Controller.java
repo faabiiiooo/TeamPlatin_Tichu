@@ -637,7 +637,7 @@ public class Clt_Controller { //Controller is a Singleton
                 Platform.runLater(() -> {
                     view.startWinnView();
                     view.getWinnerView().getLabel().setText(translator.getString("label.winMessage") + "\nTeam "+winningTeamID
-                            +translator.getString("label.winMessage2"));
+                            +" "translator.getString("label.winMessage2"));
                 });
                 break;
 

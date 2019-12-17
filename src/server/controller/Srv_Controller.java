@@ -46,7 +46,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
         model.getGame().getTable().skip();
         model.sendPlayersToClients();
         model.sendActivePlayerToClients();
-        model.getGame().getTable().checkIfMJWishIsActive(); //check if the mj wish is active
+        if(!model.getGame().getTable().isWishCardPlayedOut()){
+            model.getGame().getTable().checkIfMJWishIsActive();
+        }
 
 
     }
@@ -110,7 +112,9 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                     model.sendHasBombStatusToClients();//send status to client
                     model.sendActivePlayerToClients();
                     model.sendPlayersToClients();
-                    model.getGame().getTable().checkIfMJWishIsActive();
+                    if(!model.getGame().getTable().isWishCardPlayedOut()){
+                        model.getGame().getTable().checkIfMJWishIsActive();
+                    }
                     for(Player p : serviceLocator.getTable().getPlayersAtTable()){ //if he skipped previously and now can play
                         if(p.getClientID() == msgIn.getSenderID()){
                             serviceLocator.getTable().getPlayersThatSkipped().remove(p);

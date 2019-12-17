@@ -335,20 +335,31 @@ public class Srv_Table {
             for (Player mj : playersAtTable) {
                 logger.info("going to check if the mj wish is still active");
                 // if the wished card is already played or it cant be played anymore set every player to false
-                if (lastPlayedCards.get(lastPlayedCards.size() - 1).getRank().ordinal() >= mahJongWishCard.getRank().ordinal() && lastPlayedCards.get(lastPlayedCards.size() - 1).getRank()
-                        != Rank.Mahjong||
-                        lastPlayedCards.size() >= 5 && !Srv_HandType.mahJongWishStreet(mj.getHandCards(), lastPlayedCards, mahJongWishCard) ) {
-                    for (Player p : playersAtTable) {
-                        p.setHasWishedCard(false);
-                        logger.info("player :"+p+" can no more play the wished card. HasWIshedCardStatus: "+p.isHasWishedCard());
-                    }
-                } else {
-                    if (lastPlayedCards.contains(mahJongWishCard.getRank()) && !wishCardPlayedOut) {
-                        wishCardPlayedOut=true;
+
+                if(!lastPlayedCards.isEmpty()){
+                    if (lastPlayedCards.get(lastPlayedCards.size() - 1).getRank().ordinal() >= mahJongWishCard.getRank().ordinal() && lastPlayedCards.get(lastPlayedCards.size() - 1).getRank()
+                            != Rank.Mahjong||
+                            lastPlayedCards.size() >= 5 && !Srv_HandType.mahJongWishStreet(mj.getHandCards(), lastPlayedCards, mahJongWishCard) ) {
                         for (Player p : playersAtTable) {
                             p.setHasWishedCard(false);
+                            logger.info("player :"+p+" can no more play the wished card. HasWIshedCardStatus: "+p.isHasWishedCard());
                         }
+                    } else {
+                        boolean containsWish = false;
+                        for(Card c : lastPlayedCards){
+                            if(c.getRank() == mahJongWishCard.getRank()){
+                                containsWish = true;
+                            }
+                        }
+                        if (containsWish && !wishCardPlayedOut) {
+                            logger.info("mjcheck");
+                            wishCardPlayedOut=true;
+                            mahJongWishCard = null;
+                            for (Player p : playersAtTable) {
+                                p.setHasWishedCard(false);
+                            }
 
+                        }
                     }
                 }
             }
