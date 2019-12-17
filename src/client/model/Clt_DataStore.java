@@ -22,6 +22,7 @@ public class Clt_DataStore {
     private final ArrayList<Message> waitingForResponse = new ArrayList<>();
 
     private boolean finish = false;
+    private boolean saidTichu = false;
 
     private Player playerTop;
     private Player playerRight;
@@ -227,5 +228,13 @@ public class Clt_DataStore {
 
     public void setFinish(boolean finish) {
         this.finish = finish;
+    }
+
+    public boolean isSaidTichu() {
+        return saidTichu;
+    }
+
+    public void setSaidTichu(boolean saidTichu) {
+        this.saidTichu = saidTichu;
     }
 }

@@ -156,6 +156,7 @@ public class Clt_Controller { //Controller is a Singleton
         if (successful) {
             logger.info("Tichu-String sent to Server");
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
+            dataStore.setSaidTichu(true);
 
 
         } else {
@@ -483,7 +484,9 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Added Cards to hand");
 
                 Platform.runLater(() -> { //reenable tichu button
-                    view.getTableView().getControls().getCallTichuButton().setDisable(false);
+                    if(!dataStore.isSaidTichu()){
+                        view.getTableView().getControls().getCallTichuButton().setDisable(false);
+                    }
                     //@author Pascal
                     view.getTableView().getTichuLabel().setText(translator.getString("label.timeForTichu"));
                     view.getTableView().getStatusView().getStatus().setText(translator.getString("label.timeForTichu"));
@@ -745,8 +748,6 @@ public class Clt_Controller { //Controller is a Singleton
                     st.setAutoReverse(true);
                     st.play();
 
-                    view.getTableView().getControls().getCallTichuButton().setDisable(true);
-
                    /* Image imageDecline = new Image(getClass().getResourceAsStream("../../resources/images/backgrounds/bomb.gif"));
                     ImageView iv=new ImageView(imageDecline);
                     view.getTableView().getBombLabel().setGraphic(iv);*/
@@ -755,11 +756,16 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "string/newRound":
+                dataStore.setSaidTichu(false);
                 Platform.runLater(() -> {//display text that a new round started
                     String displayText = view.getTableView().getStatusView().getStatus().getText();
                     displayText += "\n"+translator.getString("status.newRound.start");
                     view.getTableView().getTichuLabel().setText(translator.getString("status.newRound.start"));
                     view.getTableView().getStatusView().getStatus().setText(displayText);
+                    view.getTableView().getControls().getCallTichuButton().setDisable(false);
+                    view.getTableView().getStatusView().getStatus().setText("");
+                    view.getTableView().getStatusView().getTichuYesOrNo().setText("");
+                    view.getTableView().getStatusView().getWished().setText("");
                 });
                 break;
 

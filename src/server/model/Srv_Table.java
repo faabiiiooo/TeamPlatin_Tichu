@@ -187,11 +187,6 @@ public class Srv_Table {
                 }
             }
         }
-        for (Player p : playersAtTable) { //Logger-Info for Testing
-            if (p.isActive()) {
-                logger.info("Active Player: " + p.getPLAYER_ID());
-            }
-        }
         logger.info("Table_Skip_Process Ended");
     }
 
@@ -214,8 +209,15 @@ public class Srv_Table {
         } else { //if player stung with his last card
             int idOfNextPlayer = winner.getNextPlayerID();
             for(Player p : playersAtTable){
-                if(idOfNextPlayer == p.getPLAYER_ID()){
-                    p.setActive(true);
+                if(idOfNextPlayer == p.getPLAYER_ID() && p.getHandCards().size() == 0){
+                    idOfNextPlayer = p.getNextPlayerID();
+                    if(idOfNextPlayer == p.getPLAYER_ID()){
+                        p.setActive(true);
+                    }
+                } else {
+                    if(idOfNextPlayer == p.getPLAYER_ID() && p.getHandCards().size() > 0){
+                        p.setActive(true);
+                    }
                 }
             }
 
