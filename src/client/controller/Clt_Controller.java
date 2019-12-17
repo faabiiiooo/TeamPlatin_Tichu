@@ -634,9 +634,11 @@ public class Clt_Controller { //Controller is a Singleton
 
             case "string/gameFinished":
                 int winningTeamID = (int) msgIn.getObjects().get(0);
-                view.startWinnView();
-                view.getWinnerView().getLabel().setText(translator.getString("label.winMessage") + "\nTeam "+winningTeamID
-                        +translator.getString("label.winMessage2"));
+                Platform.runLater(() -> {
+                    view.startWinnView();
+                    view.getWinnerView().getLabel().setText(translator.getString("label.winMessage") + "\nTeam "+winningTeamID
+                            +translator.getString("label.winMessage2"));
+                });
                 break;
 
             case "response/string": //checking if client recieves a response string
