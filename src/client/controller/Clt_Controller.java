@@ -109,7 +109,8 @@ public class Clt_Controller { //Controller is a Singleton
 
     }
 
-    //@author Thomas Activate the bomb button if the player has a bomb on his hand
+    //@author Thomas
+    // Activate the bomb button if the player has a bomb on his hand
     private void updateBombButton(Boolean newValue) {
         if(newValue){
                 logger.info("Reenable the bomb button because the player has a bomb");
@@ -241,13 +242,12 @@ public class Clt_Controller { //Controller is a Singleton
     private void wishedCardfromMahjong(boolean newValue){
         logger.info(this.toString()+  "Info to show Wish view");
         if(newValue) {
-            Platform.runLater(() -> view.startWishView());
-            Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
+            Platform.runLater(() -> view.startWishView()); // open wish view window
+            Platform.runLater(() -> view.getCardWishView().getWishButtonGroup().selectedToggleProperty().addListener((ov, toggle, new_toggle) -> { // get the selected togglebutton
                 if (view.getCardWishView().getWishButtonGroup().getSelectedToggle() != null)
                     for (ToggleButton tb : view.getCardWishView().getCardButtons()) {
-                        if (tb == new_toggle && !tb.getText().equalsIgnoreCase("N")) {
+                        if (tb == new_toggle && !tb.getText().equalsIgnoreCase("N")) { // create a new card with the String from the button
                             createWishedCard(tb.getText());
-                            //view.getTableView().getStatusView().getWished().setText(tb.getText());
                             logger.info(tb.getText()+ "Text from button");
                             break;
                         }else{
@@ -256,10 +256,9 @@ public class Clt_Controller { //Controller is a Singleton
                                 logger.info("Card wish N");
                                 break;
                             }
-                            //view.getTableView().getStatusView().getWished().setText(tb.getText());
                         }
 
-                    }
+                    } //close the wish view
                 Platform.runLater(() -> view.getCardWishView().getWishStage().close());
 
             }));

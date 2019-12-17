@@ -387,7 +387,7 @@ public enum Srv_HandType {
                             testedStreetWithWish.clear();
                         }
                     }
-                    logger.info("Leer?" + testedStreetWithWish);
+                    logger.info(""+ testedStreetWithWish);
                 }
             Collections.sort(testedStreetWithWish);
             //check if the street contains the wished card from Mah Jong and check if the third card has the higher ordinal than the last played cards (first and second card could be special cards)
