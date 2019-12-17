@@ -744,6 +744,8 @@ public class Clt_Controller { //Controller is a Singleton
                     st.setAutoReverse(true);
                     st.play();
 
+                    view.getTableView().getControls().getCallTichuButton().setDisable(true);
+
                    /* Image imageDecline = new Image(getClass().getResourceAsStream("../../resources/images/backgrounds/bomb.gif"));
                     ImageView iv=new ImageView(imageDecline);
                     view.getTableView().getBombLabel().setGraphic(iv);*/
