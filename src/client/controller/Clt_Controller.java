@@ -593,6 +593,7 @@ public class Clt_Controller { //Controller is a Singleton
                 String playerId = (String) msgIn.getObjects().get(0);
                     Platform.runLater(() -> {
                         view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+playerId+" "+ translator.getString("label.playerBombs") );
+
                     });
                 break;
 
@@ -742,6 +743,11 @@ public class Clt_Controller { //Controller is a Singleton
                     st.setCycleCount(4);
                     st.setAutoReverse(true);
                     st.play();
+
+                   /* Image imageDecline = new Image(getClass().getResourceAsStream("../../resources/images/backgrounds/bomb.gif"));
+                    ImageView iv=new ImageView(imageDecline);
+                    view.getTableView().getBombLabel().setGraphic(iv);*/
+
                 });
                 break;
 
