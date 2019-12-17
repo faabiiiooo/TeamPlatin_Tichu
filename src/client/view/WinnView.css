@@ -1,0 +1,11 @@
+.label{
+    -fx-font-size: 40px;
+    -fx-font-family: "Arial Black";
+    -fx-text-fill: white;
+
+}
+#winnView{
+    -fx-background-image: url(../../resources/images/backgrounds/giphy.gif);
+    -fx-background-size: cover;
+
+}

@@ -6,12 +6,16 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import resources.ServiceLocator;
 import resources.Translator;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Stack;
 
 public class Clt_StartScreen extends StackPane {
@@ -19,28 +23,28 @@ public class Clt_StartScreen extends StackPane {
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Translator translator = serviceLocator.getTranslator();
 
-    private final CheckBox beServer;
     private final TextField txtIpAddress;
     private final ToggleButton toggleDE, toggleEN;
-    private final Label lblLanguage, lblBeServer, lblIpAddress, lblTitle;
+    private final Label lblLanguage, lblIpAddress, lblTitle;
     private final Button btnNext;
     private final Stage startStage;
+    private Media media;
+    private MediaPlayer mp;
 
     private final GridPane gridPane = new GridPane();
 
-    public Clt_StartScreen(Stage startStage){
+    public Clt_StartScreen(Stage startStage) throws MalformedURLException {
         this.startStage = startStage;
-
-        this.beServer = new CheckBox();
         this.txtIpAddress = new TextField();
+
 
         this.btnNext = new Button(translator.getString("button.next"));
 
         this.lblTitle = new Label(translator.getString("label.welcome")+"\n\n");
         this.lblTitle.setId("lblTitle");
         this.lblLanguage = new Label(translator.getString("label.language"));
-        this.lblBeServer = new Label(translator.getString("label.beServer"));
         this.lblIpAddress = new Label(translator.getString("label.serverIp"));
+
 
 
         ToggleGroup language = new ToggleGroup();
@@ -52,14 +56,12 @@ public class Clt_StartScreen extends StackPane {
 
         gridPane.add(lblTitle,0,0, 2,1);
 
+        gridPane.add(lblIpAddress,0,1);
+        gridPane.add(txtIpAddress,1,1);
 
-        gridPane.add(lblBeServer,0,1);
-        gridPane.add(beServer,1,1);
 
-        gridPane.add(lblIpAddress,0,2);
-        gridPane.add(txtIpAddress,1,2);
 
-        gridPane.add(btnNext,0,3);
+        gridPane.add(btnNext,0,4);
 
 
         gridPane.add(lblLanguage,2,1);
@@ -81,16 +83,25 @@ public class Clt_StartScreen extends StackPane {
         this.startStage.setResizable(false);
         this.startStage.setWidth(875);
         this.startStage.setHeight(502);
-        //this.startStage.initStyle(StageStyle.TRANSPARENT);
+        //this.startStage.initStyle(StageStyle.TRANSPARENT);d
+        gridPane.setId("backGif");
         this.setId("start-pane");
         this.startStage.setTitle(translator.getString("program.name"));
         this.startStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.startStage.show();
 
-    }
 
-    public CheckBox getBeServer() {
-        return beServer;
+        //@author pascal
+     media = new Media(new File("..\\TeamPlatin_Tichu\\src\\resources\\Sound\\hero.mp3")
+                .toURI().toURL().toExternalForm());
+       mp=new MediaPlayer(media);
+       mp.play();
+       mp.getOnRepeat();
+
+
+
+
+
     }
 
     public TextField getTxtIpAddress() {
@@ -100,4 +111,21 @@ public class Clt_StartScreen extends StackPane {
     public Button getBtnNext() {
         return btnNext;
     }
+
+    public void close(){
+        this.startStage.close();
+    }
+
+    public MediaPlayer getMp() {
+        return mp;
+    }
+
+    public ToggleButton getToggleDE() {
+        return toggleDE;
+    }
+
+    public ToggleButton getToggleEN() {
+        return toggleEN;
+    }
 }
+

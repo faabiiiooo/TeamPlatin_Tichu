@@ -1,8 +1,13 @@
 package client.view;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import resources.ServiceLocator;
 import resources.Translator;
 
@@ -13,16 +18,31 @@ public class ControlView extends HBox {
     private final Translator translator = serviceLocator.getTranslator();
 
     private Button playButton, passButton, bombButton, callTichuButton;
-    private Label countDownLabel;
+
+
 
     public ControlView(){
         this.playButton = new Button(translator.getString("button.playCards"));
         this.passButton = new Button(translator.getString("button.pass"));
         this.bombButton = new Button(translator.getString("button.bomb"));
         this.callTichuButton = new Button(translator.getString("button.callTichu"));
-        this.countDownLabel = new Label("");
 
-        this.getChildren().addAll(countDownLabel,playButton,passButton,bombButton,callTichuButton);
+
+        playButton.getStyleClass().add("controlButtons");
+        passButton.getStyleClass().add("controlButtons");
+        bombButton.getStyleClass().add("controlButtons");
+        callTichuButton.getStyleClass().add("controlButtons");
+
+
+        this.setId("bottom");
+        this.getChildren().addAll(playButton,passButton,bombButton,callTichuButton);
+        //Bomb button is always disabled at the beginning, only able it when player got a bomb
+        this.bombButton.setDisable(true);
+        //disable buttons until player is active
+        this.playButton.setDisable(true);
+        this.passButton.setDisable(true);
+
+
 
     }
 
@@ -40,10 +60,6 @@ public class ControlView extends HBox {
 
     public Button getCallTichuButton() {
         return callTichuButton;
-    }
-
-    public Label getCountDownLabel() {
-        return countDownLabel;
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.Collections;
 public class Srv_Game { //@author Thomas
 
     protected ArrayList<Srv_Team> teams = new ArrayList<Srv_Team>();;
-    protected final int G_MIN_SCORE = 1000;
+    protected final static int G_MIN_SCORE = 300;
     protected Srv_Team winner;
     private ArrayList<Srv_Round> rounds;
     private Srv_Table table;
@@ -19,6 +19,7 @@ public class Srv_Game { //@author Thomas
         this.teams = createTeams();
         this.rounds = new ArrayList<Srv_Round>();
         this.winner = null;
+        this.table = new Srv_Table(this);
 
     }
     //create two teams and add them to the a list
@@ -72,6 +73,11 @@ public class Srv_Game { //@author Thomas
                 winningRangeTeams.add(teams.get(1));
             }
         }
+
+        if(winningRangeTeams.isEmpty()){
+            return null;
+        }
+
         /* check the size of the list to see if there is a team who reached 1000 points or more.
         for the case that both teams reached the 1000 points, sort the list and get the team with more points.
         The instance variable winner will be set to the winner team and returned*/
@@ -79,8 +85,13 @@ public class Srv_Game { //@author Thomas
             Collections.sort(winningRangeTeams);
             this.winner = winningRangeTeams.get(0);
         }else{ // if both teams have the same amount of points, set the winner to null
-            if(winningRangeTeams.get(0).getGameScore() == winningRangeTeams.get(1).getGameScore() )
-            this.winner = null;
+            if(winningRangeTeams.get(0).getGameScore() == winningRangeTeams.get(1).getGameScore()){
+                this.winner = null;
+            } else {
+                if(winningRangeTeams.isEmpty()){
+                    winner = null;
+                }
+            }
         }
         return winner;
     }
@@ -92,9 +103,18 @@ public class Srv_Game { //@author Thomas
         return table;
     }
 
-    // reset the table Object
-    private void resetTable(){
-        this.table = null;
+
+    public void resetTable(){
+        table.createDeck();
+        table.getPlayersThatSkipped().clear();
+        table.getLastPlayedCards().clear();
+        table.setMahJongWishCard(null);
+        table.getAllPlayedCards().clear();
+        table.setBeginner(null);
+        table.setWishCardPlayedOut(false);
+        table.setDragonPlayed(false);
+        table.setpWhichGetsDragon(null);
+
     }
 
     //getters and setters

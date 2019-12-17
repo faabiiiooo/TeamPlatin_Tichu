@@ -1,20 +1,30 @@
 package client.view;
 
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 
 
-public class RivalPaneL extends HBox {
+public class RivalPaneL extends VBox {
 
-    private Label avatarLabel, cardsLabel, rice;
-    private Image team1 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team1_avatar.png"));
+    private Label avatarLabel, cardsLabel, rice,lName;
+    private Image team1 = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/team2_avatar.png"));
     private Image cardBack = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/card_back.jpg"));
     private Image riceImg = new Image(getClass().getClassLoader().getResourceAsStream("./resources/images/ingame/rice.png"));
 
-    private VBox vBox = new VBox();
+    private GridPane gridPane=new GridPane();
+    private StackPane stack = new StackPane();
+    private Text cardAmountText = new Text();
+
+
+
+
 
     public RivalPaneL(){
 
@@ -33,8 +43,12 @@ public class RivalPaneL extends HBox {
         imgViewCard.fitHeightProperty().bind(cardsLabel.heightProperty());
         cardsLabel.getStyleClass().add("cardBack");
         imgViewCard.setPreserveRatio(true);
+        stack.getChildren().addAll(cardsLabel,cardAmountText);
+        cardAmountText.setId("cardAmount");
 
-
+        this.lName=new Label();
+        this.lName.setPadding(new Insets(2));
+        this.lName.setId("playerIdLR");
         this.rice = new Label();
         ImageView imgViewRice = new ImageView(riceImg);
         this.rice.setGraphic(imgViewRice);
@@ -43,15 +57,31 @@ public class RivalPaneL extends HBox {
         this.rice.getStyleClass().add("rice");
         imgViewRice.setPreserveRatio(true);
 
-        this.vBox.getChildren().addAll(avatarLabel, rice);
 
+        this.setPadding(new Insets(2,80,0,30));
+        gridPane.setPadding(new Insets(0,0,25,0));
+        gridPane.add(rice,1,1);
+        gridPane.add(avatarLabel,1,3);
+        gridPane.add(lName,1,2);
 
+        gridPane.add(stack,2,3);
+        gridPane.setHgap(5);
+        //gridPane.setVgap(5);
 
-        this.getChildren().addAll(vBox,cardsLabel);
-
+        this.getChildren().add(gridPane);
+        //this.setId("left");
     }
 
     public Label getCardsLabel() {
         return cardsLabel;
+    }
+    public Text getCardAmountText() { return cardAmountText; }
+
+    public Label getRiceLabel() {
+        return this.rice;
+    }
+
+    public Label getlName() {
+        return lName;
     }
 }

@@ -3,16 +3,13 @@ package server.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import resources.Message;
+import resources.Player;
 import resources.ServiceLocator;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Observable;
 import java.util.logging.Logger;
 
 //@author Fabio
@@ -27,13 +24,16 @@ public class Srv_Server extends Thread {
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
 
+    private boolean gameAlreadyStarted = false;
+
 
     //Creating Server Thread
 
     public Srv_Server(){
         super("Srv_ServerThread");
         logger.info("Srv_Server created.");
-        this.setDaemon(true); //autmatically close Thread when program halt.
+        serviceLocator.setServer(this);
+        //this.setDaemon(true); //autmatically close Thread when program halt.
 
     }
 
@@ -44,9 +44,16 @@ public class Srv_Server extends Thread {
             while(true){ //Create new Thread for each Client.
                 Socket socket = listener.accept();
                 clientSockets.add(socket);  //Keep ClientThreads alive
-                Srv_ClientThread client = new Srv_ClientThread(this,socket.getInputStream(),socket.getOutputStream());
+                Player newPlayer = new Player();
+                Srv_ClientThread client = new Srv_ClientThread(this,socket.getInputStream(),socket.getOutputStream(), newPlayer.getPLAYER_ID());
+                newPlayer.setClientID(client.getID());
+                serviceLocator.getTable().addPlayerToTable(newPlayer); //ad the newly generated player to the table
                 clientThreads.add(client);
                 client.start();
+                if(clientThreads.size() == 4 && !gameAlreadyStarted){ //start game when 4 clients are connected.
+                    logger.info("Going to start first Round!");
+                    this.startGame();
+                }
 
             }
 
@@ -87,7 +94,7 @@ public class Srv_Server extends Thread {
         this.broadcast(stopMsg);
     }
 
-    private boolean searchDisconnectedClients(){ //finds closed Client threads, and removes them from server
+    protected boolean searchDisconnectedClients(){ //finds closed Client threads, and removes them from server
 
        ArrayList<Srv_ClientThread> stoppedClients = new ArrayList<>(); //temporary List for inactive Clients
        boolean stoppedClientFound = false;
@@ -108,5 +115,24 @@ public class Srv_Server extends Thread {
 
        return stoppedClientFound;
 
+    }
+
+    private void startGame(){
+        serviceLocator.getSrvModel().startGame();
+        this.gameAlreadyStarted = true;
+    }
+
+    public int searchIndexOfClientThreadByID(int id){
+        int index = -1;
+        for(int i = 0; i < this.clientThreads.size(); i++){
+            if(clientThreads.get(i).getID() == id) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public ObservableList<Srv_ClientThread> getClientThreads() {
+        return clientThreads;
     }
 }

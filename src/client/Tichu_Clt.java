@@ -5,9 +5,14 @@ import client.model.Clt_Model;
 import client.view.Clt_View;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import resources.ServiceLocator;
 import resources.Translator;
+
+import java.io.File;
+import java.net.MalformedURLException;
 
 public class Tichu_Clt extends Application {
     private static Tichu_Clt clt; //singleton
@@ -28,7 +33,7 @@ public class Tichu_Clt extends Application {
     }
 
     // @author Fabio
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) throws MalformedURLException {
 
         initialize();
 
@@ -36,6 +41,7 @@ public class Tichu_Clt extends Application {
         Clt_Model model = new Clt_Model();
         Clt_View view = new Clt_View(primaryStage, model);
         Clt_Controller controller = new Clt_Controller(primaryStage,view,model);
+
 
 
     }

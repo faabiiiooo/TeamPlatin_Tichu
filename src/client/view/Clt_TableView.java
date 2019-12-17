@@ -1,9 +1,14 @@
 package client.view;
 
+import com.sun.prism.paint.Color;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -26,6 +31,10 @@ public class Clt_TableView extends BorderPane {
     private final VBox bottom;
     private final HBox top;
     private final Label countdown;
+    private final Label tichuLabel;
+    //private Label bombLabel;
+    private final StatusView statusView;
+
 
     private final Stage primaryStage;
 
@@ -33,8 +42,7 @@ public class Clt_TableView extends BorderPane {
     private final Translator translator = sl.getTranslator();
 
 
-
-    public Clt_TableView(Stage primaryStage){
+    public Clt_TableView(Stage primaryStage) {
 
         this.primaryStage = primaryStage;
 
@@ -49,29 +57,43 @@ public class Clt_TableView extends BorderPane {
         this.countdown = new Label();
         this.controls = new ControlView();
         this.tableCards = new TableCards();
+        this.tichuLabel = new Label();
+        this.statusView = new StatusView();
+       // this.bombLabel = new Label();
 
         this.setLeft(rivalLeft);
         this.setRight(rivalRight);
 
-        top.getChildren().addAll(rivalTop, pointView);
+        top.getChildren().addAll(statusView, rivalTop, pointView);
         this.setTop(top);
 
-        bottom.getChildren().addAll(playerView,controls);
+
+        bottom.getChildren().addAll(playerView, controls);
         this.setBottom(bottom);
 
         this.setCenter(tableCards);
+        this.tichuLabel.setPadding(new Insets(100, 0, 0, 0));
+        this.tichuLabel.setId("tichuLabel");
+
+
+      //  this.bombLabel.setId("bomb");
 
 
         root.getChildren().addAll(this);
+        root.getChildren().add(tichuLabel);
+      //  root.getChildren().add(bombLabel);
+
         StackPane.setAlignment(this, Pos.CENTER);
 
-        Scene tableScene = new Scene(root);
+        Scene tableScene = new Scene(root, 1480, 900);
         tableScene.getStylesheets().add(getClass().getResource("TableView.css").toExternalForm());
-        this.primaryStage.setResizable(true);
+        this.primaryStage.setResizable(false);
+        this.setId("start-pane");
         this.primaryStage.setScene(tableScene);
         this.primaryStage.setTitle(translator.getString("program.name"));
         this.primaryStage.getIcons().add(new Image("./resources/images/logo.jpg"));
         this.primaryStage.show();
+
 
     }
 
@@ -115,4 +137,21 @@ public class Clt_TableView extends BorderPane {
     public Label getCountdown() {
         return countdown;
     }
+
+
+    public StatusView getStatusView() {
+        return statusView;
+    }
+
+    public Label getTichuLabel() {
+        return tichuLabel;
+    }
+
+    public TableCards getTableCards() {
+        return tableCards;
+    }
+
+   /* public Label getBombLabel() {
+        return bombLabel;
+    }*/
 }

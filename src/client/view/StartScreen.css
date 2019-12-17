@@ -1,15 +1,21 @@
 
 /* Default styles like font, fontsize, etc*/
-*{
-
+* {
 }
+    #backGif{
+
+        -fx-background-image: url(../../resources/images/backgrounds/scroll.png);
+        -fx-background-size: cover;
+    }
 
 #start-pane{
-    -fx-background-image: url(../../resources/images/backgrounds/scroll.png);
+    -fx-background-image: url(../../resources/images/backgrounds/fire.gif);
+
     -fx-background-size: cover;
 }
 
 .label{
+    -fx-font-family: Algerian;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 
@@ -17,6 +23,7 @@
 
 
 .button{
+    -fx-font-family: Algerian;
     -fx-font-size: 16px;
     -fx-background-color: rgba(0,0,0,0);
     -fx-font-weight: bold;
@@ -25,12 +32,13 @@
 }
 
 .button:pressed {
-    -fx-background-color: green;
+    -fx-background-color: rgba(168, 1, 9, 0.84);;
 }
 
 .toggle-button {
     -fx-background-color: rgba(0,0,0,0);
     -fx-font-weight: bold;
+    -fx-font-family: Algerian;
 }
 
 .toggle-button:selected {
@@ -39,6 +47,7 @@
 
 .check-box{
     -fx-background-color: rgba(0,0,0,0);
+
 }
 
 .check-box > .box{
@@ -53,6 +62,7 @@
 }
 
 .text-field{
+    -fx-font-family: Algerian;
     -fx-font-size: 16px;
     -fx-pref-width: 150px;
     -fx-background-color: rgba(0,0,0,0);
@@ -62,6 +72,7 @@
 }
 
 #lblTitle{
+    -fx-font-family: Algerian;
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-padding-bottom: 50px;

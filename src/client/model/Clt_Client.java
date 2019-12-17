@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Logger;
 
-
+//@author Pascal
 public class Clt_Client extends Thread{
 
     private final int PORT=10456;
@@ -58,6 +58,7 @@ public class Clt_Client extends Thread{
 
         } catch (Exception e){
             logger.severe("Error while retrieving messages");
+            e.printStackTrace();
         }
 
 
@@ -77,6 +78,7 @@ public class Clt_Client extends Thread{
 
         try{
                 out.writeObject(msgOut);
+                out.reset(); //resetting Outputstream, to force that objects don't become send from cache
                 out.flush();
                 logger.info("Message sent");
 

@@ -14,19 +14,22 @@ import java.util.logging.Logger;
  */
 public class Srv_ClientThread extends Thread {
 
-    private static int id_generator = 0;
+    private static int id_generator = 1;
     private final int ID;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private Srv_Server server;
     private Srv_Controller controller;
 
+    private final int playerID;
+
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
     private final Logger logger = serviceLocator.getLogger();
 
 
-    public Srv_ClientThread(Srv_Server server, InputStream in, OutputStream out) {
+    public Srv_ClientThread(Srv_Server server, InputStream in, OutputStream out, int playerID) {
         super("ClientThread for Client " + id_generator);
+        this.playerID = playerID;
         controller = Srv_Controller.getController();
         ID = id_generator;
         id_generator++;
@@ -51,6 +54,7 @@ public class Srv_ClientThread extends Thread {
                 Message msgIn = this.receive();
                 if(msgIn != null ){ //when a message received redirect it to the Server Controller
                     logger.info("Message received from Client. Message Type: "+msgIn.getType());
+                    msgIn.setSenderID(this.ID);
                     Message msgOut = controller.processIncomingMessage(msgIn); //generating answer to send back to Client
                     if(msgOut != null){
                         this.send(msgOut);
@@ -61,8 +65,10 @@ public class Srv_ClientThread extends Thread {
             }
 
         } catch (Exception e){
-            server.clientDisconnected(); //when thread gets closes, notify server thread to stop game.
-            //e.printStackTrace();
+            logger.severe("Failed to recieve Message");
+            server.searchDisconnectedClients();
+            server.clientDisconnected();
+            e.printStackTrace();
         }
 
 
@@ -81,6 +87,7 @@ public class Srv_ClientThread extends Thread {
 
         out.writeObject(msgOut);
         out.flush();
+        out.reset(); //resetting Outputstream, to force that objects don't become send from cache
 
     }
 

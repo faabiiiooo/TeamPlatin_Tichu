@@ -5,6 +5,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.net.MalformedURLException;
+
 //Basic Class to start build the GUI
 
 public class Clt_View {
@@ -14,10 +16,12 @@ public class Clt_View {
 
     private final Clt_StartScreen startScreen;
     private Clt_TableView tableView;
+    private Clt_CardWishView cardWishView;
+    private Clt_DisconnectedView dcView;
+    private Clt_WinnerView winnerView;
 
 
-
-    public Clt_View(Stage primaryStage, Clt_Model model){
+    public Clt_View(Stage primaryStage, Clt_Model model) throws MalformedURLException {
         this.primaryStage = primaryStage;
         this.model = model;
 
@@ -28,6 +32,12 @@ public class Clt_View {
     public void startTableView(){
         tableView = new Clt_TableView(primaryStage);
     }
+
+    public void startWishView(){cardWishView=new Clt_CardWishView(new Stage());}
+
+    public void startDcView(){dcView=new Clt_DisconnectedView(primaryStage);}
+
+    public void startWinnView(){winnerView=new Clt_WinnerView(primaryStage);}
 
 
     //Start displaying View
@@ -45,7 +55,15 @@ public class Clt_View {
 
     public Clt_StartScreen getStartScreen() { return startScreen; }
 
+    public Clt_TableView getTableView() { return tableView; }
+
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public Clt_CardWishView getCardWishView() { return cardWishView; }
+
+    public Clt_WinnerView getWinnerView() {
+        return winnerView;
     }
 }
