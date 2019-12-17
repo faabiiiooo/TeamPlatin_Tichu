@@ -563,7 +563,6 @@ public enum Srv_HandType {
         boolean found = false;
         int counterA = 0;
         int counterB = 1;
-        int countCards= 0;
         List<Card> pagodaCards = new ArrayList<>();
         List<Card> jadeCards = new ArrayList<>();
         List<Card> starsCards = new ArrayList<>();
@@ -623,20 +622,33 @@ public enum Srv_HandType {
                     check every suit separately, if the first checked number is only 1 higher than the next.
                     if 5 cards are found set found to true.
                      */
-                    for (int k = 0; k < listOfSuitLists.size() && counterB!=5; k++){
+                    for (int k = 0; k < listOfSuitLists.size() && counterB <= 5; k++){
                         counterB = 1;
-                        countCards=0;
                         straightFlushCards.clear();
+                        for(int m = 0; m < listOfSuitLists.get(k).size()-1 ; m++) {
+                                Collections.sort(listOfSuitLists.get(k));
 
-                        for(int u = countCards; u < listOfSuitLists.get(k).size()-1 && counterB!=5; u++) {
+                                logger.info("Check: "+listOfSuitLists.get(k).get(m).getRank().ordinal() +" == "+listOfSuitLists.get(k).get(m+1).getRank().ordinal());
 
-                            if ((listOfSuitLists.get(k).get(u).getRank().ordinal() - 1 == listOfSuitLists.get(k).get(u+1).getRank().ordinal())) {
-                                //add the cards to the list to check them if they could still be played when the player before also played a bomb
-                                straightFlushCards.add(listOfSuitLists.get(k).get(u));  straightFlushCards.add(listOfSuitLists.get(k).get(u+1));
-                                counterB++;
-                            }
+                                if ((listOfSuitLists.get(k).get(m).getRank().ordinal() == listOfSuitLists.get(k).get(m+1).getRank().ordinal() + 1)) {
+                                    //add the cards to the list to check them if they could still be played when the player before also played a bomb
+                                    if(!straightFlushCards.contains(listOfSuitLists.get(k).get(m+1))){
+                                        straightFlushCards.add(listOfSuitLists.get(k).get(m+1));
+                                    }
+                                    if(!straightFlushCards.contains(listOfSuitLists.get(k).get(m))){
+                                        straightFlushCards.add(listOfSuitLists.get(k).get(m));
+                                    }
+                                    logger.info("Bomb Add 1: " + listOfSuitLists.get(k).get(m) +" "+ straightFlushCards.size());
+                                    counterB++;
+                                }else{
+                                    if(straightFlushCards.size() < 5){
+                                        straightFlushCards.clear();
+                                        counterB=1;
+                                    }
+                                }
                         }
                     }
+                    logger.info(" Straightflushcards: "+ straightFlushCards);
                     if(counterB >= 5 && lastPlayedCards.size() <= 5){
                         found = true;
                     }else if(counterB >= 5 && lastPlayedCards.size() >=5){
@@ -651,7 +663,7 @@ public enum Srv_HandType {
             }
 
 
-        logger.info("Checked hand on bomb, value: "+found +"Playerhands: "+playerCards );
+        logger.info("Checked hand on bomb, value: "+found +"Playerhands: "+straightFlushCards );
         return found;
     }
 

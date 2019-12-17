@@ -103,17 +103,17 @@ public class Srv_HandTypeTest { //@author Sandro, Thomas
 
     private static String[][] bombCardsTableFullHand = {
             //{ "6S", "6K", "6P", "6J"},
-           { "2S", "3S", "4S", "5S","6S"},
+           { "2S", "3S", "4S"},
 
     };
 
     private static String[][] bombCardsPlayerFullHand = {
-            { "3K", "4K", "5K", "6K","7K" }
+          //{ "AP", "AS", "KP","QP","JS", "9S", "8P","8S", "7J", "7P", "6K", "6P", "5J", "3P"}
             //{ "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K", "7S"},
            //{ "5K", "4K", "6K", "7K","8J", "9J", "5S", "8S", "6S", "8K", "PE"},
           // { "4S", "4K", "4P", "4J","8S", "9K", "9S", "8K", "7K","PE"}, //4er + straight + special card
             //{ "ME", "AJ", "AP","AS", "6P", "4K", "2S", "7K","KK", "TK", "9K", "7S","QP" },
-           // { "2K", "3K", "4K", "5K", "ME"}
+           { "2K", "3K", "4K", "5K", "6K","7K", "8K","AP", "ME", "KS", "QP"}
 
     };
 
