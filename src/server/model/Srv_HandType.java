@@ -628,8 +628,6 @@ public enum Srv_HandType {
                         for(int m = 0; m < listOfSuitLists.get(k).size()-1 ; m++) {
                                 Collections.sort(listOfSuitLists.get(k));
 
-                                logger.info("Check: "+listOfSuitLists.get(k).get(m).getRank().ordinal() +" == "+listOfSuitLists.get(k).get(m+1).getRank().ordinal());
-
                                 if ((listOfSuitLists.get(k).get(m).getRank().ordinal() == listOfSuitLists.get(k).get(m+1).getRank().ordinal() + 1)) {
                                     //add the cards to the list to check them if they could still be played when the player before also played a bomb
                                     if(!straightFlushCards.contains(listOfSuitLists.get(k).get(m+1))){
@@ -638,7 +636,6 @@ public enum Srv_HandType {
                                     if(!straightFlushCards.contains(listOfSuitLists.get(k).get(m))){
                                         straightFlushCards.add(listOfSuitLists.get(k).get(m));
                                     }
-                                    logger.info("Bomb Add 1: " + listOfSuitLists.get(k).get(m) +" "+ straightFlushCards.size());
                                     counterB++;
                                 }else{
                                     if(straightFlushCards.size() < 5){
@@ -648,7 +645,6 @@ public enum Srv_HandType {
                                 }
                         }
                     }
-                    logger.info(" Straightflushcards: "+ straightFlushCards);
                     if(counterB >= 5 && lastPlayedCards.size() <= 5){
                         found = true;
                     }else if(counterB >= 5 && lastPlayedCards.size() >=5){
