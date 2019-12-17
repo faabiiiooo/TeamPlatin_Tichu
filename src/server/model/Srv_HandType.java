@@ -45,8 +45,14 @@ public enum Srv_HandType {
         //special case --> special card dog cannot be bombed
         if(isBomb(playerCards) && !isBomb(tableCards) && tableCards.size() !=0 && tableCards.get(0).getRank() != Rank.Dog  ){
             canPlay = true;
+        }
 
-            }
+        //special case --> special card dog is on table
+        if(tableCards.size() == 1 && tableCards.get(0).getRank() == Rank.Dog && isSingleCard(playerCards) || isOnePair(playerCards) || isXPair(playerCards) ||
+                isTripple(playerCards) || isStreet(playerCards) || isFullHouse(playerCards) || isBomb(playerCards) ) {
+            canPlay = true;
+        }
+
         logger.info("canPlay in HandType: "+ canPlay);
         return canPlay;
     }
