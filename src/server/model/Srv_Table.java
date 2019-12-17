@@ -52,8 +52,9 @@ public class Srv_Table {
         logger.info("Remaining Cards in deck: "+deck.getRemainingCards());
     }
 
-    //when every player decided, or the countdown has ended, deal the rest od the cards.
+
     //@author thomas
+    //when every player decided, or the countdown has ended, deal the rest od the cards.
     protected void dealRestOfCards(){
         do {
             for (int i = 0; i < playersAtTable.size(); i++) {
@@ -337,14 +338,15 @@ public class Srv_Table {
                 // if the wished card is already played or it cant be played anymore set every player to false
 
                 if(!lastPlayedCards.isEmpty()){
-                    if (lastPlayedCards.get(lastPlayedCards.size() - 1).getRank().ordinal() >= mahJongWishCard.getRank().ordinal() && lastPlayedCards.get(lastPlayedCards.size() - 1).getRank()
+                    //check if either the last played cards have the higher rank and it wasnt the mahjong or if the last played street cant be topped with the wished card inside
+                    if (lastPlayedCards.get(lastPlayedCards.size() - 1).getRank().ordinal() > mahJongWishCard.getRank().ordinal() && lastPlayedCards.get(lastPlayedCards.size() - 1).getRank()
                             != Rank.Mahjong||
-                            lastPlayedCards.size() >= 5 && !Srv_HandType.mahJongWishStreet(mj.getHandCards(), lastPlayedCards, mahJongWishCard) ) {
+                            (lastPlayedCards.size() >= 5 && !Srv_HandType.mahJongWishStreet(mj.getHandCards(), lastPlayedCards, mahJongWishCard)) ) {
+                        //if true set the players variable to false
                         for (Player p : playersAtTable) {
                             p.setHasWishedCard(false);
-                            logger.info("player :"+p+" can no more play the wished card. HasWIshedCardStatus: "+p.isHasWishedCard());
                         }
-                    } else {
+                    } else {// if false, check if the wished card was inside the last played cards, then set the players variable to false
                         boolean containsWish = false;
                         for(Card c : lastPlayedCards){
                             if(c.getRank() == mahJongWishCard.getRank()){
@@ -354,7 +356,6 @@ public class Srv_Table {
                         if (containsWish && !wishCardPlayedOut) {
                             logger.info("mjcheck");
                             wishCardPlayedOut=true;
-                            mahJongWishCard = null;
                             for (Player p : playersAtTable) {
                                 p.setHasWishedCard(false);
                             }
