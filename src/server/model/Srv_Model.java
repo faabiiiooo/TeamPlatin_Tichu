@@ -351,6 +351,7 @@ public class Srv_Model {
     //@author Fabio
     private void startNewRound(){
         logger.info("Starting new Round");
+        this.sendNewRoundInfo();
         game.getTable().dealCards();
         logger.info("dealed first 8 cards");
         this.sendPlayerHandsToClient();
@@ -366,7 +367,6 @@ public class Srv_Model {
         this.sendPlayersToClients();
         this.sendHasBombStatusToClients();
         this.sendActivePlayerToClients();
-        this.sendNewRoundInfo();
     }
 
     private void sendNewRoundInfo(){
