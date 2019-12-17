@@ -755,6 +755,7 @@ public class Clt_Controller { //Controller is a Singleton
                 break;
 
             case "string/newRound":
+                logger.info("recieved new round string on client");
                 dataStore.setSaidTichu(false);
                 Platform.runLater(() -> {//display text that a new round started
                     String displayText = view.getTableView().getStatusView().getStatus().getText();

@@ -325,9 +325,12 @@ public class Srv_Model {
             this.sendTableCardsToClients();
             this.sendScoresToClients();
 
-            for(Player p : game.getTable().getPlayersAtTable()){
+            for(Player p : game.getTable().getPlayersAtTable()){ //resetting player variables
                 p.getHandCards().clear();
                 p.getWonCards().clear();
+                p.setSaidBigTichu(false);
+                p.setSaidSmallTichu(false);
+                p.setHasWishedCard(false);
                 p.setActive(false);
             }
 
@@ -363,6 +366,7 @@ public class Srv_Model {
         this.sendPlayersToClients();
         this.sendHasBombStatusToClients();
         this.sendActivePlayerToClients();
+        this.sendNewRoundInfo();
     }
 
     private void sendNewRoundInfo(){
