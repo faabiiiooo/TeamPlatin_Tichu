@@ -149,7 +149,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
             //@author thomas
             case "card/wishCard": //setting the wished card from the player
                 model.getGame().getTable().setMahJongWishCard((Card)msgIn.getObjects().get(0));
-//                logger.info("RECEIVED WISHED CARD FROM CLIENT: "+ ((Card)msgIn.getObjects().get(0)));
                 msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                 logger.info("Wished card has been set on Table : " + model.getGame().getTable().getMahJongWishCard().getRank());
                 model.getGame().getTable().skip();
