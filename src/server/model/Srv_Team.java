@@ -52,6 +52,12 @@ public  class Srv_Team implements Comparable<Srv_Team> {
             roundScore = 200;
             return roundScore;
        }
+
+       // Check all Scores from the Team and add it to the roundScore
+       for(Player p : this.members){
+           this.roundScore += p.calculateScore();
+       }
+
         /*Check if a player on the team called out a small tichu.
          If the player finishes the round first increase the roundScore by 100.
           Otherwise decrease it by 100.*/
@@ -75,12 +81,6 @@ public  class Srv_Team implements Comparable<Srv_Team> {
                   }
               }
           }
-      }
-      // Check all Scores from the Team and add it to the roundScore
-      for(Player p : this.members){
-          this.roundScore += p.calculateScore();
-          System.out.println("Team:"+ this.getTEAM_ID()+" Score:"+this.getRoundScore());
-          System.out.println("PlayerScore "+p.getPLAYER_ID()+":" + p.calculateScore());
       }
 
       return roundScore;
