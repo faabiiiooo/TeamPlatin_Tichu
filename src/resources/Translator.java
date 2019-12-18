@@ -5,7 +5,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-
+//@author Fabio -> includes parts from Bradley Richards
 public class Translator {
     private ServiceLocator sl = ServiceLocator.getServiceLocator();
     private Logger logger = sl.getLogger();
@@ -29,7 +29,7 @@ public class Translator {
         }
         
         // Load the resource strings
-        resourceBundle = ResourceBundle.getBundle(sl.getAPP_CLASS().getName(), locale);
+        resourceBundle = ResourceBundle.getBundle("TeamPlatin_Tichu", locale);
         Locale.setDefault(locale); // Change VM default (for dialogs, etc.)
         currentLocale = locale;
         

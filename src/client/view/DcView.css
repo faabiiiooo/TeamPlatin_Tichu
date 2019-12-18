@@ -1,0 +1,11 @@
+#background{
+    -fx-background-image: url(../../resources/images/backgrounds/error.gif);
+    -fx-background-size: cover;
+}
+.label{
+    -fx-font-size: 22px;
+    -fx-text-fill: white;
+    -fx-font-family:"Arial Black";
+    -fx-font: bold;
+    -fx-background-color: black;
+}
