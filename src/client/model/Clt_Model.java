@@ -1,16 +1,15 @@
 package client.model;
 
-//Basic Class to Start Building the Model -> no functuality
 
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
+
 import resources.Message;
 import resources.MessageStats;
 import resources.ServiceLocator;
-import server.Tichu_Srv;
+
 
 import java.util.logging.Logger;
 
+//@author Fabio
 public class Clt_Model {
 
     private Clt_Client client;
@@ -24,7 +23,6 @@ public class Clt_Model {
 
     }
 
-    //@author Fabio
     public void startClient(String serverIP){  //start client
         client = new Clt_Client(serverIP);
         client.start();
@@ -37,7 +35,7 @@ public class Clt_Model {
 
     }
 
-    //@author Fabio
+
     public boolean sendMessage(Message msgOut){
         boolean successful = false;
         client.send(msgOut); //sends the message to te server

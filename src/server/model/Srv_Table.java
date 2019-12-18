@@ -1,6 +1,6 @@
 package server.model;
 
-import javafx.application.Platform;
+
 import resources.Card;
 import resources.Player;
 import resources.Rank;
@@ -35,13 +35,14 @@ public class Srv_Table {
 
 
 
-    //@author thomas
+    //@author Thomas
     protected Srv_Deck createDeck(){
         this.deck = new Srv_Deck();
         return deck;
 
     }
-    //@author thomas
+
+    //@author Thomas
     protected void dealCards() {
         //deal 1 card to each player until everyone got 8 cards
         do {
@@ -53,7 +54,7 @@ public class Srv_Table {
     }
 
 
-    //@author thomas
+    //@author Thomas
     //when every player decided, or the countdown has ended, deal the rest od the cards.
     protected void dealRestOfCards(){
         do {
@@ -70,7 +71,8 @@ public class Srv_Table {
 
         checkPlayerHandsOnBomb();
     }
-    //@author thomas
+
+    //@author Thomas
     // method to play out the cards
     public boolean playCards(ArrayList<Card> playerCards){
         logger.info("Going to play a card");
@@ -92,7 +94,8 @@ public class Srv_Table {
 
         return canPlay;
     }
-    //@author thomas
+
+    //@author Thomas
     //check player hands on bombs
     public void checkPlayerHandsOnBomb(){
 
@@ -110,18 +113,19 @@ public class Srv_Table {
         }
     }
 
-    public void skip() { //@author Sandro
+    //@author Sandro
+    public void skip() {
         logger.info("Table_Skip_Process started");
         boolean foundNextPlayer = false;
 
         int playersInGame = 0;
-        for(Player p : playersAtTable){
+        for(Player p : playersAtTable){ //how many players are still in game (having cards on hand)
             if(p.getHandCards().size() > 0){
                 playersInGame++;
             }
         }
 
-       if(playersThatSkipped.size() >= playersInGame && !lastPlayedCards.isEmpty()){
+       if(playersThatSkipped.size() >= playersInGame && !lastPlayedCards.isEmpty()){ //if all players skipped once, sting process is started
            logger.info(playersThatSkipped.size()+ "size from skipped list");
             int playerIDOfLastPlayedCards = lastPlayedCards.get(0).getPlayerId();
             for(Player p : playersAtTable){
@@ -191,6 +195,7 @@ public class Srv_Table {
         logger.info("Table_Skip_Process Ended");
     }
 
+    //@author Fabio
     private void sting(Player winner){
         this.transferCards(winner); //transfer Cards to the player which stung
 
@@ -298,7 +303,7 @@ public class Srv_Table {
     }
 
 
-    //@author thomas
+    //@author Thomas
     public void mahJongPlayed(){
     ArrayList<Player> playersWithWishedCard = new ArrayList<>();
 
@@ -329,7 +334,8 @@ public class Srv_Table {
     }
 
     }
-    //@author thomas
+
+    //@author Thomas
     //method checks if the MJ wish card is already played or cant be played anymore
     public void checkIfMJWishIsActive(){
         if(!wishCardPlayedOut && mahJongWishCard != null) { // only if the wished card has not been played out and is not null
@@ -367,8 +373,8 @@ public class Srv_Table {
         }
     }
 
-
-    protected void dogPlayed(){ //SkiptoTeamMember @author Sandro
+    //@author Sandro
+    protected void dogPlayed(){ //SkiptoTeamMember
         logger.info("Table_DogPlayed_Process started");
         boolean foundNextPlayer = false;
         for(int i = 0; i < playersAtTable.size() && !foundNextPlayer; i++) { //looking for IsActive player
@@ -474,10 +480,6 @@ public class Srv_Table {
     public void addPlayerToTable(Player player){
         this.playersAtTable.add(player);
     }
-
-
-
-
 
     //getter setter
     public Card getMahJongWishCard(){ return this.mahJongWishCard; }

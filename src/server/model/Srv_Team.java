@@ -1,8 +1,9 @@
 package server.model;
 
 import resources.Player;
-
 import java.util.ArrayList;
+
+
 //@author Pascal
 public  class Srv_Team implements Comparable<Srv_Team> {
 

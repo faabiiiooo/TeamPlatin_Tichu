@@ -1,6 +1,7 @@
 package resources;
 
-public enum Suit { //@author Sandro
+//@author Sandro
+public enum Suit {
     Jade, Pagodas, Stars, Swords, SpecialCards;
 
     public String toString() {

@@ -1,10 +1,8 @@
 package server.model;
 
-import javafx.application.Platform;
-import resources.*;
 
+import resources.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.logging.Logger;
 
 public class Srv_Model {
@@ -32,7 +30,7 @@ public class Srv_Model {
     }
 
     //@author Fabio
-    public void startGame(){
+    public void startGame(){ //gets called when game starts
 
         Srv_Round firstRound = new Srv_Round();
         game.getRounds().add(firstRound);
@@ -57,7 +55,8 @@ public class Srv_Model {
         this.sendActivePlayerToClients();
 
     }
-    //@author thomas
+
+    //@author Thomas
     public void sendHasBombStatusToClients(){
         ArrayList<Player> players = game.getTable().getPlayersAtTable();
         Srv_Server server = serviceLocator.getServer();
@@ -80,7 +79,7 @@ public class Srv_Model {
 
     }
 
-    //@author thomas
+    //@author Thomas
     public void openClientWishView(int clientThreadID){
         Message msgOutMJWish = null;
         Srv_Server server = serviceLocator.getServer();
@@ -94,7 +93,7 @@ public class Srv_Model {
 
     }
 
-    //@author thomas
+    //@author Thomas
     public void sendWishedCardToClients(){
         Message msgOutMJWish = null;
         Srv_Server server = serviceLocator.getServer();
@@ -134,7 +133,8 @@ public class Srv_Model {
         server.broadcast(msgOut);
 
     }
-    //@auhtor Fabio
+
+    //@author Fabio
     public void sendPlayersToClients(){
         ArrayList<Player> allPlayers = game.getTable().getPlayersAtTable(); //getting all Players
         ArrayList<Player> tempList = new ArrayList<>();
@@ -223,6 +223,7 @@ public class Srv_Model {
 
     }
 
+    //@author Fabio
     public void sendStingNotification(){
         Srv_Server server = serviceLocator.getServer();
         Player playerThatStung = null;
@@ -272,6 +273,7 @@ public class Srv_Model {
             }
         }
     }
+
     //@author Fabio
     public void removePlayedCardsFromPlayerHand(int senderID, ArrayList<Card> playedCards){
         logger.info("removePlayedCardsFromPlayerHand: ID "+senderID);
@@ -283,7 +285,7 @@ public class Srv_Model {
 
     }
 
-    //@author thomas
+    //@author Thomas
     public boolean checkIfWishedCardIsInPlayedCards(ArrayList<Card> playedCards){
         ArrayList<Card> clonedCards = (ArrayList<Card>) playedCards.clone();
         boolean playsWishedCard = false;
@@ -369,6 +371,7 @@ public class Srv_Model {
         this.sendActivePlayerToClients();
     }
 
+    //@author Fabio
     private void sendNewRoundInfo(){
         try{
             Message msgOut = new Message("string/newRound");
@@ -378,6 +381,7 @@ public class Srv_Model {
         }
     }
 
+    //@author Fabio
     private void gameFinished(Srv_Team winningTeam){
         try{
             Message msgOut = new Message("string/gameFinished",winningTeam.getTEAM_ID());
@@ -408,7 +412,8 @@ public class Srv_Model {
 
 
     }
-    //@author thomas
+
+    //@author Thomas
     public void clientInfoWishedCardPlayed(boolean cardPlayed) {
         Srv_Server server = serviceLocator.getServer();
         Message msgOut = new Message("boolean/wishedCardPlayedInfo", cardPlayed);
@@ -416,7 +421,7 @@ public class Srv_Model {
 
     }
 
-    //@author thomas
+    //@author Thomas
     public void clientInfoPlayerWantsBomb(String playerName) {
         Srv_Server server = serviceLocator.getServer();
         Message msgOut = new Message("string/playerThatBombs", playerName);

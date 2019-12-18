@@ -1,9 +1,9 @@
 package resources;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import resources.ServiceLocator;
 import java.util.logging.Logger;
 
+//@author Sandro
 public class Countdown extends Thread { //@author Sandro Countdown is a Thread
 
     private static ServiceLocator sl = ServiceLocator.getServiceLocator();

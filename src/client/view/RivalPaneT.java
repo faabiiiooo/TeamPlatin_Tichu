@@ -1,18 +1,14 @@
 package client.view;
 
-import client.model.Clt_DataStore;
-import javafx.application.Platform;
+
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Rotate;
-import resources.Player;
 
+//@author Pascal
 public class RivalPaneT extends HBox {
 
     private Label avatarLabel, cardsLabel, rice,tName;
@@ -56,7 +52,6 @@ public class RivalPaneT extends HBox {
         imgViewRice.setPreserveRatio(true);
 
         this.tName=new Label();
-       // this.tName.setPadding(new Insets(5));
         this.tName.setId("playerIdTop");
         gridPane.setPadding(new Insets(0,450,0,350));
         gridPane.add(avatarLabel,0,1);

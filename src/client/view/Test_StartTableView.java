@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import resources.ServiceLocator;
 import resources.Translator;
 
+//author Pascal
 public class Test_StartTableView extends Application {
 
     private ServiceLocator serviceLocator;

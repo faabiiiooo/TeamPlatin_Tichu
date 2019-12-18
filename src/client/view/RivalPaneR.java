@@ -1,17 +1,16 @@
 package client.view;
 
-import com.sun.jnlp.IntegrationServiceNSBImpl;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-
+//@author Pascal
 public class RivalPaneR extends VBox {
 
     private Label avatarLabel, cardsLabel, rice,rName;
@@ -58,7 +57,6 @@ public class RivalPaneR extends VBox {
         gridPane.add(rice,2,1);
         gridPane.add(stack,1,3);
         gridPane.setHgap(5);
-        //gridPane.setVgap(5);
 
         gridPane.add(avatarLabel,2,3);
         gridPane.add(rName,2,2);

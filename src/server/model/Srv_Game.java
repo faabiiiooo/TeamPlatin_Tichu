@@ -5,9 +5,10 @@ import resources.ServiceLocator;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Srv_Game { //@author Thomas
+//@author Thomas
+public class Srv_Game {
 
-    protected ArrayList<Srv_Team> teams = new ArrayList<Srv_Team>();;
+    protected ArrayList<Srv_Team> teams = new ArrayList<Srv_Team>();
     protected final static int G_MIN_SCORE = 1000;
     protected Srv_Team winner;
     private ArrayList<Srv_Round> rounds;

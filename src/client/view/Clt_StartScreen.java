@@ -8,16 +8,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import resources.ServiceLocator;
 import resources.Translator;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Stack;
 
+//@author Pascal
 public class Clt_StartScreen extends StackPane {
 
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();
@@ -78,12 +76,11 @@ public class Clt_StartScreen extends StackPane {
 
         Scene startScene = new Scene(this);
         startScene.getStylesheets().add(getClass().getResource("StartScreen.css").toExternalForm());
-        //startScene.setFill(Color.TRANSPARENT);
         this.startStage.setScene(startScene);
         this.startStage.setResizable(false);
         this.startStage.setWidth(875);
         this.startStage.setHeight(502);
-        //this.startStage.initStyle(StageStyle.TRANSPARENT);d
+
         gridPane.setId("backGif");
         this.setId("start-pane");
         this.startStage.setTitle(translator.getString("program.name"));
@@ -91,16 +88,11 @@ public class Clt_StartScreen extends StackPane {
         this.startStage.show();
 
 
-        //@author pascal
-     media = new Media(new File("..\\TeamPlatin_Tichu\\src\\resources\\Sound\\hero.mp3")
+        media = new Media(new File("..\\TeamPlatin_Tichu\\src\\resources\\Sound\\hero.mp3")
                 .toURI().toURL().toExternalForm());
-       mp=new MediaPlayer(media);
-       mp.play();
-       mp.getOnRepeat();
-
-
-
-
+        mp=new MediaPlayer(media);
+        mp.play();
+        mp.getOnRepeat();
 
     }
 

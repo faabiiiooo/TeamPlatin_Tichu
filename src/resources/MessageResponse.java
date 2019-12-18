@@ -1,5 +1,6 @@
 package resources;
 
+//@author Fabio
 public class MessageResponse extends Message {
 
     private final String parentMessageID;

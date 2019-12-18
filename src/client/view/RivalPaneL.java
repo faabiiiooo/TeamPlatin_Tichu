@@ -1,16 +1,14 @@
 package client.view;
 
-import javafx.geometry.HPos;
+
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
-
+//@author Pascal
 public class RivalPaneL extends VBox {
 
     private Label avatarLabel, cardsLabel, rice,lName;
@@ -66,10 +64,8 @@ public class RivalPaneL extends VBox {
 
         gridPane.add(stack,2,3);
         gridPane.setHgap(5);
-        //gridPane.setVgap(5);
 
         this.getChildren().add(gridPane);
-        //this.setId("left");
     }
 
     public Label getCardsLabel() {

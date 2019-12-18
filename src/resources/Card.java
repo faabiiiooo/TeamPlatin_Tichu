@@ -3,7 +3,8 @@ package resources;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Card implements Comparable<Card>, Serializable { //@author Sandro ; Import Comparable to compare Cards
+//@author Sandro
+public class Card implements Comparable<Card>, Serializable { //Import Comparable to compare Cards, serializable for sending cards around
 
     protected static final long serialVersionUID= 1;
 

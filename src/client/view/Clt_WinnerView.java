@@ -4,12 +4,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import resources.ServiceLocator;
 import resources.Translator;
 
+//@author Pascal
 public class Clt_WinnerView extends HBox {
 
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();

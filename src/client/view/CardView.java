@@ -1,16 +1,15 @@
 package client.view;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import resources.Card;
 import resources.ServiceLocator;
-
 import java.util.logging.Logger;
 
-public class CardView extends Label { //@author Sandro -> Reference: Poker_Projekt by Bradley Richards
+//@author Sandro
+public class CardView extends Label { // -> Reference: Poker_Projekt by Bradley Richards
 
     private final Card card;
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();

@@ -1,14 +1,11 @@
 package client.view;
 
-import com.sun.prism.paint.Color;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -17,7 +14,7 @@ import javafx.stage.Stage;
 import resources.ServiceLocator;
 import resources.Translator;
 
-
+//@author Pascal
 public class Clt_TableView extends BorderPane {
 
     private final StackPane root;
@@ -32,7 +29,6 @@ public class Clt_TableView extends BorderPane {
     private final HBox top;
     private final Label countdown;
     private final Label tichuLabel;
-    //private Label bombLabel;
     private final StatusView statusView;
 
 
@@ -59,7 +55,6 @@ public class Clt_TableView extends BorderPane {
         this.tableCards = new TableCards();
         this.tichuLabel = new Label();
         this.statusView = new StatusView();
-       // this.bombLabel = new Label();
 
         this.setLeft(rivalLeft);
         this.setRight(rivalRight);
@@ -75,13 +70,8 @@ public class Clt_TableView extends BorderPane {
         this.tichuLabel.setPadding(new Insets(100, 0, 0, 0));
         this.tichuLabel.setId("tichuLabel");
 
-
-      //  this.bombLabel.setId("bomb");
-
-
         root.getChildren().addAll(this);
         root.getChildren().add(tichuLabel);
-      //  root.getChildren().add(bombLabel);
 
         StackPane.setAlignment(this, Pos.CENTER);
 

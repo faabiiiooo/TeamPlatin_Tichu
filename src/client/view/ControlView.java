@@ -1,17 +1,12 @@
 package client.view;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import resources.ServiceLocator;
 import resources.Translator;
 
-//@author thomas
+//@author Pascal
 public class ControlView extends HBox {
 
     private final ServiceLocator serviceLocator = ServiceLocator.getServiceLocator();

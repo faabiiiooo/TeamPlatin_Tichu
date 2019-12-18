@@ -19,7 +19,8 @@ public enum Srv_HandType {
     private static Logger logger = sl.getLogger();
     private static Srv_Table table = sl.getTable();
 
-    public static boolean evaluateHand(ArrayList<Card> tableCards, ArrayList<Card> playerCards) { //@author Sandro, Thomas
+    //@author Sandro, Thomas
+    public static boolean evaluateHand(ArrayList<Card> tableCards, ArrayList<Card> playerCards) {
         Srv_HandType handType = null;
 
         boolean canPlay = false;
@@ -57,7 +58,8 @@ public enum Srv_HandType {
         return canPlay;
     }
 
-    public static boolean isSingleCard(ArrayList<Card> cards) { //@author Sandro, Thomas
+    //@author Sandro, Thomas
+    public static boolean isSingleCard(ArrayList<Card> cards) {
         boolean found = false;
         if (cards.size() == 1) {
             found = true;
@@ -65,7 +67,8 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isOnePair(ArrayList<Card> cards) { //@author Sandro, Thomas
+    //@author Sandro, Thomas
+    public static boolean isOnePair(ArrayList<Card> cards) {
         boolean found = false;
         Collections.sort(cards);
         if (cards.size() == 2) { //only 2 cards allowed
@@ -86,6 +89,7 @@ public enum Srv_HandType {
         }
         return found;
     }
+
     //This code taken from https://www.baeldung.com/java-streams-distinct-by#1-using-the-listiteratedistinct
     public static <T> Predicate<T> distinctByKey(
             Function<? super T, ?> keyExtractor) {
@@ -113,8 +117,6 @@ public enum Srv_HandType {
         //case with no played specialcard
         if(!includesSpecialCards(cards) && cards.size() >= 4 && cards.size() % 2 == 0){
             for(int i = 0; i < clonedCards.size() && pairsFound; i++){ //separately put 2 cards in a new list to send them to the isOnePair Method
-                logger.info("clonedCards size: "+ clonedCards.size());
-                logger.info("i: "+ i);
                   pairCards.add(clonedCards.get(i)); pairCards.add(clonedCards.get(i+1));
                   if (isOnePair(pairCards)){ // if the sent 2 cards are one pair add 1 card to our uniqueList which we need later
                       uniqueList.add(pairCards.get(1));
@@ -184,7 +186,8 @@ public enum Srv_HandType {
 
     }
 
-    public static boolean isTripple(ArrayList<Card> cards) { //@author Sandro
+    //@author Sandro
+    public static boolean isTripple(ArrayList<Card> cards) {
         logger.info("CASE isTripple");
         boolean found = false;
         Collections.sort(cards);
@@ -206,7 +209,8 @@ public enum Srv_HandType {
 
     }
 
-    public static boolean isStreet(ArrayList<Card> cards) { //@author Sandro
+    //@author Sandro
+    public static boolean isStreet(ArrayList<Card> cards) {
         boolean found = false;
         int counter = 1; // Counter of the correct cards
         Collections.sort(cards); // Sort the cards from high to low ordinal
@@ -323,6 +327,7 @@ public enum Srv_HandType {
         }
         return found;
     }
+
     //@author Thomas
     // hands need to be checked when some player played the mahjong card and wishes a card
     public static boolean mahJongWishStreet(ArrayList<Card> cards, ArrayList<Card> lastPlayedCards, Card mahJongWishCard) {
@@ -495,7 +500,8 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isFullHouse(ArrayList<Card> cards) { //@author Sandro
+    //@author Sandro
+    public static boolean isFullHouse(ArrayList<Card> cards) {
         boolean foundFullHouse = false;
         boolean foundTripple = false;
         boolean foundOnePair = false;
@@ -556,8 +562,8 @@ public enum Srv_HandType {
         return foundFullHouse;
     }
 
-
-    public static boolean isBombOnHand(ArrayList<Card> playerCards, ArrayList<Card> lastPlayedCards) { //@author thomas
+    //@author Thomas
+    public static boolean isBombOnHand(ArrayList<Card> playerCards, ArrayList<Card> lastPlayedCards) {
         //method it is  written to check the whole deck from the players for bombs
         //create all the variables we need for the checks
         boolean found = false;
@@ -663,7 +669,8 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static boolean isBomb(ArrayList<Card> cards){//@author thomas
+    //@author Thomas
+    public static boolean isBomb(ArrayList<Card> cards){
         //method to check out the played bomb cards
         boolean found = false;
         int counterA = 1;
@@ -700,8 +707,8 @@ public enum Srv_HandType {
         }
 
 
-
-    public static boolean includesSpecialCards(ArrayList<Card> cards) { //specialCard played? @author Sandro, Thomas
+    //@author Sandro, Thomas
+    public static boolean includesSpecialCards(ArrayList<Card> cards) { //specialCard played?
         boolean found = false;
         Collections.sort(cards);
         if (cards.get(0).getSuit() == Suit.SpecialCards) { //SpecialCards would be always the highest card
@@ -710,7 +717,8 @@ public enum Srv_HandType {
         return found;
     }
 
-    public static void callSpecialCard(ArrayList<Card> cards) { //Call the right specialCard method in Table @author Sandro, Thomas
+    //@author Sandro, Thomas
+    public static void callSpecialCard(ArrayList<Card> cards) { //Call the right specialCard method in Table
         Collections.sort(cards);
         logger.info("SpecialCardPlayed");
         for (int i =0; i < cards.size(); i++) {
@@ -730,8 +738,8 @@ public enum Srv_HandType {
             }
         }
     }
-
-        public static boolean isHigher (ArrayList<Card> tableCards, ArrayList<Card> playerCards, Srv_HandType handType) { //@author Sandro, Thomas
+        //@author Sandro, Thomas
+        public static boolean isHigher (ArrayList<Card> tableCards, ArrayList<Card> playerCards, Srv_HandType handType) {
             boolean isHigher = false;
 
             if(handType  == null){ //if no handtype got evaluated, only return false

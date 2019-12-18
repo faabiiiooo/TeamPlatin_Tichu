@@ -6,36 +6,17 @@ import client.view.CardView;
 import client.view.Clt_View;
 import javafx.animation.*;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.concurrent.Task;
-import javafx.event.Event;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import resources.*;
 
-import javax.tools.Tool;
-import java.beans.PropertyChangeListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Observable;
-import java.util.TimerTask;
 import java.util.logging.Logger;
 
 //Controller for Client Part of the Game
@@ -63,7 +44,7 @@ public class Clt_Controller { //Controller is a Singleton
 
 
     }
-
+    //@author Fabio
     private void setStartScreenOnAction(){
         view.getStartScreen().getBtnNext().setOnAction(e -> startScreenBtnNext());
         view.getStartScreen().getToggleDE().setOnAction(e -> selectLanguage());
@@ -158,18 +139,12 @@ public class Clt_Controller { //Controller is a Singleton
             logger.info("Tichu-String sent to Server");
             Platform.runLater(() ->view.getTableView().getControls().getCallTichuButton().setDisable(true));
             dataStore.setSaidTichu(true);
-
-
         } else {
             logger.info("saying tichu is not possible");
         }
-
-
-
-
     }
 
-//@author thomas
+    //@author Thomas
     private void processBombButton(){
         logger.info("Clt_processBombButton");
         boolean successfulActiveStatusSent = false;
@@ -229,16 +204,15 @@ public class Clt_Controller { //Controller is a Singleton
                logger.info(this.toString()+"Cards declined by server. player has to replay.");
                this.displayWrongCardsStatus();
            }
-            if(dataStore.isFinish() && !finishedStatusSent){
+            if(dataStore.isFinish() && !finishedStatusSent){ //check if player finished round
                 logger.info("Sending finishedMessage");
                 Message msgFinished = new Message("string/finished","");
                 serviceLocator.getClient().send(msgFinished);
                 finishedStatusSent = true;
             }
         }
-
-
     }
+
     //@author Thomas
     private void wishedCardfromMahjong(boolean newValue){
         logger.info(this.toString()+  "Info to show Wish view");
@@ -270,10 +244,9 @@ public class Clt_Controller { //Controller is a Singleton
 
     //@author Fabio
     private void displayWrongCardsStatus(){
-
         view.getTableView().getStatusView().getStatus().setText(translator.getString("status.wrong.cards"));
-
     }
+
     //@author Fabio
     public void handCardChanged(){ //method gets called when client retrieves or playes card
         Platform.runLater(() -> {
@@ -290,6 +263,7 @@ public class Clt_Controller { //Controller is a Singleton
         }
 
     }
+
     //@auhtor Fabio
     private void tableCardChanged(){ //ListChangeListener for table cards. Always clears the list before adding the new cards
         Platform.runLater(() -> {
@@ -322,12 +296,13 @@ public class Clt_Controller { //Controller is a Singleton
         }
     }
 
-
+    //@author Thomas
     private void disableButtons(){
             view.getTableView().getControls().getPlayButton().setDisable(true);
             view.getTableView().getControls().getPassButton().setDisable(true);
     }
 
+    //@author Thomas
     private void enableButtons(){
         view.getTableView().getControls().getPlayButton().setDisable(false);
         view.getTableView().getControls().getPassButton().setDisable(false);
@@ -335,7 +310,7 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
     //@author Sandro
-    private void changeRiceLabel() {
+    private void changeRiceLabel() { //displaying rice label at player which is active
         logger.info("Changing RiceLabel");
         if (dataStore.getPlayerTop().isActive()) {
             logger.info("Player Top is active");
@@ -364,7 +339,7 @@ public class Clt_Controller { //Controller is a Singleton
         }
     }
 
-    //@author Fabio
+    //@author Pascal
     private void processCardClicked(MouseEvent e){ //adds card to send queue and removes it if unclicked
         logger.info("clicked on card");
         CardView source = (CardView) e.getSource();
@@ -373,7 +348,6 @@ public class Clt_Controller { //Controller is a Singleton
             model.getDataStore().addCardsToSend(c);
             source.setSelected(true);
 
-            //@author Pascal
             PathElement p1=new MoveTo(52,83);// Start Position
             PathElement p2=new LineTo(52,55);//End Position
 
@@ -390,7 +364,6 @@ public class Clt_Controller { //Controller is a Singleton
                 model.getDataStore().getCardsToSend().remove(c);
                 source.setSelected(false);
 
-                //@author Pascal
                 PathElement p3=new MoveTo(52,55);
                 PathElement p4=new LineTo(52,83);
 
@@ -403,7 +376,8 @@ public class Clt_Controller { //Controller is a Singleton
         }
     }
 
-    private void createWishedCard(String rank){
+    //@author Thomas
+    private void createWishedCard(String rank){ //create the wished card if this player plays mah jong -> suit doesn't matter
         boolean successful = false;
         logger.info("going to create new card: "+rank);
         int value = 0;
@@ -462,11 +436,10 @@ public class Clt_Controller { //Controller is a Singleton
     }
 
 
-    //@author Fabio
     public void processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
         switch (msgIn.getType()) {
-
+            //@author Fabio
             case "card/dealCards":  //getting the playerHand from server
                 dataStore.setFinish(false); //in case new round is started.
                 finishedStatusSent = false;
@@ -492,17 +465,11 @@ public class Clt_Controller { //Controller is a Singleton
                     if(dataStore.getHandCards().size()==14){
                         view.getTableView().getTichuLabel().setText("");
                     }
-
-
-
-
-
                 });
-
-
                 break;
 
-            case "card/tableCards": //@author Fabio
+            //@author Fabio
+            case "card/tableCards":
                 Platform.runLater(() -> {
                     view.getTableView().getTichuLabel().setText(""); //reset Tichulabel
                 });
@@ -515,6 +482,7 @@ public class Clt_Controller { //Controller is a Singleton
                 logger.info("Added TableCards to table");
                 break;
 
+            //@author Thomas
             case "card/wishedCard": //set the wished card on clients to set info in gui
                 logger.info("Wished card has been set in data store");
                 dataStore.setWishedCard((Card) msgIn.getObjects().get(0));
@@ -530,14 +498,15 @@ public class Clt_Controller { //Controller is a Singleton
 
                 logger.info("Clt_Controller: Player ActiveStatus: "+ dataStore.isActiveProperty().get());
                 break;
-
+            //@author Thomas
             case "boolean/hasBomb":
                 boolean hasBomb = (boolean) msgIn.getObjects().get(0);
                 dataStore.hasBombProperty().set(hasBomb);
 
                 logger.info("HasBomb set to: "+hasBomb );
                 break;
-            //@author thomas
+
+            //@author Thomas
             case "boolean/wishedCardPlayedInfo":
                 boolean cardPlayed = (boolean) msgIn.getObjects().get(0);
                 if(cardPlayed){
@@ -553,6 +522,7 @@ public class Clt_Controller { //Controller is a Singleton
                 }
                 break;
 
+            //@author Fabio
             case "player": //recieveing all other players from server -> it is necessary that nextPlayerID is already set
                 ArrayList<Player> otherPlayers = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){ //generate player objects
@@ -577,8 +547,7 @@ public class Clt_Controller { //Controller is a Singleton
 
                 dataStore.setCardAmountProperties();
                 //@author Pascal
-                // Set the Player ID
-                Platform.runLater(() -> {
+                Platform.runLater(() -> { // Set the Player ID
                     view.getTableView().getRivalTop().gettName().setText(translator.getString("model.player")+" "+dataStore.getPlayerTop().getPLAYER_ID()
                             +" Team: "+ dataStore.getPlayerTop().getTeamID());
                     view.getTableView().getRivalRight().getrName().setText(translator.getString("model.player")+" "+dataStore.getPlayerRight().getPLAYER_ID()
@@ -592,24 +561,29 @@ public class Clt_Controller { //Controller is a Singleton
 
                 break;
 
+            //@author Thomas
             case "string/playerThatBombs":
                 String playerId = (String) msgIn.getObjects().get(0);
                     Platform.runLater(() -> {
-                        view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+playerId+" "+ translator.getString("label.playerBombs") );
+                        view.getTableView().getStatusView().getStatus().setText(translator.getString("model.player")+" "+playerId+" "
+                                + translator.getString("label.playerBombs") );
 
                     });
                 break;
 
-            case "string/nextPlayer": //@author Fabio
+            //@author Fabio
+            case "string/nextPlayer":
                 int nextPlayerID = (int) msgIn.getObjects().get(0); //getting nextPlayer from Server
                 dataStore.setNextPlayerID(nextPlayerID);
                 break;
 
+            //@author Thomas
             case "string/wishView":
                 model.getDataStore().isWantsCardWish().set(true);
             break;
 
-            case "string/score": //@author Fabio
+            //@author Fabio
+            case "string/score":
 
                 ArrayList<String> teamScores = new ArrayList<>();
                 for(Object o : msgIn.getObjects()){
@@ -632,6 +606,7 @@ public class Clt_Controller { //Controller is a Singleton
 
                 break;
 
+            //@author Fabio
             case "string/gameFinished":
                 int winningTeamID = (int) msgIn.getObjects().get(0);
                 Platform.runLater(() -> {
@@ -641,6 +616,7 @@ public class Clt_Controller { //Controller is a Singleton
                 });
                 break;
 
+            //@author Fabio
             case "response/string": //checking if client recieves a response string
                 logger.info("Recieved a responseString, going to evaluate it.");
                 MessageResponse responseIn = (MessageResponse) msgIn; //Cast it to a Response
@@ -664,7 +640,8 @@ public class Clt_Controller { //Controller is a Singleton
 
                 break;
 
-            case "string/stingNotification": //@author Fabio -> Show which player stung
+            //@author Fabio
+            case "string/stingNotification": // -> Show which player stung
                 String notification = (String) msgIn.getObjects().get(0);
                 String[] temp = notification.split(";"); //getting nitification which player stung
                 int playerID = Integer.parseInt(temp[0]);
@@ -703,10 +680,10 @@ public class Clt_Controller { //Controller is a Singleton
                 }
                 this.changeRiceLabel();
 
-
                 break;
 
-            case "string/oSaidSmallTichu":
+            //@author Pascal
+            case "string/oSaidSmallTichu": //shows if any player announced a small tichu
                 int pID = (int) msgIn.getObjects().get(0);
                 Platform.runLater(() -> {
 
@@ -728,7 +705,8 @@ public class Clt_Controller { //Controller is a Singleton
                 });
                 break;
 
-            case "string/oSaidBigTichu":
+            //@author Pascal
+            case "string/oSaidBigTichu": //shows if any player announced a big tichu
                 int plID = (int) msgIn.getObjects().get(0);
                 Platform.runLater(() -> {
 
@@ -749,14 +727,11 @@ public class Clt_Controller { //Controller is a Singleton
                     st.setAutoReverse(true);
                     st.play();
 
-                   /* Image imageDecline = new Image(getClass().getResourceAsStream("../../resources/images/backgrounds/bomb.gif"));
-                    ImageView iv=new ImageView(imageDecline);
-                    view.getTableView().getBombLabel().setGraphic(iv);*/
-
                 });
                 break;
 
-            case "string/newRound":
+            //@author Fabio
+            case "string/newRound": //resetting round, displaying that new round starts
                 logger.info("recieved new round string on client");
                 dataStore.setSaidTichu(false);
                 Platform.runLater(() -> {//display text that a new round started
@@ -771,7 +746,7 @@ public class Clt_Controller { //Controller is a Singleton
                 });
                 break;
 
-
+            //@author Pascal
             case "connection-lost": //stop game. A client got disconnected.
                 logger.warning("Client is going to stop because of connection loss");
 
@@ -780,10 +755,9 @@ public class Clt_Controller { //Controller is a Singleton
                 });
 
                 break;
-
         }
-
     }
+
     //@author Fabio
     private void selectLanguage(){
         if(view.getStartScreen().getToggleDE().isSelected() || view.getStartScreen().getToggleEN().isSelected()){

@@ -1,14 +1,12 @@
 package client.view;
 
 import client.model.Clt_Model;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.net.MalformedURLException;
 
 //Basic Class to start build the GUI
-
+//@author Pascal
 public class Clt_View {
 
     private Stage primaryStage;

@@ -4,9 +4,9 @@ package client.view;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 
+
+//@author Pascal
 public class PointView extends GridPane {
 
     private Label scoreTeam1, scoreTeam2;

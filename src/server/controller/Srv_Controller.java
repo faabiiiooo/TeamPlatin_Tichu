@@ -1,11 +1,10 @@
 package server.controller;
 
-import javafx.application.Platform;
+
 import resources.*;
 import server.model.Srv_HandType;
 import server.model.Srv_Model;
 import server.model.Srv_Round;
-import server.model.Srv_Table;
 import resources.Player;
 
 import java.util.ArrayList;
@@ -36,6 +35,7 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
 
     }
 
+    //@author Thomas
     private void standardProcessPlayCards(int senderID, ArrayList<Card> cardsToPlay){
         logger.info("standardProcessPlayCards");
         model.removePlayedCardsFromPlayerHand(senderID,cardsToPlay);
@@ -50,17 +50,15 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
             model.getGame().getTable().checkIfMJWishIsActive();
         }
 
-
     }
 
-
-    //@author Fabio
     public Message processIncomingMessage(Message msgIn) { // Generates Answermessage for every Incoming Message
 
         Message msgOut = null;
 
         switch (msgIn.getType()) {
 
+            //@author Fabio, Thomas
             case "card/playCard":  //generating a Card from Message when card should be played
                 boolean playsWishedCard = false;
                 ArrayList<Card> cardsToPlay = new ArrayList<>();
@@ -150,20 +148,20 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 }
                 break;
 
-            //@author thomas
+            //@author Thomas
             case "card/wishCard": //setting the wished card from the player
                 model.getGame().getTable().setMahJongWishCard((Card)msgIn.getObjects().get(0));
                 msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
                 logger.info("Wished card has been set on Table : " + model.getGame().getTable().getMahJongWishCard().getRank());
                 model.getGame().getTable().skip();
                 model.getGame().getTable().mahJongPlayed();
-               // model.getGame().getTable().skip();
                 model.sendActivePlayerToClients();
                 model.sendPlayersToClients();
                 model.sendWishedCardToClients();
                 break;
 
-            case "string/finished": //@author Fabio
+            //@author Fabio
+            case "string/finished":
                 logger.info("Player " + msgIn.getSenderID() + " finished the round");
 
                 Srv_Round thisRound = model.getGame().getRounds().get(model.getGame().getRounds().size()-1);
@@ -189,7 +187,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                 String incoming = (String) msgIn.getObjects().get(0);
                 boolean skipProcessEnded = false;
                 switch (incoming) {
-                    case "skip": //@author Sandro
+                    //@author Sandro
+                    case "skip":
                         logger.info("Srv_processSkipButton");
                         int clientID = msgIn.getSenderID();
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) { //Each Player at Table
@@ -219,7 +218,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                         model.sendActivePlayerToClients(); //send new activePlayer to Client
                         break;
 
-                    case "tichu"://@author Pascal
+                    //@author Pascal
+                    case "tichu":
 
                         for (Player p : model.getGame().getTable().getPlayersAtTable()) {//Each Player at Tabel
                             if (p.getPLAYER_ID() == msgIn.getSenderID()) {// Is the player ID equals to the Client ID
@@ -239,7 +239,8 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             }
                         }
                         break;
-                    //@author thomas
+
+                    //@author Thomas
                     case "bombActiveChange":
                         //set the active player to not active
                         int msgId = msgIn.getSenderID();
@@ -268,20 +269,6 @@ public class Srv_Controller { //Servercontroller is generated as a Singleton
                             model.sendActivePlayerToClients();
                             model.sendPlayersToClients();
                         }
-
-                      /*  if (ok){
-                            for(Player p : model.getGame().getTable().getPlayersAtTable()){
-                                logger.info("Active status players: "+ p.getPLAYER_ID()+" Status "+p.isActive());
-                            }
-                            logger.info("Player who pressed bomb button is now active");
-                            msgOut = new MessageResponse("string", "ok", msgIn.getMessageID());
-                            model.sendActivePlayerToClients();
-                        }else{
-                            logger.info("failes to change active player with bomb on hand");
-                            msgOut = new MessageResponse("string", "n-ok", msgIn.getMessageID());
-                        }*/
-                        //send the active status to all clients
-
 
                         break;
                     }

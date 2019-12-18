@@ -1,17 +1,14 @@
 package client.view;
 
-import javafx.geometry.Insets;
+
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import resources.Card;
-import resources.ServiceLocator;
-import resources.Translator;
 
 import java.util.ArrayList;
 
-
+//@author Pascal
 public class PlayerView extends HBox {
 
     private final ArrayList<CardView> cardViews = new ArrayList<>();

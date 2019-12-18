@@ -3,13 +3,11 @@ package client.view;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import resources.ServiceLocator;
 import resources.Translator;
 
-import javax.swing.*;
 
 //@author Pascal
 public class StatusView extends GridPane {
