@@ -8,7 +8,7 @@ import java.util.Collections;
 public class Srv_Game { //@author Thomas
 
     protected ArrayList<Srv_Team> teams = new ArrayList<Srv_Team>();;
-    protected final static int G_MIN_SCORE = 30;
+    protected final static int G_MIN_SCORE = 1000;
     protected Srv_Team winner;
     private ArrayList<Srv_Round> rounds;
     private Srv_Table table;
